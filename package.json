@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && swc src/background/main.ts -o dist/background.js",
+    "build": "npm run build:vite && npm run build:swc && npm run build:web-ext",
+    "build:vite": "tsc && vite build",
+    "build:swc": "swc src/background/main.ts -o dist/background.js",
+    "build:web-ext": "web-ext build -s ./dist --overwrite-dest",
     "lint": "npm run lint:eslint && npm run lint:web-ext",
     "lint:eslint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:web-ext": "npm run build && web-ext lint -s ./dist",
