@@ -32,5 +32,11 @@
         "allowConstantExport": true
       }
     ]
+  },
+
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
