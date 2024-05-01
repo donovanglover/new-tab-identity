@@ -1,5 +1,3 @@
-const browser = window.browser
-
 const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple', 'toolbar']
 let i = 0
 
