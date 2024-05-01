@@ -1,40 +1,42 @@
+import { MULLVAD_PUBLIC_API_URL, type MullvadServer } from './providers/Mullvad'
+
 const browser = window.browser
-
 const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple', 'toolbar']
-let i = 0
 
-// Remove all existing containers
-browser.contextualIdentities.query({}).then(async contexts => {
-  for (const context of contexts) {
-    browser.contextualIdentities.remove(context.cookieStoreId)
-  }
+await Promise.all([
+  // Remove all existing containers
+  browser.contextualIdentities.query({}).then(async contexts => {
+    for (const context of contexts) {
+      await browser.contextualIdentities.remove(context.cookieStoreId)
+    }
 
-  // Add containers based on Mullvad API
-  const servers = await (await fetch('https://api-www.mullvad.net/www/relays/all/')).json()
+    // Add containers based on Mullvad API
+    const servers: MullvadServer[] = await (await fetch(MULLVAD_PUBLIC_API_URL)).json()
 
-  servers.forEach(server => {
-    const socks = server.socks_name
-    console.log(server)
-    if (socks) {
-      browser.contextualIdentities.create({
-        name: socks,
-        color: colors[i++],
-        icon: 'circle'
-      })
+    for (const [i, server] of servers.entries()) {
+      const socks = server.socks_name
 
-      if (i === colors.length) i = 0
+      if (socks !== undefined) {
+        await browser.contextualIdentities.create({
+          name: socks,
+          color: colors[i % colors.length],
+          icon: 'circle'
+        })
+      }
     }
   })
-})
+])
 
 // Listen for requests and proxy based on container
-browser.proxy.onRequest.addListener(async requestInfo => {
+browser.proxy.onRequest.addListener(requestInfo => {
   const id = requestInfo.cookieStoreId
-  if (id === 'firefox-default') return
+  if (typeof id === 'undefined' || id === 'firefox-default') {
+    return
+  }
 
   return {
     type: 'socks',
-    host: await browser.contextualIdentities.get(id).then(context => {
+    host: browser.contextualIdentities.get(id).then(context => {
       return context.name
     }),
 
