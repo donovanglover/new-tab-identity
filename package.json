@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev:vite": "vite",
+    "dev:swc": "npm run build:swc -- --watch",
     "build": "npm run build:vite && npm run build:swc && npm run build:web-ext",
     "build:vite": "tsc && vite build",
     "build:swc": "swc src/background/main.ts -o dist/background.js",
@@ -30,6 +31,7 @@
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.19",
+    "chokidar": "^3.6.0",
     "eslint-config-love": "^47.0.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
