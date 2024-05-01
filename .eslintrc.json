@@ -16,7 +16,8 @@
 
   "ignorePatterns": [
     "dist",
-    ".eslintrc.json"
+    ".eslintrc.json",
+    "*.d.ts"
   ],
 
   "plugins": [
