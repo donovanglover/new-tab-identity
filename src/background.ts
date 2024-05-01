@@ -1,4 +1,4 @@
-import { type MullvadServer } from '../providers/Mullvad'
+import { MULLVAD_PUBLIC_API_URL, type MullvadServer } from './providers/Mullvad'
 
 const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple', 'toolbar']
 
@@ -9,7 +9,7 @@ browser.contextualIdentities.query({}).then(async contexts => {
   }
 
   // Add containers based on Mullvad API
-  const servers: MullvadServer[] = await (await fetch('https://api-www.mullvad.net/www/relays/all/')).json()
+  const servers: MullvadServer[] = await (await fetch(MULLVAD_PUBLIC_API_URL)).json()
 
   for (const [i, server] of servers.entries()) {
     const socks = server.socks_name

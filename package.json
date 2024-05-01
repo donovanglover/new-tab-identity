@@ -5,10 +5,8 @@
   "type": "module",
   "scripts": {
     "dev:vite": "vite",
-    "dev:swc": "npm run build:swc -- --watch",
-    "build": "npm run build:vite && npm run build:swc && npm run build:web-ext",
+    "build": "npm run build:vite && npm run build:web-ext",
     "build:vite": "vite build",
-    "build:swc": "swc src/background/main.ts -o dist/background.js",
     "build:web-ext": "web-ext build -s ./dist --overwrite-dest",
     "lint": "npm run lint:tsc && npm run lint:eslint && npm run lint:web-ext",
     "lint:tsc": "tsc",
@@ -24,8 +22,6 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.4.17",
     "@types/firefox-webext-browser": "^120.0.3",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.66",
