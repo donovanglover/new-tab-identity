@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && swc src/background/main.ts -o dist/background.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start": "web-ext run --source-dir ./dist"
@@ -15,6 +15,8 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.4.17",
     "@types/firefox-webext-browser": "^120.0.3",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",

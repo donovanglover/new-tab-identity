@@ -1,7 +1,13 @@
-import { MULLVAD_PUBLIC_API_URL, type MullvadServer } from '../providers/Mullvad'
+import type { MullvadServer } from '../providers/Mullvad'
 
 const browser = window.browser
 const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple', 'toolbar']
+
+/** The publicly accessible API endpoint used to fetch all Mullvad VPN servers.
+ *
+ * Used for <https://mullvad.net/servers>.
+ */
+export const MULLVAD_PUBLIC_API_URL = 'https://api-www.mullvad.net/www/relays/all'
 
 // Remove all existing containers
 browser.contextualIdentities.query({}).then(async contexts => {
