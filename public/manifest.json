@@ -1,4 +1,5 @@
 {
+  "strict_min_version": "91.1.0",
   "background": {
     "scripts": ["background.js"]
   },
