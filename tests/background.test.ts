@@ -1,4 +1,4 @@
-import '../src/background/main'
+import { expect, describe, it } from 'vitest'
 
 describe('background.ts', () => {
   it('works', () => {

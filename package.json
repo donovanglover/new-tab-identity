@@ -12,8 +12,7 @@
     "lint:tsc": "tsc",
     "lint:eslint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:web-ext": "npm run build && web-ext lint -s ./dist",
-    "test": "jest",
-    "test:coverage": "jest --collectCoverage",
+    "test": "vitest",
     "start": "web-ext run --source-dir ./dist"
   },
   "dependencies": {
@@ -22,7 +21,6 @@
   },
   "devDependencies": {
     "@types/firefox-webext-browser": "^120.0.3",
-    "@types/jest": "^29.5.12",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react-swc": "^3.5.0",
@@ -34,14 +32,11 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "eslint-plugin-tailwindcss": "^3.15.1",
-    "jest-environment-jsdom": "^29.7.0",
-    "jest-webextension-mock": "^3.8.16",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
-    "ts-jest": "^29.1.2",
-    "ts-node": "^10.9.2",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
+    "vitest": "^1.5.3",
     "web-ext": "^7.11.0"
   }
 }
