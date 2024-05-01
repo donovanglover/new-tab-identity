@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import RootPage from './app/page.tsx'
-import './index.css'
+import RootPage from '../app/page.tsx'
+import '../styles/main.css'
 
 const root = document.getElementById('root')
 
