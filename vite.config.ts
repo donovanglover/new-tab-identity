@@ -7,10 +7,16 @@ export default defineConfig({
     react()
   ],
 
+  root: 'src',
+  publicDir: '../public',
+
   build: {
+    outDir: '../dist',
+    emptyOutDir: true,
+
     rollupOptions: {
       input: {
-        app: resolve(__dirname, './index.html'),
+        app: resolve(__dirname, './src/index.html'),
         background: resolve(__dirname, './src/background.ts')
       },
       output: {
