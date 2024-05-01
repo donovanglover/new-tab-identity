@@ -208,12 +208,24 @@ export interface MullvadServer {
    */
   type: 'wireguard' | 'openvpn' | 'bridge'
 
-  /** Any status messages for the server.
+  /** An array of status messages for the given server.
    *
-   * Note that the `string` type is assumed since we haven't observed
-   * any status messages from the API yet.
+   * If there are no messages, an empty array is returned instead.
    *
    * @example []
+   * @example [{ message: "1 and 2Gbps servers hosted by Tzulo will be upgraded to 10Gbps, keep in mind IP-addresses will change, as will WireGuard pubkeys for those servers. Please use other servers during this time to minimize downtime." }]
    */
-  status_messages: string[]
+  status_messages: MullvadStatusMessage[]
+}
+
+/** A status message for a Mullvad server.
+ *
+ * @example { message: "1 and 2Gbps servers hosted by Tzulo will be upgraded to 10Gbps, keep in mind IP-addresses will change, as will WireGuard pubkeys for those servers. Please use other servers during this time to minimize downtime." }
+ */
+export interface MullvadStatusMessage {
+  /** A string consisting of a message about the server.
+   *
+   * @example "1 and 2Gbps servers hosted by Tzulo will be upgraded to 10Gbps, keep in mind IP-addresses will change, as will WireGuard pubkeys for those servers. Please use other servers during this time to minimize downtime."
+   */
+  message: string
 }
