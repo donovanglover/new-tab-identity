@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build && web-ext build -s ./dist --overwrite-dest",
+    "build": "vite build && web-ext build -s ./dist -a ./dist --overwrite-dest",
     "lint": "tsc && eslint . --ext ts,tsx && npm run build && web-ext lint -s ./dist",
     "test": "vitest",
     "start": "web-ext run --source-dir ./dist"
