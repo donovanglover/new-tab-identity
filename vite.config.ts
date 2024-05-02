@@ -19,5 +19,9 @@ export default defineConfig({
         assetFileNames: '[name].[ext]'
       }
     }
+  },
+
+  test: {
+    dir: './tests'
   }
 })
