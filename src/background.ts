@@ -1,4 +1,4 @@
-import { MULLVAD_PUBLIC_API_URL, type MullvadServer } from './providers/Mullvad'
+import { MULLVAD_PUBLIC_API_URL, type MullvadServer } from './lib/Mullvad'
 
 const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple']
 
