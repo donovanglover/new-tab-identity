@@ -4,12 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev:vite": "vite",
-    "build": "npm run build:vite && npm run build:web-ext",
-    "build:vite": "vite build",
-    "build:web-ext": "web-ext build -s ./dist --overwrite-dest",
-    "lint": "tsc && eslint . --ext ts,tsx",
-    "lint:web-ext": "npm run build && web-ext lint -s ./dist",
+    "dev": "vite build --watch",
+    "build": "vite build && web-ext build -s ./dist --overwrite-dest",
+    "lint": "tsc && eslint . --ext ts,tsx && npm run build && web-ext lint -s ./dist",
     "test": "vitest",
     "start": "web-ext run --source-dir ./dist"
   },
