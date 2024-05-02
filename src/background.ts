@@ -1,6 +1,6 @@
 import { MULLVAD_PUBLIC_API_URL, type MullvadServer } from './providers/Mullvad'
 
-const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple', 'toolbar']
+const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple']
 
 // Remove all existing containers
 browser.contextualIdentities.query({}).then(async contexts => {
