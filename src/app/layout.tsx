@@ -8,7 +8,9 @@ const root = document.getElementById('root')
 if (root !== null) {
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
-      <RootPage />
+      <div className="bg-100 text-700 base16-katy">
+        <RootPage />
+      </div>
     </React.StrictMode>
   )
 }

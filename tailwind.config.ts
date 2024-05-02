@@ -7,6 +7,7 @@ const tailwindConfig: Config = {
   ],
   plugins: [
     base16Tailwind({
+      invert: true,
       customPath: 'node_modules/@donovanglover/base16-tailwind/schemes'
     })
   ]
