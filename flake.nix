@@ -6,8 +6,12 @@
   outputs = { self, nixpkgs }: let
     pkgs = nixpkgs.legacyPackages.x86_64-linux;
   in {
-    devShell.x86_64-linux = pkgs.mkShell (import ./nix/shell.nix {
-      inherit pkgs;
-    });
+    devShell.x86_64-linux = pkgs.mkShell {
+      nativeBuildInputs = with pkgs; [
+        firefox
+        nodejs
+        nodePackages.npm
+      ];
+    };
   };
 }
