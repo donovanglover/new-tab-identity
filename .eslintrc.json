@@ -14,12 +14,6 @@
     "plugin:tailwindcss/recommended"
   ],
 
-  "ignorePatterns": [
-    "dist",
-    ".eslintrc.json",
-    "*.d.ts"
-  ],
-
   "plugins": [
     "simple-import-sort",
     "react",
