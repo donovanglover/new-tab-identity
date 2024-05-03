@@ -1,5 +1,5 @@
 import { ContainerList } from '../lib/browser'
-import { fetchJSON } from '../lib/fetchJSON.ts'
+import { fetchJSON } from '../lib/fetchJSON'
 import { MULLVAD_PUBLIC_API_URL, type MullvadServer } from '../lib/Mullvad'
 import Button from './Button'
 
