@@ -1,34 +1,35 @@
 interface IProxyInfo {
+  host: string
+  port: number
   failoverTimeout?: number
   proxyAuthorizationHeader?: string
   connectionIsolationKey?: string
 }
 
-interface IProxyInfoDirect extends IProxyInfo {
+interface IProxyInfoDirect extends Omit<IProxyInfo, 'host' | 'port'> {
   type: 'direct'
   host?: string
   port?: number
 }
 
-interface IProxyInfoNotDirect extends IProxyInfo {
-  host: string
-  port: number
+interface IProxyInfoHttp extends IProxyInfo {
+  type: 'http'
 }
 
-interface IProxyInfoHttp extends IProxyInfoNotDirect {
-  type: 'http' | 'https'
+interface IProxyInfoHttps extends IProxyInfo {
+  type: 'https'
 }
 
-interface IProxyInfoSocks extends IProxyInfoNotDirect {
+interface IProxyInfoSocks extends IProxyInfo {
   type: 'socks'
   username?: string
   password?: string
   proxyDNS?: boolean
 }
 
-interface IProxyInfoSocks4 extends IProxyInfoNotDirect {
+interface IProxyInfoSocks4 extends IProxyInfo {
   type: 'socks4'
   proxyDNS?: boolean
 }
 
-export type ProxyInfo = IProxyInfoDirect | IProxyInfoSocks | IProxyInfoSocks4 | IProxyInfoHttp
+export type ProxyInfo = IProxyInfoDirect | IProxyInfoSocks | IProxyInfoSocks4 | IProxyInfoHttp | IProxyInfoHttps
