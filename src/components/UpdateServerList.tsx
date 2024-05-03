@@ -1,12 +1,11 @@
 import { ContainerList } from '../lib/browser'
-import { type MullvadServer } from '../lib/Mullvad'
+import { fetchJSON } from '../lib/helpers'
+import { MULLVAD_PUBLIC_API_URL, type MullvadServer } from '../lib/Mullvad'
 import Button from './Button'
 
 async function updateServerList (): Promise<void> {
   const list = new ContainerList()
-  const servers: MullvadServer[] = await browser.runtime.sendMessage({
-    contentScriptQuery: 'fetch'
-  })
+  const servers: MullvadServer[] = await fetchJSON(MULLVAD_PUBLIC_API_URL)
 
   console.log(list)
   console.log(servers)
