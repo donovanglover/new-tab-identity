@@ -1,4 +1,4 @@
-import { BrowserProxy } from './lib/Proxy'
+import { BrowserProxy } from './lib/BrowserProxy.ts'
 
 const proxy = new BrowserProxy()
 
