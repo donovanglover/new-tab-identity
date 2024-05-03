@@ -1,3 +1,5 @@
+import UpdateServerList from '../components/UpdateServerList'
+
 export default function RootPage (): React.ReactElement {
   const status = browser.contextualIdentities !== undefined ? 'All good to go.' : 'browser.contextualIdentities not available.'
 
@@ -23,8 +25,9 @@ export default function RootPage (): React.ReactElement {
 
   return (
     <div className="p-4">
+      <h1 className='text-center text-4xl font-bold'>New Tab Identity</h1>
+      <UpdateServerList />
       <p>{status}</p>
-      <button className='text-center text-4xl font-bold' onClick={eventHandler}>New Tab Identity</button>
     </div>
   )
 }
