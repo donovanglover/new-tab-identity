@@ -23,7 +23,17 @@ export default defineConfig({
 
   test: {
     coverage: {
-      provider: 'istanbul'
+      enabled: true,
+      provider: 'istanbul',
+      include: ['lib/**'],
+
+      reporter: ['text'],
+      reportsDirectory: '../dist',
+      clean: false,
+
+      thresholds: {
+        100: true
+      }
     },
 
     dir: './tests'
