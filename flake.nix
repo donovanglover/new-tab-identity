@@ -3,14 +3,17 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs }: let
-    pkgs = nixpkgs.legacyPackages.x86_64-linux;
+  outputs = { nixpkgs, ... }: let
+    inherit (nixpkgs.legacyPackages.${system}) pkgs;
+    inherit (pkgs) mkShell;
+    inherit (builtins) attrValues;
+
+    system = "x86_64-linux";
   in {
-    devShell.x86_64-linux = pkgs.mkShell {
-      nativeBuildInputs = with pkgs; [
-        firefox
-        nodejs
-      ];
+    devShell.${system} = mkShell {
+      nativeBuildInputs = attrValues {
+        inherit (pkgs) firefox nodejs;
+      };
     };
   };
 }
