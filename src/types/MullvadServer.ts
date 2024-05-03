@@ -1,9 +1,3 @@
-/** The publicly accessible API endpoint used to fetch all Mullvad VPN servers.
- *
- * Used for <https://mullvad.net/servers>.
- */
-export const MULLVAD_PUBLIC_API_URL = 'https://api-www.mullvad.net/www/relays/all'
-
 /** Server data returned from the publicly accessible Mullvad API.
  *
  * Date last checked for changes in public API: 2024-04-30.

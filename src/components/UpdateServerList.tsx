@@ -1,6 +1,7 @@
 import { ContainerList } from '../lib/browser'
 import { fetchJSON } from '../lib/fetchJSON'
-import { MULLVAD_PUBLIC_API_URL, type MullvadServer } from '../lib/Mullvad'
+import { MULLVAD_PUBLIC_API_URL } from '../lib/globals'
+import type { MullvadServer } from '../types/MullvadServer'
 import Button from './Button'
 
 async function updateServerList (): Promise<void> {
