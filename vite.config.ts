@@ -22,6 +22,10 @@ export default defineConfig({
   },
 
   test: {
+    coverage: {
+      provider: 'istanbul'
+    },
+
     dir: './tests'
   }
 })
