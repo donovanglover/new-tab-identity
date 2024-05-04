@@ -4,21 +4,30 @@ import { MULLVAD_PUBLIC_API_URL } from '../lib/globals'
 import type { MullvadServer } from '../types/MullvadServer'
 import Button from './ui/Button'
 
-async function updateServerList (): Promise<void> {
+function updateServerList (): void {
   const containers = new BrowserContainers()
-  const servers: MullvadServer[] = await fetchJSON(MULLVAD_PUBLIC_API_URL)
 
-  for (const server of servers) {
-    const socks = server.socks_name
+  fetchJSON(MULLVAD_PUBLIC_API_URL).then(result => {
+    const servers: MullvadServer[] = result
 
-    if (socks !== undefined) {
-      await containers.add(socks)
+    for (const server of servers) {
+      const socks = server.socks_name
+
+      if (socks !== undefined) {
+        containers.add(socks).then(result => {
+          console.log(result)
+        }).catch(e => {
+          console.warn(e)
+        })
+      }
     }
-  }
+  }).catch(e => {
+    console.warn(e)
+  })
 }
 
 export default function UpdateServerList (): React.ReactElement {
   return (
-    <Button onClick={() => { void updateServerList() }}>Update server list</Button>
+    <Button onClick={updateServerList}>Update server list</Button>
   )
 }
