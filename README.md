@@ -1,10 +1,25 @@
 # new-tab-identity
 
-Web extension to use multiple proxies simultaneously with multi-account containers in Firefox-based browsers.
+Browse the web from multiple VPN locations simultaneously. Goes well with [Librewolf](https://librewolf.net/).
+
+## Features
+
+- Open new container tabs with different VPN locations.
+- Visit the same website with different VPN locations.
+
+### Supported Providers
+
+- [Mullvad VPN](https://mullvad.net)
 
 ## Installation
 
+1. `git clone https://github.com/donovanglover/new-tab-identity && cd new-tab-identity`
+2. `npm ci && npm run build`
+3. Go to `about:addons`, press the gear icon on the right and press "Install Add-on From File..."
+
 ## Usage
+
+Use the extension popup to create new identities and delete old ones.
 
 ## Contributing
 
