@@ -2,7 +2,7 @@ import { BrowserContainers } from '../lib/BrowserContainers'
 import { fetchJSON } from '../lib/fetchJSON'
 import { MULLVAD_PUBLIC_API_URL } from '../lib/globals'
 import type { MullvadServer } from '../types/MullvadServer'
-import Button from './Button'
+import Button from './ui/Button'
 
 async function updateServerList (): Promise<void> {
   const containers = new BrowserContainers()
