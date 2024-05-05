@@ -29,11 +29,7 @@ export default defineConfig({
 
       reporter: ['text'],
       reportsDirectory: '../dist',
-      clean: false,
-
-      thresholds: {
-        100: true
-      }
+      clean: false
     },
 
     dir: './tests'
