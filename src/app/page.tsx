@@ -3,28 +3,19 @@ import Button from '../components/Button'
 import { BrowserContainers } from '../lib/BrowserContainers'
 import { fetchJSON } from '../lib/fetchJSON'
 import { MULLVAD_PUBLIC_API_URL } from '../lib/globals'
-import type { MullvadServer } from '../types/MullvadServer'
+import type { IMullvadServerWireguard, MullvadServer } from '../types/MullvadServer'
 
 function updateServerList (): void {
   const containers = new BrowserContainers()
 
   fetchJSON(MULLVAD_PUBLIC_API_URL).then(result => {
     const servers: MullvadServer[] = result
+    const relays = servers.filter(server => server.type === 'wireguard') as IMullvadServerWireguard[]
 
-    for (const server of servers) {
-      const socks = server.socks_name
-
-      if (socks !== undefined) {
-        containers.add(socks).then(result => {
-          console.log(result)
-        }).catch(e => {
-          console.warn(e)
-        })
-      }
+    for (const server of relays) {
+      void containers.add(server.socks_name)
     }
-  }).catch(e => {
-    console.warn(e)
-  })
+  }).catch(e => { console.warn(e) })
 }
 
 export default function RootPage (): React.ReactElement {
@@ -33,9 +24,7 @@ export default function RootPage (): React.ReactElement {
   useEffect(() => {
     browser.contextualIdentities.query({}).then((containers) => {
       setContainers(containers)
-    }).catch(err => {
-      console.warn(err)
-    })
+    }).catch(e => { console.warn(e) })
   }, [containers])
 
   function deleteContainer (): void {}
