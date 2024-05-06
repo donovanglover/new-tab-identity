@@ -2,7 +2,7 @@
  *
  * Date last checked for changes in public API: 2024-04-30.
  */
-export interface MullvadServer {
+interface IMullvadServer {
   /** The hostname of the server.
    *
    * This is the part before ".relays.mullvad.net" in the *fqdn*.
@@ -114,93 +114,17 @@ export interface MullvadServer {
    */
   stboot: true
 
-  /** The public key to access the server.
-   *
-   * This should only defined for servers of *type* `wireguard`.
-   *
-   * @example "abx3jjkKD+7abroGzeELm4Esa4bESJV72Fm9Tp+YqAE="
-   */
-  pubkey?: string
-
   /** The port used for multi-hopping.
    *
    * @example 3295
    */
   multihop_port?: number
 
-  /** The name of the SOCKS5 relay to connect to.
-   *
-   * This should only defined for servers of *type* `wireguard`.
-   *
-   * @example "us-slc-wg-socks5-106.relays.mullvad.net"
-   */
-  socks_name?: `${string}.relays.mullvad.net`
-
-  /** The port to access the SOCKS5 proxy.
-   *
-   * This is currently port 1080 for all connections.
-   *
-   * <https://mullvad.net/en/help/socks5-proxy>
-   *
-   * This should only defined for servers of *type* `wireguard`.
-   *
-   * @example 1080
-   */
-  socks_port?: 1080
-
-  /** Whether or not the relay supports DAITA.
-   *
-   * DAITA stands for "Defense against AI-guided Traffic Analysis".
-   *
-   * "DAITA hides patterns in your encrypted VPN traffic. If anyone is monitoring
-   * your connection, this makes it significantly harder for them to identify what
-   * websites you are visiting. It does this by carefully adding network noise and
-   * making all network packets the same size."
-   *
-   * This seems to be an unreleased feature; no servers currently support DAITA.
-   *
-   * <https://github.com/mullvad/mullvadvpn-app/blob/0eb0832/gui/locales/messages.pot#L1999>
-   *
-   * This should only defined for servers of *type* `wireguard`.
-   *
-   * @example false
-   */
-  daita?: boolean
-
-  /** The v2Ray IP address for a given server.
-   *
-   * This should only defined for servers of *type* `bridge`.
-   *
-   * The last set of numbers should be different than *ipv4_addr_in*.
-   *
-   * <https://www.v2ray.com/en/index.html>
-   * <https://github.com/v2fly/v2ray-core>
-   *
-   * @example "146.70.141.155"
-   */
-  ipv4_v2ray?: string
-
-  /** The SSH fingerprint in SHA256 for the v2Ray server.
-   *
-   * This should only defined for servers of *type* `bridge`.
-   *
-   * @example "SHA256:wEmga6H8w6oCOz8s8YGzQs2WaGSPTFBEydyLuCAgHnE"
-   */
-  ssh_fingerprint_sha256?: `SHA256:${string}`
-
-  /** The SSH fingerprint in MD5 for the v2Ray server.
-   *
-   * This should only defined for servers of *type* `bridge`.
-   *
-   * @example "MD5:57:33:cb:32:c5:01:df…0b:ad:e7:b7:3a:98:9f:68"
-   */
-  ssh_fingerprint_md5?: `MD5:${string}`
-
   /** What type of connection the given server is.
    *
    * @example "wireguard"
    */
-  type: 'wireguard' | 'openvpn' | 'bridge'
+  type: string
 
   /** An array of status messages for the given server.
    *
@@ -223,3 +147,79 @@ export interface MullvadStatusMessage {
    */
   message: string
 }
+
+export interface IMullvadServerWireguard extends IMullvadServer {
+  type: 'wireguard'
+
+  /** The public key to access the server.
+   *
+   * @example "abx3jjkKD+7abroGzeELm4Esa4bESJV72Fm9Tp+YqAE="
+   */
+  pubkey: string
+
+  /** The name of the SOCKS5 relay to connect to.
+   *
+   * @example "us-slc-wg-socks5-106.relays.mullvad.net"
+   */
+  socks_name: `${string}.relays.mullvad.net`
+
+  /** The port to access the SOCKS5 proxy.
+   *
+   * This is currently port 1080 for all connections.
+   *
+   * <https://mullvad.net/en/help/socks5-proxy>
+   *
+   * @example 1080
+   */
+  socks_port: 1080
+
+  /** Whether or not the relay supports DAITA.
+   *
+   * DAITA stands for "Defense against AI-guided Traffic Analysis".
+   *
+   * "DAITA hides patterns in your encrypted VPN traffic. If anyone is monitoring
+   * your connection, this makes it significantly harder for them to identify what
+   * websites you are visiting. It does this by carefully adding network noise and
+   * making all network packets the same size."
+   *
+   * This seems to be an unreleased feature; no servers currently support DAITA.
+   *
+   * <https://github.com/mullvad/mullvadvpn-app/blob/0eb0832/gui/locales/messages.pot#L1999>
+   *
+   * @example false
+   */
+  daita: boolean
+}
+
+interface IMullvadServerBridge extends IMullvadServer {
+  type: 'bridge'
+
+  /** The v2Ray IP address for a given server.
+   *
+   * The last set of numbers should be different than *ipv4_addr_in*.
+   *
+   * <https://www.v2ray.com/en/index.html>
+   * <https://github.com/v2fly/v2ray-core>
+   *
+   * @example "146.70.141.155"
+   */
+  ipv4_v2ray: string
+
+  /** The SSH fingerprint in SHA256 for the v2Ray server.
+   *
+   * @example "SHA256:wEmga6H8w6oCOz8s8YGzQs2WaGSPTFBEydyLuCAgHnE"
+   */
+  ssh_fingerprint_sha256: `SHA256:${string}`
+
+  /** The SSH fingerprint in MD5 for the v2Ray server.
+   *
+   * @example "MD5:57:33:cb:32:c5:01:df…0b:ad:e7:b7:3a:98:9f:68"
+   */
+  ssh_fingerprint_md5: `MD5:${string}`
+}
+
+interface IMullvadServerOpenVpn extends IMullvadServer {
+  type: 'openvpn'
+}
+
+export type MullvadServer = IMullvadServerWireguard | IMullvadServerBridge | IMullvadServerOpenVpn
