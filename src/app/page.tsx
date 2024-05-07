@@ -77,10 +77,10 @@ export default function RootPage (): React.ReactElement {
 
       {browser.contextualIdentities === undefined && <p className="p-4"><strong className="text-orange">WARNING:</strong> Go to <code className="text-cyan">about:config</code> and set <code className="text-blue">privacy.userContext.enabled</code> to <code className="text-red">true</code>, then restart your browser. Otherwise this extension will not work!</p>}
 
-      <div className="grid grid-cols-4">
+      <div className="mx-0.5 grid grid-cols-4">
         {locations.map(location => {
           return (
-            <Button key={location.name} className='bg-pink' onClick={addTabWithLocation} title={location.name}>{location.name}</Button>
+            <Button key={location.name} className='m-0.5' onClick={addTabWithLocation} title={location.name}>{location.name}</Button>
           )
         })}
       </div>
