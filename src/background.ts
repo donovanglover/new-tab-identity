@@ -1,17 +1,9 @@
 import { fetchMullvad } from './lib/fetchMullvad'
 import type { ProxyInfo } from './types/ProxyInfo'
-import { storage } from './types/StorageAll'
+import { defaultStorage } from './types/StorageAll'
 
-storage.sync = { ...storage.sync, ...await browser.storage.sync.get(null) }
-storage.local = { ...storage.local, ...await browser.storage.local.get(null) }
-
-if (storage.sync.provider === 'mullvad') {
-  if (storage.local.servers.length === 0) {
-    storage.local.servers = await fetchMullvad()
-
-    await browser.storage.local.set({ servers: storage.local.servers })
-  }
-}
+await browser.storage.sync.set({ ...defaultStorage.sync, ...await browser.storage.sync.get(null) })
+await browser.storage.local.set({ ...defaultStorage.local, ...await browser.storage.local.get(null) })
 
 browser.proxy.onRequest.addListener(
   async (requestInfo): Promise<ProxyInfo> => {
@@ -26,7 +18,7 @@ browser.proxy.onRequest.addListener(
     }
 
     if (containerId === 'firefox-default') {
-      return storage.sync.blockDefault
+      return (await browser.storage.local.get('blockDefault')).blockDefault === true
         ? {
             type: 'http',
             host: '127.0.0.1',
@@ -53,7 +45,7 @@ browser.proxy.onRequest.addListener(
 )
 
 browser.proxy.onError.addListener(error => {
-  console.error(`new-tab-identity(proxy-error): ${error.message}`)
+  throw error
 })
 
 browser.tabs.onCreated.addListener(tab => {
