@@ -60,10 +60,7 @@ export default function RootPage (): React.ReactElement {
         <Button className="ml-2" onClick={removeInactiveContainers} title="Delete all containers"><LuX /></Button>
       </div>
 
-      {browser.contextualIdentities === undefined
-        ? <p>Go to <code>about:config</code> and set <code>privacy.userContext.enabled</code> to <code>true</code>, then restart your browser.</p>
-        : <p>All good to go.</p>
-      }
+      {browser.contextualIdentities === undefined && <p className="p-4"><strong className="text-orange">WARNING:</strong> Go to <code className="text-cyan">about:config</code> and set <code className="text-blue">privacy.userContext.enabled</code> to <code className="text-red">true</code>, then restart your browser. Otherwise this extension will not work!</p>}
 
       <div className="grid grid-cols-4">
         {locations.map(location => {
