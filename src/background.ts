@@ -58,3 +58,22 @@ browser.proxy.onError.addListener(error => {
 browser.tabs.onCreated.addListener(tab => {
   console.log(tab)
 })
+
+browser.contextMenus.create({
+  id: 'new-tab-identity',
+  title: 'Open with New Identity',
+  contexts: [
+    'link',
+    'page',
+    'tab'
+  ]
+})
+
+browser.contextMenus.onClicked.addListener(async info => {
+  if (info.menuItemId !== 'new-tab-identity') return
+
+  await browser.tabs.create({
+    url: info.linkUrl ?? info.pageUrl,
+    cookieStoreId: 'firefox-default'
+  })
+})
