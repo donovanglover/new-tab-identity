@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
+import type { ProxyInfo } from './types/ProxyInfo'
 
 const blockDefault = false
 
 browser.proxy.onRequest.addListener(
-  async requestInfo => {
+  async (requestInfo): Promise<ProxyInfo> => {
     const containerId = requestInfo.cookieStoreId
 
     if (containerId === undefined) {
