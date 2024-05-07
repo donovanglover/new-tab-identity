@@ -6,10 +6,18 @@ await browser.storage.sync.set({ ...defaultStorage.sync, ...await browser.storag
 await browser.storage.local.set({ ...defaultStorage.local, ...await browser.storage.local.get(null) })
 
 if (Date.now() - (await browser.storage.local.get('lastUpdated') as Pick<StorageLocal, 'lastUpdated'>).lastUpdated > 60 * 60 * 1000) {
-  await browser.storage.local.set({
-    servers: await fetchMullvad(),
-    lastUpdated: Date.now()
-  })
+  try {
+    const servers = await fetchMullvad()
+
+    await browser.storage.local.set({
+      servers,
+      lastUpdated: Date.now()
+    })
+  } catch {
+    await browser.storage.local.set({
+      lastUpdated: 0
+    })
+  }
 }
 
 browser.proxy.onRequest.addListener(
