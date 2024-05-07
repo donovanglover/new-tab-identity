@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import { LuRefreshCw, LuX } from 'react-icons/lu'
 import Button from '../components/Button'
 import { fetchMullvad } from '../lib/fetchMullvad'
@@ -9,11 +10,19 @@ const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink',
 
 async function updateServerList (): Promise<void> {
   if (Date.now() - (await browser.storage.local.get('lastUpdated') as Pick<StorageLocal, 'lastUpdated'>).lastUpdated > 60 * 1000) {
+    const servers = await fetchMullvad()
+
     await browser.storage.local.set({
-      servers: await fetchMullvad(),
+      servers,
       lastUpdated: Date.now()
     })
+
+    toast.success(`Updated server list with ${servers.length} servers.`)
+
+    return
   }
+
+  toast.error('Server list is already up to date!')
 }
 
 let i = 0
@@ -32,14 +41,18 @@ async function addTabWithLocation (event: React.MouseEvent<HTMLElement>): Promis
 
 async function removeInactiveContainers (): Promise<void> {
   const containers = await browser.contextualIdentities.query({})
+  let numRemoved = 0
 
   for (const container of containers) {
     const tabsWithContainer = await browser.tabs.query({ cookieStoreId: container.cookieStoreId })
 
     if (tabsWithContainer.length === 0) {
       await browser.contextualIdentities.remove(container.cookieStoreId)
+      numRemoved++
     }
   }
+
+  toast.success(`Removed ${numRemoved} inactive containers.`)
 }
 
 export default function RootPage (): React.ReactElement {
@@ -69,6 +82,7 @@ export default function RootPage (): React.ReactElement {
           )
         })}
       </div>
+      <Toaster />
     </div>
   )
 }
