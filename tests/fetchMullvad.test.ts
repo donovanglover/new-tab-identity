@@ -20,9 +20,93 @@ describe('fetchMullvad()', async () => {
     })
   })
 
+  it('should return the country_code for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('country_code')
+    })
+  })
+
+  it('should return the country_name for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('country_name')
+    })
+  })
+
+  it('should return the city_code for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('city_code')
+    })
+  })
+
+  it('should return the city_name for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('city_name')
+    })
+  })
+
   it('should return the socks_name for servers', () => {
     servers.forEach(server => {
       expect(server).toHaveProperty('socks_name')
+    })
+  })
+
+  it('should return the fqdn for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('fqdn')
+    })
+  })
+
+  it('should return the active state for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('active')
+    })
+  })
+
+  it('should return the owned state for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('owned')
+    })
+  })
+
+  it('should return the provider for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('provider')
+    })
+  })
+
+  it('should return the ipv4_addr_in for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('ipv4_addr_in')
+    })
+  })
+
+  it('should return the ipv6_addr_in for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('ipv6_addr_in')
+    })
+  })
+
+  it('should return the network_port_speed for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('network_port_speed')
+    })
+  })
+
+  it('should return the stboot for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('stboot')
+    })
+  })
+
+  it('should return the multihop_port for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('multihop_port')
+    })
+  })
+
+  it('should return the status_messages for servers', () => {
+    servers.forEach(server => {
+      expect(server).toHaveProperty('status_messages')
     })
   })
 
