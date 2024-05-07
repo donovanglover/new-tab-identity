@@ -87,7 +87,7 @@ interface IMullvadServer {
    * @example "2606:2e00:0:b9::f501"
    * @example "2001:ac8:84:3::1f"
    */
-  ipv6_addr_in: string | null
+  ipv6_addr_in: string
 
   /** How fast the server is, measured in Gbps.
    *
@@ -113,12 +113,6 @@ interface IMullvadServer {
    * @example true
    */
   stboot: true
-
-  /** The port used for multi-hopping.
-   *
-   * @example 3295
-   */
-  multihop_port?: number
 
   /** What type of connection the given server is.
    *
@@ -157,6 +151,12 @@ export interface IMullvadServerWireguard extends IMullvadServer {
    */
   pubkey: string
 
+  /** The port used for multi-hopping.
+   *
+   * @example 3295
+   */
+  multihop_port: number
+
   /** The name of the SOCKS5 relay to connect to.
    *
    * @example "us-slc-wg-socks5-106.relays.mullvad.net"
@@ -191,7 +191,7 @@ export interface IMullvadServerWireguard extends IMullvadServer {
   daita: boolean
 }
 
-interface IMullvadServerBridge extends IMullvadServer {
+interface IMullvadServerBridge extends Omit<IMullvadServer, 'ipv6_addr_in'> {
   type: 'bridge'
 
   /** The v2Ray IP address for a given server.
@@ -216,6 +216,12 @@ interface IMullvadServerBridge extends IMullvadServer {
    * @example "MD5:57:33:cb:32:c5:01:df…0b:ad:e7:b7:3a:98:9f:68"
    */
   ssh_fingerprint_md5: `MD5:${string}`
+
+  /** Bridge servers don't have IPv6 addresses you connect to, so this will always return null.
+   *
+   * @example null
+   */
+  ipv6_addr_in: null
 }
 
 interface IMullvadServerOpenVpn extends IMullvadServer {
