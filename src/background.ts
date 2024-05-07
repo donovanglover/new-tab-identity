@@ -20,41 +20,28 @@ if (Date.now() - (await browser.storage.local.get('lastUpdated') as Pick<Storage
   }
 }
 
-browser.proxy.onRequest.addListener(
-  async (requestInfo): Promise<ProxyInfo> => {
-    const containerId = requestInfo.cookieStoreId
+browser.proxy.onRequest.addListener(async (requestInfo): Promise<ProxyInfo> => {
+  const containerId = requestInfo.cookieStoreId
 
-    if (containerId === undefined) {
-      return {
-        type: 'direct'
-      }
-    }
-
-    if (containerId === 'firefox-default') {
-      return (await browser.storage.sync.get('blockDefault') as Pick<StorageSync, 'blockDefault'>).blockDefault
-        ? {
-            type: 'http',
-            host: '127.0.0.1',
-            port: 65535
-          }
-        : {
-            type: 'direct'
-          }
-    }
-
-    const context = await browser.contextualIdentities.get(containerId)
-
-    return {
-      type: 'socks',
-      host: context.name,
-      proxyDNS: true,
-      port: 1080
-    }
-  },
-  {
-    urls: ['<all_urls>']
+  if (containerId === undefined) {
+    return { type: 'direct' }
   }
-)
+
+  if (containerId === 'firefox-default') {
+    return (await browser.storage.sync.get('blockDefault') as Pick<StorageSync, 'blockDefault'>).blockDefault
+      ? { type: 'http', host: '127.0.0.1', port: 65535 }
+      : { type: 'direct' }
+  }
+
+  const context = await browser.contextualIdentities.get(containerId)
+
+  return {
+    type: 'socks',
+    host: context.name,
+    proxyDNS: true,
+    port: 1080
+  }
+}, { urls: ['<all_urls>'] })
 
 browser.proxy.onError.addListener(error => {
   throw error
