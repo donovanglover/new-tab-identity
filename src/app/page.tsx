@@ -9,14 +9,18 @@ async function updateServerList (): Promise<void> {
   const servers = await fetchMullvad()
 
   for (const server of servers) {
-    const container = await browser.contextualIdentities.create({
-      name: server.socks_name,
-      color: colors[containers.length % colors.length],
-      icon: 'circle'
-    })
-
-    containers.push(container)
+    await addContainer(server.socks_name)
   }
+}
+
+async function addContainer (name: string): Promise<void> {
+  const container = await browser.contextualIdentities.create({
+    name,
+    color: colors[containers.length % colors.length],
+    icon: 'circle'
+  })
+
+  containers.push(container)
 }
 
 async function deleteContainer (): Promise<void> {
@@ -44,11 +48,13 @@ export default function RootPage (): React.ReactElement {
   }, [containers])
 
   return (
-    <div className="p-4">
-      <h1 className='text-center text-4xl font-bold'>New Tab Identity</h1>
+    <div>
+      <h1 className='m-4 text-center text-4xl font-bold'>New Tab Identity</h1>
 
-      <Button onClick={updateServerList}>Update server list</Button>
-      <Button onClick={deleteContainer}>Delete all containers</Button>
+      <div className="absolute right-0 top-0 pr-2 pt-4">
+        <Button onClick={updateServerList} title="Update server list">U</Button>
+        <Button className="ml-2" onClick={deleteContainer} title="Delete all containers">X</Button>
+      </div>
 
       {browser.contextualIdentities === undefined
         ? <p>Go to <code>about:config</code> and set <code>privacy.userContext.enabled</code> to <code>true</code>, then restart your browser.</p>
