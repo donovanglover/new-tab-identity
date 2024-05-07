@@ -19,7 +19,7 @@ async function updateServerList (): Promise<void> {
     })
 
     toast.dismiss(loading)
-    toast.success(`Updated server list with ${servers.length} servers.`)
+    toast.success(`Updated server list with ${servers.length} ${servers.length === 1 ? 'server' : 'servers'}.`)
 
     return
   }
@@ -54,7 +54,7 @@ async function removeInactiveContainers (): Promise<void> {
     }
   }
 
-  toast.success(`Removed ${numRemoved} inactive containers.`)
+  toast.success(`Removed ${numRemoved} inactive ${numRemoved === 1 ? 'container' : 'containers'}.`)
 }
 
 export default function RootPage (): React.ReactElement {
