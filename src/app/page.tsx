@@ -6,39 +6,40 @@ import { filterByLocation, type ServerLocation } from '../lib/filterByLocation'
 import { type StorageLocal } from '../types/StorageAll'
 
 const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple']
-const containers: browser.contextualIdentities.ContextualIdentity[] = []
 
 async function updateServerList (): Promise<void> {
-  const servers = await fetchMullvad()
-
-  for (const server of servers) {
-    await addContainer(server.socks_name)
+  if (Date.now() - (await browser.storage.local.get('lastUpdated') as Pick<StorageLocal, 'lastUpdated'>).lastUpdated > 60 * 1000) {
+    await browser.storage.local.set({
+      servers: await fetchMullvad(),
+      lastUpdated: Date.now()
+    })
   }
 }
 
-async function addContainer (name: string): Promise<void> {
+let i = 0
+async function addTabWithLocation (event: React.MouseEvent<HTMLElement>): Promise<void> {
   const container = await browser.contextualIdentities.create({
-    name,
-    color: colors[containers.length % colors.length],
+    name: (event.target as HTMLButtonElement).innerText,
+    color: colors[i++ % colors.length],
     icon: 'circle'
   })
 
-  containers.push(container)
-}
-
-async function deleteContainer (): Promise<void> {
-  const contexts = await browser.contextualIdentities.query({})
-
-  for (const context of contexts) {
-    await browser.contextualIdentities.remove(context.cookieStoreId)
-  }
-}
-
-async function newTabWithContainer (cookieStoreId: string): Promise<void> {
   await browser.tabs.create({
     url: 'about:blank',
-    cookieStoreId
+    cookieStoreId: container.cookieStoreId
   })
+}
+
+async function removeInactiveContainers (): Promise<void> {
+  const containers = await browser.contextualIdentities.query({})
+
+  for (const container of containers) {
+    const tabsWithContainer = await browser.tabs.query({ cookieStoreId: container.cookieStoreId })
+
+    if (tabsWithContainer.length === 0) {
+      await browser.contextualIdentities.remove(container.cookieStoreId)
+    }
+  }
 }
 
 export default function RootPage (): React.ReactElement {
@@ -56,7 +57,7 @@ export default function RootPage (): React.ReactElement {
 
       <div className="absolute right-0 top-0 p-4">
         <Button onClick={updateServerList} title="Update server list"><LuRefreshCw /></Button>
-        <Button className="ml-2" onClick={deleteContainer} title="Delete all containers"><LuX /></Button>
+        <Button className="ml-2" onClick={removeInactiveContainers} title="Delete all containers"><LuX /></Button>
       </div>
 
       {browser.contextualIdentities === undefined
@@ -67,7 +68,7 @@ export default function RootPage (): React.ReactElement {
       <div className="grid grid-cols-4">
         {locations.map(location => {
           return (
-            <div key={location.name} className='bg-pink'>{location.name}</div>
+            <Button key={location.name} className='bg-pink' onClick={addTabWithLocation} title={location.name}>{location.name}</Button>
           )
         })}
       </div>
