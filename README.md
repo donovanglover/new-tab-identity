@@ -1,4 +1,4 @@
-# new-tab-identity
+# New Tab Identity
 
 Browse the web from multiple VPN locations simultaneously. Goes well with [Librewolf](https://librewolf.net/).
 
