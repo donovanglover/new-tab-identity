@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { LuRefreshCw, LuX } from 'react-icons/lu'
 import Button from '../components/Button'
 import { fetchMullvad } from '../lib/fetchMullvad'
+import { filterByLocation, type ServerLocation } from '../lib/filterByLocation'
+import { type StorageLocal } from '../types/StorageAll'
 
 const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple']
 const containers: browser.contextualIdentities.ContextualIdentity[] = []
@@ -40,13 +42,13 @@ async function newTabWithContainer (cookieStoreId: string): Promise<void> {
 }
 
 export default function RootPage (): React.ReactElement {
-  const [containers, setContainers] = useState<browser.contextualIdentities.ContextualIdentity[]>()
+  const [locations, setLocations] = useState<ServerLocation[]>([])
 
   useEffect(() => {
-    browser.contextualIdentities.query({}).then((containers) => {
-      setContainers(containers)
-    }).catch(e => { console.warn(e) })
-  }, [containers])
+    void browser.storage.local.get('servers').then(result => {
+      setLocations(filterByLocation((result as Pick<StorageLocal, 'servers'>).servers))
+    })
+  }, [locations])
 
   return (
     <div>
@@ -62,15 +64,13 @@ export default function RootPage (): React.ReactElement {
         : <p>All good to go.</p>
       }
 
-      {containers?.map(container => {
-        return (
-          <p style={{ color: container.colorCode }} key={container.cookieStoreId}>
-            <span>({container.cookieStoreId.replace('firefox-container-', '')})</span>
-            {' '}
-            {container.name}
-          </p>
-        )
-      })}
+      <div className="grid grid-cols-4">
+        {locations.map(location => {
+          return (
+            <div key={location.name} className='bg-pink'>{location.name}</div>
+          )
+        })}
+      </div>
     </div>
   )
 }
