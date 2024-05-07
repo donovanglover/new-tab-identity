@@ -17,8 +17,6 @@ browser.proxy.onRequest.addListener(
     const containerId = requestInfo.cookieStoreId
 
     if (containerId === undefined) {
-      console.warn('Got unknown container, which should never happen.')
-
       return {
         type: 'direct'
       }
@@ -37,7 +35,6 @@ browser.proxy.onRequest.addListener(
     }
 
     const context = await browser.contextualIdentities.get(containerId)
-    console.log(context)
 
     return {
       type: 'socks',
