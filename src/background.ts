@@ -2,21 +2,16 @@ import { fetchMullvad } from './lib/fetchMullvad'
 import type { ProxyInfo } from './types/ProxyInfo'
 import { storage } from './types/StorageAll'
 
-void browser.storage.sync.get(null).then(sync => {
-  storage.sync = { ...storage.sync, ...sync }
+storage.sync = { ...storage.sync, ...await browser.storage.sync.get(null) }
+storage.local = { ...storage.local, ...await browser.storage.local.get(null) }
 
-  if (storage.sync.provider === 'mullvad') {
-    void browser.storage.local.get(null).then(local => {
-      if (local.servers === undefined) {
-        void fetchMullvad().then(servers => {
-          void browser.storage.local.set({
-            servers
-          })
-        })
-      }
-    })
+if (storage.sync.provider === 'mullvad') {
+  if (storage.local.servers.length === 0) {
+    storage.local.servers = await fetchMullvad()
+
+    await browser.storage.local.set({ servers: storage.local.servers })
   }
-})
+}
 
 browser.proxy.onRequest.addListener(
   async (requestInfo): Promise<ProxyInfo> => {
