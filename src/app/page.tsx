@@ -10,6 +10,7 @@ const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink',
 
 async function updateServerList (): Promise<void> {
   if (Date.now() - (await browser.storage.local.get('lastUpdated') as Pick<StorageLocal, 'lastUpdated'>).lastUpdated > 60 * 1000) {
+    const loading = toast.loading('Updating server list...')
     const servers = await fetchMullvad()
 
     await browser.storage.local.set({
@@ -17,6 +18,7 @@ async function updateServerList (): Promise<void> {
       lastUpdated: Date.now()
     })
 
+    toast.dismiss(loading)
     toast.success(`Updated server list with ${servers.length} servers.`)
 
     return
