@@ -1,20 +1,11 @@
 import { fetchMullvad } from './lib/fetchMullvad'
 import type { ProxyInfo } from './types/ProxyInfo'
+import { storage } from './types/StorageAll'
 
 void browser.storage.sync.get(null).then(sync => {
-  if (sync.provider === undefined) {
-    void browser.storage.sync.set({
-      provider: 'mullvad'
-    })
-  }
+  storage.sync = { ...storage.sync, ...sync }
 
-  if (sync.blockDefault === undefined) {
-    void browser.storage.sync.set({
-      blockDefault: false
-    })
-  }
-
-  if (sync.provider === undefined || sync.provider === 'mullvad') {
+  if (storage.sync.provider === 'mullvad') {
     void browser.storage.local.get(null).then(local => {
       if (local.servers === undefined) {
         void fetchMullvad().then(servers => {
@@ -40,7 +31,7 @@ browser.proxy.onRequest.addListener(
     }
 
     if (containerId === 'firefox-default') {
-      return blockDefault
+      return storage.sync.blockDefault
         ? {
             type: 'http',
             host: '127.0.0.1',
