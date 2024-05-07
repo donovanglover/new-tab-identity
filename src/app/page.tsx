@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { LuRefreshCw, LuX } from 'react-icons/lu'
 import Button from '../components/Button'
 import { fetchMullvad } from '../lib/fetchMullvad'
 
@@ -51,9 +52,9 @@ export default function RootPage (): React.ReactElement {
     <div>
       <h1 className='m-4 text-center text-4xl font-bold'>New Tab Identity</h1>
 
-      <div className="absolute right-0 top-0 pr-2 pt-4">
-        <Button onClick={updateServerList} title="Update server list">U</Button>
-        <Button className="ml-2" onClick={deleteContainer} title="Delete all containers">X</Button>
+      <div className="absolute right-0 top-0 p-4">
+        <Button onClick={updateServerList} title="Update server list"><LuRefreshCw /></Button>
+        <Button className="ml-2" onClick={deleteContainer} title="Delete all containers"><LuX /></Button>
       </div>
 
       {browser.contextualIdentities === undefined
@@ -67,7 +68,6 @@ export default function RootPage (): React.ReactElement {
             <span>({container.cookieStoreId.replace('firefox-container-', '')})</span>
             {' '}
             {container.name}
-            <Button onClick={deleteContainer}>Delete</Button>
           </p>
         )
       })}
