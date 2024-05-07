@@ -23,7 +23,6 @@
   "permissions": [
     "contextualIdentities",
     "cookies",
-    "theme",
     "proxy",
     "<all_urls>"
   ],
