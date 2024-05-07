@@ -1,16 +1,37 @@
 import { useEffect, useState } from 'react'
 import Button from '../components/Button'
-import { BrowserContainers } from '../lib/BrowserContainers'
 import { fetchMullvad } from '../lib/fetchMullvad'
 
-function updateServerList (): void {
-  const containers = new BrowserContainers()
+const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple']
+const containers: browser.contextualIdentities.ContextualIdentity[] = []
 
-  fetchMullvad().then(servers => {
-    for (const server of servers) {
-      void containers.add(server.socks_name)
-    }
-  }).catch(e => { console.warn(e) })
+async function updateServerList (): Promise<void> {
+  const servers = await fetchMullvad()
+
+  for (const server of servers) {
+    const container = await browser.contextualIdentities.create({
+      name: server.socks_name,
+      color: colors[containers.length % colors.length],
+      icon: 'circle'
+    })
+
+    containers.push(container)
+  }
+}
+
+async function deleteContainer (): Promise<void> {
+  const contexts = await browser.contextualIdentities.query({})
+
+  for (const context of contexts) {
+    await browser.contextualIdentities.remove(context.cookieStoreId)
+  }
+}
+
+async function newTabWithContainer (cookieStoreId: string): Promise<void> {
+  await browser.tabs.create({
+    url: 'about:blank',
+    cookieStoreId
+  })
 }
 
 export default function RootPage (): React.ReactElement {
@@ -22,13 +43,12 @@ export default function RootPage (): React.ReactElement {
     }).catch(e => { console.warn(e) })
   }, [containers])
 
-  function deleteContainer (): void {}
-
   return (
     <div className="p-4">
       <h1 className='text-center text-4xl font-bold'>New Tab Identity</h1>
 
       <Button onClick={updateServerList}>Update server list</Button>
+      <Button onClick={deleteContainer}>Delete all containers</Button>
 
       {browser.contextualIdentities === undefined
         ? <p>Go to <code>about:config</code> and set <code>privacy.userContext.enabled</code> to <code>true</code>, then restart your browser.</p>
