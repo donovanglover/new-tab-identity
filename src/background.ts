@@ -1,6 +1,6 @@
 import { fetchMullvad } from './lib/fetchMullvad'
 import type { ProxyInfo } from './types/ProxyInfo'
-import { defaultStorage, type StorageLocal } from './types/StorageAll'
+import { defaultStorage, type StorageLocal, type StorageSync } from './types/StorageAll'
 
 await browser.storage.sync.set({ ...defaultStorage.sync, ...await browser.storage.sync.get(null) })
 await browser.storage.local.set({ ...defaultStorage.local, ...await browser.storage.local.get(null) })
@@ -25,7 +25,7 @@ browser.proxy.onRequest.addListener(
     }
 
     if (containerId === 'firefox-default') {
-      return (await browser.storage.local.get('blockDefault')).blockDefault === true
+      return (await browser.storage.sync.get('blockDefault') as Pick<StorageSync, 'blockDefault'>).blockDefault
         ? {
             type: 'http',
             host: '127.0.0.1',
