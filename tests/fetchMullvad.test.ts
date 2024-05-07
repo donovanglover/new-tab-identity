@@ -129,4 +129,12 @@ describe('fetchMullvad()', async () => {
       })
     })
   })
+
+  describe('active', () => {
+    it('should not return servers that are inactive', () => {
+      servers.forEach(server => {
+        expect(server.active).toBeTruthy()
+      })
+    })
+  })
 })
