@@ -53,7 +53,7 @@ export default function RootPage (): React.ReactElement {
 
   return (
     <div>
-      <h1 className='m-4 text-center text-4xl font-bold'>New Tab Identity</h1>
+      <h1 className='p-4 text-center text-4xl font-bold'>New Tab Identity</h1>
 
       <div className="absolute right-0 top-0 p-4">
         <Button onClick={updateServerList} title="Update server list"><LuRefreshCw /></Button>
