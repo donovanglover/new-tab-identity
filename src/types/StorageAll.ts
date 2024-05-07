@@ -7,6 +7,7 @@ export interface StorageSync {
 
 export interface StorageLocal {
   servers: IMullvadServerWireguard[]
+  lastUpdated: number
 }
 
 export interface StorageAll {
@@ -21,6 +22,7 @@ export const defaultStorage: StorageAll = {
   },
 
   local: {
-    servers: []
+    servers: [],
+    lastUpdated: 0
   }
 }

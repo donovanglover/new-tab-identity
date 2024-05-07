@@ -1,9 +1,16 @@
 import { fetchMullvad } from './lib/fetchMullvad'
 import type { ProxyInfo } from './types/ProxyInfo'
-import { defaultStorage } from './types/StorageAll'
+import { defaultStorage, type StorageLocal } from './types/StorageAll'
 
 await browser.storage.sync.set({ ...defaultStorage.sync, ...await browser.storage.sync.get(null) })
 await browser.storage.local.set({ ...defaultStorage.local, ...await browser.storage.local.get(null) })
+
+if (Date.now() - (await browser.storage.local.get('lastUpdated') as Pick<StorageLocal, 'lastUpdated'>).lastUpdated > 60 * 60 * 1000) {
+  await browser.storage.local.set({
+    servers: await fetchMullvad(),
+    lastUpdated: Date.now()
+  })
+}
 
 browser.proxy.onRequest.addListener(
   async (requestInfo): Promise<ProxyInfo> => {
