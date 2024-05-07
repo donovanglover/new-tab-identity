@@ -1,18 +1,13 @@
 import { useEffect, useState } from 'react'
 import Button from '../components/Button'
 import { BrowserContainers } from '../lib/BrowserContainers'
-import { fetchJSON } from '../lib/fetchJSON'
-import { MULLVAD_PUBLIC_API_URL } from '../lib/globals'
-import type { IMullvadServerWireguard, MullvadServer } from '../types/MullvadServer'
+import { fetchMullvad } from '../lib/fetchMullvad'
 
 function updateServerList (): void {
   const containers = new BrowserContainers()
 
-  fetchJSON(MULLVAD_PUBLIC_API_URL).then(result => {
-    const servers: MullvadServer[] = result
-    const relays = servers.filter(server => server.type === 'wireguard') as IMullvadServerWireguard[]
-
-    for (const server of relays) {
+  fetchMullvad().then(servers => {
+    for (const server of servers) {
       void containers.add(server.socks_name)
     }
   }).catch(e => { console.warn(e) })
