@@ -15,10 +15,19 @@ export default defineConfig({
         app: resolve(__dirname, './src/index.html'),
         background: resolve(__dirname, './src/background.ts')
       },
+
       output: {
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
         assetFileNames: '[name].[ext]'
+      },
+
+      onwarn (warning, warn) {
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+          return
+        }
+
+        warn(warning)
       }
     }
   },
