@@ -55,10 +55,6 @@ browser.proxy.onError.addListener(error => {
   throw error
 })
 
-browser.tabs.onCreated.addListener(tab => {
-  console.log(tab)
-})
-
 browser.contextMenus.create({
   id: 'new-tab-identity',
   title: 'Open with New Identity',
