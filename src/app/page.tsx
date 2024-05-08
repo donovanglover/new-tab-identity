@@ -65,7 +65,7 @@ async function addTabWithLocation (event: React.MouseEvent<HTMLElement>): Promis
   })
 
   await browser.tabs.create({
-    url: 'about:blank',
+    url: 'https://am.i.mullvad.net/connected',
     cookieStoreId: container.cookieStoreId
   })
 }
