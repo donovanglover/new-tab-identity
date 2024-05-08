@@ -39,3 +39,4 @@ Run `npm ci` to do a clean install and use the `lint` and `test` scripts to chec
 - [ ] Add option to customize colors
 - [ ] Add option to customize icons
 - [ ] Add option to customize container name format
+- [ ] Add option to customize context menu

@@ -59,6 +59,9 @@ browser.contextMenus.create({
   id: 'new-tab-identity',
   title: 'Open with New Identity',
   contexts: [
+    'image',
+    'audio',
+    'video',
     'link',
     'page',
     'tab'
@@ -72,6 +75,6 @@ browser.contextMenus.onClicked.addListener(async info => {
   const server = servers[Math.floor(Math.random() * servers.length)]
 
   await newTabWithServer(server, {
-    url: info.linkUrl ?? info.pageUrl
+    url: info.srcUrl ?? info.linkUrl ?? info.pageUrl
   })
 })
