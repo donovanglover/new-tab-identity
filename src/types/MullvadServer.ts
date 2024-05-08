@@ -229,5 +229,3 @@ interface IMullvadServerOpenVpn extends IMullvadServer {
 }
 
 export type MullvadServer = IMullvadServerWireguard | IMullvadServerBridge | IMullvadServerOpenVpn
-
-export const isWireguard = (server: MullvadServer): server is IMullvadServerWireguard => server.type === 'wireguard'
