@@ -29,9 +29,13 @@ Run `npm ci` to do a clean install and use the `lint` and `test` scripts to chec
 
 ## Todo
 
-- [x] Warn when trying to delete an identity/container that has active tabs
-  - There is now a button that only deletes containers that don't have associated tabs
-- [x] Remove overflow-y-scroll
-- [x] Cycle between locations for a certain country/city
+- [x] Add button to delete containers that don't have associated tabs
+- [x] Remove `overflow-y: scroll;` from popup
+- [x] Cycle between locations for a certain country
+- [ ] Cycle between locations for a certain city
 - [ ] Warn user if current container is no longer in the list of servers (offline or removed) and therefore can't be proxied
 - [ ] Write logic so it's possible to switch the proxy of an existing container with `browser.contextualIdentities.update()`
+- [ ] Add option to customize new tab (`about:blank`, mullvad status, etc.)
+- [ ] Add option to customize colors
+- [ ] Add option to customize icons
+- [ ] Add option to customize container name format
