@@ -27,7 +27,6 @@ async function updateServerList (): Promise<void> {
   toast.error('Server list is already up to date!')
 }
 
-let i = 0
 async function addTabWithLocation (event: React.MouseEvent<HTMLElement>): Promise<void> {
   const servers = (await browser.storage.local.get('servers') as Pick<StorageLocal, 'servers'>).servers
   const thisLocation = (event.target as HTMLButtonElement).innerText
@@ -36,7 +35,7 @@ async function addTabWithLocation (event: React.MouseEvent<HTMLElement>): Promis
 
   const container = await browser.contextualIdentities.create({
     name: `${randomServer.city_name}, ${randomServer.country_name} (${randomServer.hostname})`,
-    color: colors[i++ % colors.length],
+    color: colors[Math.floor(Math.random() * colors.length)],
     icon: 'circle'
   })
 
