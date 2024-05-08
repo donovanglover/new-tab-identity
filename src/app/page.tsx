@@ -68,6 +68,8 @@ async function addTabWithLocation (event: React.MouseEvent<HTMLElement>): Promis
     url: 'https://am.i.mullvad.net/connected',
     cookieStoreId: container.cookieStoreId
   })
+
+  window.close()
 }
 
 async function removeInactiveContainers (): Promise<void> {
