@@ -4,34 +4,8 @@ import { LuRefreshCw, LuX } from 'react-icons/lu'
 import Button from '../components/Button'
 import { fetchMullvad } from '../lib/fetchMullvad'
 import { filterByLocation, type ServerLocation } from '../lib/filterByLocation'
+import { newTabWithServer } from '../lib/newTabWithServer'
 import { type StorageLocal } from '../types/StorageAll'
-
-const colors = [
-  'blue',
-  'turquoise',
-  'green',
-  'yellow',
-  'orange',
-  'red',
-  'pink',
-  'purple'
-]
-
-const icons = [
-  'fingerprint',
-  'briefcase',
-  'dollar',
-  'cart',
-  'circle',
-  'gift',
-  'vacation',
-  'food',
-  'fruit',
-  'pet',
-  'tree',
-  'chill',
-  'fence'
-]
 
 async function updateServerList (): Promise<void> {
   if (Date.now() - (await browser.storage.local.get('lastUpdated') as Pick<StorageLocal, 'lastUpdated'>).lastUpdated > 60 * 1000) {
@@ -58,16 +32,7 @@ async function addTabWithLocation (event: React.MouseEvent<HTMLElement>): Promis
   const serversFromLocation = servers.filter(server => server.country_name === thisLocation)
   const randomServer = serversFromLocation[Math.floor(Math.random() * serversFromLocation.length)]
 
-  const container = await browser.contextualIdentities.create({
-    name: `${randomServer.city_name}, ${randomServer.country_name} (${randomServer.hostname})`,
-    color: colors[Math.floor(Math.random() * colors.length)],
-    icon: icons[Math.floor(Math.random() * icons.length)]
-  })
-
-  await browser.tabs.create({
-    url: 'https://am.i.mullvad.net/connected',
-    cookieStoreId: container.cookieStoreId
-  })
+  await newTabWithServer(randomServer)
 
   window.close()
 }
