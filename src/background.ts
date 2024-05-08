@@ -1,4 +1,5 @@
 import { fetchMullvad } from './lib/fetchMullvad'
+import { newTabWithServer } from './lib/newTabWithServer'
 import type { ProxyInfo } from './types/ProxyInfo'
 import { defaultStorage, type StorageLocal, type StorageSync } from './types/StorageAll'
 
@@ -67,8 +68,10 @@ browser.contextMenus.create({
 browser.contextMenus.onClicked.addListener(async info => {
   if (info.menuItemId !== 'new-tab-identity') return
 
-  await browser.tabs.create({
-    url: info.linkUrl ?? info.pageUrl,
-    cookieStoreId: 'firefox-default'
+  const servers = (await browser.storage.local.get('servers') as Pick<StorageLocal, 'servers'>).servers
+  const server = servers[Math.floor(Math.random() * servers.length)]
+
+  await newTabWithServer(server, {
+    url: info.linkUrl ?? info.pageUrl
   })
 })

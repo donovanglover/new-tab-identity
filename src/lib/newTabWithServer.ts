@@ -27,7 +27,11 @@ const icons = [
   'fence'
 ]
 
-export async function newTabWithServer (server: IMullvadServerWireguard): Promise<void> {
+interface Options {
+  url?: string
+}
+
+export async function newTabWithServer (server: IMullvadServerWireguard, options: Options = {}): Promise<void> {
   const container = await browser.contextualIdentities.create({
     name: `${server.city_name}, ${server.country_name} (${server.hostname})`,
     color: colors[Math.floor(Math.random() * colors.length)],
@@ -35,7 +39,7 @@ export async function newTabWithServer (server: IMullvadServerWireguard): Promis
   })
 
   await browser.tabs.create({
-    url: 'https://am.i.mullvad.net/connected',
+    url: options.url ?? 'https://am.i.mullvad.net/connected',
     cookieStoreId: container.cookieStoreId
   })
 }
