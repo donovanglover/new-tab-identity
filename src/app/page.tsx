@@ -101,7 +101,7 @@ export default function RootPage (): React.ReactElement {
 
       <div className="absolute right-0 top-0 p-4">
         <Button onClick={updateServerList} title="Update server list"><LuRefreshCw /></Button>
-        <Button className="ml-2" onClick={removeInactiveContainers} title="Delete all containers"><LuX /></Button>
+        <Button className="ml-2" onClick={removeInactiveContainers} title="Delete inactive containers"><LuX /></Button>
       </div>
 
       {browser.contextualIdentities === undefined && <p className="p-4"><strong className="text-orange">WARNING:</strong> Go to <code className="text-cyan">about:config</code> and set <code className="text-blue">privacy.userContext.enabled</code> to <code className="text-red">true</code>, then restart your browser. Otherwise this extension will not work!</p>}
