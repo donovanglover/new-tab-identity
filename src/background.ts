@@ -33,11 +33,18 @@ browser.proxy.onRequest.addListener(async (requestInfo): Promise<ProxyInfo> => {
       : { type: 'direct' }
   }
 
-  const context = await browser.contextualIdentities.get(containerId)
+  const container = await browser.contextualIdentities.get(containerId)
+  const hostname = /\(([^)]+)\)/.exec(container.name)?.[1]
+
+  if (hostname === undefined) {
+    return {
+      type: 'direct'
+    }
+  }
 
   return {
     type: 'socks',
-    host: context.name,
+    host: `${hostname.replace('-wg-', '-wg-socks5-')}.relays.mullvad.net`,
     proxyDNS: true,
     port: 1080
   }
