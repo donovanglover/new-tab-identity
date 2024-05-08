@@ -1,4 +1,4 @@
-import type { MullvadServer } from '../types/MullvadServer'
+import type { MullvadServer } from '@/types/MullvadServer'
 
 export interface ServerLocation {
   name: string

@@ -1,4 +1,4 @@
-import type { IMullvadServerWireguard } from '../types/MullvadServer'
+import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 
 const colors = [
   'blue',

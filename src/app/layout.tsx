@@ -1,7 +1,7 @@
-import './globals.css'
+import '@/app/globals.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import RootPage from './page'
+import RootPage from '@/app/page'
 
 const root = document.getElementById('root')
 

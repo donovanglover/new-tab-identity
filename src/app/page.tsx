@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { LuRefreshCw, LuX } from 'react-icons/lu'
-import Button from '../components/Button'
-import { fetchMullvad } from '../lib/fetchMullvad'
-import { filterByLocation, type ServerLocation } from '../lib/filterByLocation'
-import { newTabWithServer } from '../lib/newTabWithServer'
-import { type StorageLocal } from '../types/StorageAll'
+import Button from '@/components/Button'
+import { fetchMullvad } from '@/lib/fetchMullvad'
+import { filterByLocation, type ServerLocation } from '@/lib/filterByLocation'
+import { newTabWithServer } from '@/lib/newTabWithServer'
+import type { StorageLocal } from '@/types/StorageAll'
 
 async function updateServerList (): Promise<void> {
   if (Date.now() - (await browser.storage.local.get('lastUpdated') as Pick<StorageLocal, 'lastUpdated'>).lastUpdated > 60 * 1000) {

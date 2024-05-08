@@ -1,4 +1,4 @@
-import { type IMullvadServerWireguard, isWireguard, type MullvadServer } from '../types/MullvadServer'
+import { type IMullvadServerWireguard, isWireguard, type MullvadServer } from '@/types/MullvadServer'
 
 /** The publicly accessible API endpoint used to fetch all Mullvad VPN servers.
  *

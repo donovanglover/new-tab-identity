@@ -1,4 +1,4 @@
-import type { IMullvadServerWireguard } from './MullvadServer'
+import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 
 export interface StorageSync {
   provider: 'mullvad'
