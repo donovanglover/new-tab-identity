@@ -1,10 +1,20 @@
 import { fetchMullvad } from '@/lib/fetchMullvad'
 import { newTabWithServer } from '@/lib/newTabWithServer'
 import type { ProxyInfo } from '@/types/ProxyInfo'
-import { defaultStorage, type StorageLocal, type StorageSync } from '@/types/StorageAll'
+import type { StorageLocal, StorageSync } from '@/types/StorageAll'
+import { storageInit } from './lib/storageInit'
 
-await browser.storage.sync.set({ ...defaultStorage.sync, ...await browser.storage.sync.get(null) })
-await browser.storage.local.set({ ...defaultStorage.local, ...await browser.storage.local.get(null) })
+await storageInit({
+  sync: {
+    provider: 'mullvad',
+    blockDefault: false
+  },
+
+  local: {
+    servers: [],
+    lastUpdated: 0
+  }
+})
 
 if (Date.now() - (await browser.storage.local.get('lastUpdated') as Pick<StorageLocal, 'lastUpdated'>).lastUpdated > 60 * 60 * 1000) {
   try {

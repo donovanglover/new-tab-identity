@@ -14,15 +14,3 @@ export interface StorageAll {
   sync: StorageSync
   local: StorageLocal
 }
-
-export const defaultStorage: StorageAll = {
-  sync: {
-    provider: 'mullvad',
-    blockDefault: false
-  },
-
-  local: {
-    servers: [],
-    lastUpdated: 0
-  }
-}
