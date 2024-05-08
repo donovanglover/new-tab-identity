@@ -17,6 +17,10 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
     "types": [
       "vite/client",
       "firefox-webext-browser"

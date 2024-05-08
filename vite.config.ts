@@ -5,6 +5,12 @@ import topLevelAwait from 'vite-plugin-top-level-await'
 export default defineConfig({
   root: 'src',
 
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src/')
+    }
+  },
+
   build: {
     outDir: '../dist',
     emptyOutDir: true,
