@@ -29,6 +29,7 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "eslint-plugin-tailwindcss": "^3.15.1",
+    "jsdom": "^24.0.0",
     "tailwindcss": "^3.4.3",
     "vite": "^5.2.11",
     "vite-plugin-top-level-await": "^1.4.1",
