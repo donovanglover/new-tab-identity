@@ -51,7 +51,7 @@ export default defineConfig({
     coverage: {
       enabled: true,
       provider: 'istanbul',
-      include: ['lib/**', 'components/**'],
+      include: ['lib/**', 'components/**', 'types/**'],
 
       reporter: ['text'],
       reportsDirectory: '../dist',
