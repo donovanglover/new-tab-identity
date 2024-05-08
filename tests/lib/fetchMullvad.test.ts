@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fetchMullvad } from '../src/lib/fetchMullvad'
+import { fetchMullvad } from '@/lib/fetchMullvad'
 
 describe('fetchMullvad()', async () => {
   const servers = await fetchMullvad()

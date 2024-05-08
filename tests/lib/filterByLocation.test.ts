@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { filterByLocation } from '../src/lib/filterByLocation'
-import { type IMullvadServerWireguard } from '../src/types/MullvadServer'
+import { filterByLocation } from '@/lib/filterByLocation'
+import { type IMullvadServerWireguard } from '@/types/MullvadServer'
 
 describe('filterByLocation()', () => {
   const servers: IMullvadServerWireguard[] = [
