@@ -29,8 +29,13 @@ async function updateServerList (): Promise<void> {
 
 let i = 0
 async function addTabWithLocation (event: React.MouseEvent<HTMLElement>): Promise<void> {
+  const servers = (await browser.storage.local.get('servers') as Pick<StorageLocal, 'servers'>).servers
+  const thisLocation = (event.target as HTMLButtonElement).innerText
+  const serversFromLocation = servers.filter(server => server.country_name === thisLocation)
+  const randomServer = serversFromLocation[Math.floor(Math.random() * serversFromLocation.length)]
+
   const container = await browser.contextualIdentities.create({
-    name: (event.target as HTMLButtonElement).innerText,
+    name: `${randomServer.city_name}, ${randomServer.country_name} (${randomServer.hostname})`,
     color: colors[i++ % colors.length],
     icon: 'circle'
   })
