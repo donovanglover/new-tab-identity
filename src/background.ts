@@ -62,7 +62,7 @@ browser.proxy.onRequest.addListener(async (requestInfo): Promise<ProxyInfo> => {
 }, { urls: ['<all_urls>'] })
 
 browser.proxy.onError.addListener(error => {
-  throw error
+  console.warn(error.message)
 })
 
 browser.contextMenus.create({
