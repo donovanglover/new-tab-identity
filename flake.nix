@@ -10,7 +10,7 @@
 
     system = "x86_64-linux";
   in {
-    devShell.${system} = mkShell {
+    devShells.${system}.default = mkShell {
       nativeBuildInputs = attrValues {
         inherit (pkgs) firefox nodejs;
       };
