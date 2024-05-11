@@ -48,6 +48,9 @@
   },
 
   "settings": {
+    "tailwindcss": {
+      "cssFiles": []
+    },
     "react": {
       "version": "detect"
     }
