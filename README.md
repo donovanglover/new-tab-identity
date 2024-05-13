@@ -31,8 +31,12 @@ Run `npm ci` to do a clean install and use the `lint` and `test` scripts to chec
 
 - [x] Add button to delete containers that don't have associated tabs
 - [x] Remove `overflow-y: scroll;` from popup
-- [x] Cycle between locations for a certain country
-- [ ] Cycle between locations for a certain city
+- [x] Cycle between country locations by default
+- [ ] Add options button that opens dialog in react view OR include options at bottom?
+- [ ] Add option to cycle between city locations
+- [ ] Don't auto-delete containers if user renames them
+- [ ] Don't auto-delete containers that aren't managed by the addon?
+- [ ] Make it easier for users to rename containers?
 - [ ] Warn user if current container is no longer in the list of servers (offline or removed) and therefore can't be proxied
 - [ ] Write logic so it's possible to switch the proxy of an existing container with `browser.contextualIdentities.update()`
 - [ ] Add option to customize new tab (`about:blank`, mullvad status, etc.)
