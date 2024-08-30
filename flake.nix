@@ -4,15 +4,19 @@
   };
 
   outputs = { nixpkgs, ... }: let
-    inherit (nixpkgs.legacyPackages.${system}) pkgs;
-
-    system = "x86_64-linux";
+    forAllSystems = function:
+      nixpkgs.lib.genAttrs [
+        "x86_64-linux"
+        "aarch64-linux"
+      ] (system: function nixpkgs.legacyPackages.${system});
   in {
-    devShells.${system}.default = pkgs.mkShell {
-      nativeBuildInputs = with pkgs; [
-        firefox
-        nodejs
-      ];
-    };
+    devShells = forAllSystems (pkgs: {
+      default = pkgs.mkShell {
+        nativeBuildInputs = with pkgs; [
+          firefox
+          nodejs
+        ];
+      };
+    });
   };
 }
