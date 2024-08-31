@@ -2,6 +2,8 @@
 
 Browse the web from multiple VPN locations simultaneously. Goes well with [Librewolf](https://librewolf.net/).
 
+> NOTE: There is currently a bug in Firefox v129+ that leaks DNS requests. This is currently not planned to be fixed until Firefox 131 at the earliest. Usage of this extension should only occur in Firefox ESR in the meantime. See https://bugzilla.mozilla.org/show_bug.cgi?id=1910593
+
 ## Features
 
 - Open new container tabs with different VPN locations.
