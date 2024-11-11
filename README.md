@@ -4,6 +4,8 @@ Browse the web from multiple VPN locations simultaneously. Goes well with [Libre
 
 > NOTE: There is a bug in Firefox versions 129, 130, and 131 that leaks DNS requests. [This is fixed in Firefox 132](https://bugzilla.mozilla.org/show_bug.cgi?id=1910593). If you are using an older version, you should set `network.dns.native_https_query` to `false` to avoid DNS leaks.
 
+> NOTE: If you are using a uBlock Origin version before v1.60.0 then you need to uncheck "Uncloak canonical names" in the settings to avoid DNS leaks. [This was fixed in v1.60.0](https://github.com/gorhill/uBlock/commit/d5f14ffa32).
+
 ## Features
 
 - Open new container tabs with different VPN locations.
