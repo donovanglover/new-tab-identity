@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "react": "^18.3.1",
+    "react": "^19.0.0",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.4.0"
@@ -21,7 +21,7 @@
     "@donovanglover/base16-tailwind": "npm:@jsr/donovanglover__base16-tailwind@^0.1.7",
     "@testing-library/react": "^16.2.0",
     "@types/firefox-webext-browser": "^120.0.4",
-    "@types/react": "^18.3.12",
+    "@types/react": "^19.0.8",
     "@types/react-dom": "^18.3.1",
     "@vitest/coverage-istanbul": "^2.1.8",
     "eslint-config-love": "^47.0.0",
