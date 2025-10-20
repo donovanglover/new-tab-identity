@@ -2,8 +2,6 @@
 
 Browse the web from multiple VPN locations simultaneously. Goes well with [Librewolf](https://librewolf.net/).
 
-> NOTE: If you are using a uBlock Origin version before v1.60.0 then you need to uncheck "Uncloak canonical names" in the settings to avoid DNS leaks. [This was fixed in v1.60.0](https://github.com/gorhill/uBlock/commit/d5f14ffa32).
-
 ## Features
 
 - Open new container tabs with different VPN locations.
