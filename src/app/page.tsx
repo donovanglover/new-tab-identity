@@ -9,6 +9,7 @@ import { filterByLocation, type ServerCountry } from '@/lib/filterByLocation'
 import { countIdentities, formatIdentityCounts, type IdentityCounts } from '@/lib/identityCounts'
 import { identityParts } from '@/lib/identityParts'
 import { isAutoContainer } from '@/lib/isAutoContainer'
+import { isCustomIdentity } from '@/lib/isCustomIdentity'
 import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
 import { serverInLocation } from '@/lib/serverInLocation'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
@@ -49,7 +50,7 @@ async function getUsedCookieStoreIds (): Promise<Set<string>> {
 
 interface Identities {
   counts: IdentityCounts
-  named: browser.contextualIdentities.ContextualIdentity[]
+  customIdentities: browser.contextualIdentities.ContextualIdentity[]
   usedCookieStoreIds: Set<string>
 }
 
@@ -59,7 +60,7 @@ async function fetchIdentities (): Promise<Identities> {
 
   return {
     counts: countIdentities(containers, usedCookieStoreIds),
-    named: containers.filter(container => !isAutoContainer(container.name)),
+    customIdentities: containers.filter(container => isCustomIdentity(container.name)),
     usedCookieStoreIds
   }
 }
@@ -92,7 +93,7 @@ export default function RootPage (): React.ReactElement {
       random: 0,
       unused: 0
     },
-    named: [],
+    customIdentities: [],
     usedCookieStoreIds: new Set()
   })
   const [openCountry, setOpenCountry] = useState<string | null>(null)
@@ -348,12 +349,12 @@ export default function RootPage (): React.ReactElement {
         })}
       </div>
 
-      {identities.named.length > 0 && (
+      {identities.customIdentities.length > 0 && (
         <div className='p-4'>
           <h2 className='pb-2 text-sm text-600'>Custom identities</h2>
 
           <div className='flex flex-col gap-1'>
-            {identities.named.map(identity => {
+            {identities.customIdentities.map(identity => {
               const { custom, hostname } = identityParts(identity.name)
               const used = identities.usedCookieStoreIds.has(identity.cookieStoreId)
 

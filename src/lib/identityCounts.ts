@@ -1,4 +1,5 @@
 import { isAutoContainer } from '@/lib/isAutoContainer'
+import { isCustomIdentity } from '@/lib/isCustomIdentity'
 
 export interface IdentityCounts {
   custom: number
@@ -8,8 +9,9 @@ export interface IdentityCounts {
 
 /** Count custom and random identities, and how many random ones are unused.
  *
- * A container is custom when its name has no comma, matching the delete button's keep rule.
- * Random containers are unused when no open tab uses their cookie store.
+ * A container is custom when its name has no comma and a parenthesized hostname, matching the
+ * popup's custom identity list. Random containers are unused when no open tab uses their cookie
+ * store. Containers that are neither (e.g. default browser containers) are ignored.
  *
  * @param containers Contextual identities to count.
  * @param usedCookieStoreIds Cookie store ids of containers with at least one open tab.
@@ -29,7 +31,7 @@ export function countIdentities (containers: Pick<browser.contextualIdentities.C
       if (!usedCookieStoreIds.has(container.cookieStoreId)) {
         counts.unused++
       }
-    } else {
+    } else if (isCustomIdentity(container.name)) {
       counts.custom++
     }
   }
