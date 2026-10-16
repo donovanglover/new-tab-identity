@@ -15,6 +15,7 @@
         nativeBuildInputs = with pkgs; [
           firefox
           nodejs
+          oxlint
         ];
       };
     });

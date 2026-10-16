@@ -1,0 +1,10 @@
+{
+  "plugins": ["react", "vitest", "jsdoc", "unicorn"],
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  },
+  "rules": {
+    "unicorn/prefer-node-protocol": "error"
+  }
+}
