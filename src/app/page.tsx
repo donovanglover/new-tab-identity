@@ -6,6 +6,7 @@ import CityButton from '@/components/CityButton'
 import { countryFlag } from '@/lib/countryFlag'
 import { fetchMullvad } from '@/lib/fetchMullvad'
 import { filterByLocation, type ServerCountry } from '@/lib/filterByLocation'
+import { isAutoContainer } from '@/lib/isAutoContainer'
 import { newTabWithServer } from '@/lib/newTabWithServer'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 import type { StoredLocation, StorageLocal, StorageSync } from '@/types/StorageAll'
@@ -42,6 +43,10 @@ async function removeInactiveContainers (): Promise<void> {
   let numRemoved = 0
 
   for (const container of containers) {
+    if (!isAutoContainer(container.name)) {
+      continue
+    }
+
     const tabsWithContainer = await browser.tabs.query({ cookieStoreId: container.cookieStoreId })
 
     if (tabsWithContainer.length === 0) {
