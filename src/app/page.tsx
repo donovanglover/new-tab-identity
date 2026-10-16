@@ -35,10 +35,12 @@ async function updateServerList (): Promise<void> {
   toast.success('Server list is already up to date.')
 }
 
-async function addTabWithServers (servers: IMullvadServerWireguard[], name: string): Promise<void> {
-  const randomServer = servers[Math.floor(Math.random() * servers.length)]
+function randomServer (servers: IMullvadServerWireguard[]): IMullvadServerWireguard {
+  return servers[Math.floor(Math.random() * servers.length)]
+}
 
-  await newTabWithServer(randomServer, { name })
+async function addTabWithServers (servers: IMullvadServerWireguard[], name: string): Promise<void> {
+  await newTabWithServer(randomServer(servers), { name })
 
   window.close()
 }
@@ -150,6 +152,15 @@ export default function RootPage (): React.ReactElement {
   const value = settingCity !== null && settingCountry !== null
     ? `${settingCountry.code}:${settingCity.code}`
     : settingCountry?.code ?? ''
+  const relays = countries.flatMap(country => country.cities.flatMap(city => city.servers))
+  const cityOptions = sortedCountries.flatMap(country => {
+    const cities = [...country.cities].sort((a, b) => a.name.localeCompare(b.name))
+
+    return cities.map(city => ({
+      value: `${country.code}:${city.code}`,
+      label: `${countryFlag(country.code)} ${city.name}, ${country.name}`
+    }))
+  })
 
   function handleLocationChange (event: React.ChangeEvent<HTMLSelectElement>): void {
     const [countryCode, cityCode] = event.target.value.split(':')
@@ -255,6 +266,37 @@ export default function RootPage (): React.ReactElement {
     await newTabWithIdentity(identity)
 
     window.close()
+  }
+
+  function handleIdentityServerChange (identity: browser.contextualIdentities.ContextualIdentity, event: React.ChangeEvent<HTMLSelectElement>): void {
+    const [countryCode, cityCode] = event.currentTarget.value.split(':')
+
+    if (cityCode === undefined) {
+      return
+    }
+
+    const servers = relays.filter(server => server.country_code === countryCode && server.city_code === cityCode)
+
+    if (servers.length === 0) {
+      return
+    }
+
+    const server = randomServer(servers)
+    const input = event.currentTarget.parentElement?.querySelector<HTMLInputElement>('input')
+    const { custom } = identityParts(identity.name)
+    const name = input === null || input === undefined ? custom : sanitizeIdentityName(input.value)
+
+    void changeIdentityServer(identity, name === '' ? custom : name, server)
+  }
+
+  async function changeIdentityServer (identity: browser.contextualIdentities.ContextualIdentity, custom: string, server: IMullvadServerWireguard): Promise<void> {
+    await browser.contextualIdentities.update(identity.cookieStoreId, {
+      name: `${custom} (${server.hostname})`
+    })
+
+    toast.success(`Changed server to ${server.city_name}, ${server.country_name}.`)
+
+    setIdentities(await fetchIdentities())
   }
 
   function handleCountryClick (country: ServerCountry, hasCities: boolean, open: boolean): void {
@@ -364,6 +406,7 @@ export default function RootPage (): React.ReactElement {
             {identities.customIdentities.map(identity => {
               const { custom, hostname } = identityParts(identity.name)
               const used = identities.usedCookieStoreIds.has(identity.cookieStoreId)
+              const server = relays.find(option => option.hostname === hostname)
 
               return (
                 <div key={identity.cookieStoreId} className='flex items-center gap-2'>
@@ -374,7 +417,10 @@ export default function RootPage (): React.ReactElement {
                     }
                   }} />
 
-                  {hostname !== undefined && <span className='shrink-0 text-xs text-600'>({hostname})</span>}
+                  <select aria-label='Server' className='w-64 shrink-0 rounded-md border-2 border-300 bg-200 p-2 shadow' value={server === undefined ? hostname ?? '' : `${server.country_code}:${server.city_code}`} onChange={event => { handleIdentityServerChange(identity, event) }}>
+                    {server === undefined && hostname !== undefined && <option value={hostname}>{hostname}</option>}
+                    {cityOptions.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+                  </select>
 
                   <Button className='shrink-0' onClick={() => { void openIdentityTab(identity) }} title='Open new tab'><LuArrowUpRight /></Button>
 
