@@ -26,6 +26,7 @@ const defaultStorage: StorageAll = {
 
   local: {
     servers: [],
+    usedCities: [],
     lastUpdated: 0
   }
 }
@@ -40,6 +41,7 @@ describe('storageInit()', () => {
 
       local: {
         servers: [],
+        usedCities: [],
         lastUpdated: 0
       }
     })

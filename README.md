@@ -33,7 +33,7 @@ Run `npm ci` to do a clean install and use the `lint` and `test` scripts to chec
 - [x] Remove `overflow-y: scroll;` from popup
 - [x] Cycle between country locations by default
 - [ ] Add options button that opens dialog in react view OR include options at bottom?
-- [ ] Add option to cycle between city locations
+- [x] Cycle between city locations in the context menu
 - [ ] Don't auto-delete containers if user renames them
 - [ ] Don't auto-delete containers that aren't managed by the addon?
 - [ ] Make it easier for users to rename containers?

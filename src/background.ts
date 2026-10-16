@@ -1,5 +1,6 @@
 import { fetchMullvad } from '@/lib/fetchMullvad'
 import { newTabWithServer } from '@/lib/newTabWithServer'
+import { nextUnusedServer } from '@/lib/nextUnusedServer'
 import type { ProxyInfo } from '@/types/ProxyInfo'
 import type { StorageLocal, StorageSync } from '@/types/StorageAll'
 import { storageInit } from './lib/storageInit'
@@ -12,6 +13,7 @@ await storageInit({
 
   local: {
     servers: [],
+    usedCities: [],
     lastUpdated: 0
   }
 })
@@ -78,13 +80,29 @@ browser.contextMenus.create({
   ]
 })
 
-browser.contextMenus.onClicked.addListener(async info => {
+let contextMenuQueue = Promise.resolve()
+
+browser.contextMenus.onClicked.addListener(info => {
   if (info.menuItemId !== 'new-tab-identity') return
 
-  const servers = (await browser.storage.local.get('servers') as Pick<StorageLocal, 'servers'>).servers
-  const server = servers[Math.floor(Math.random() * servers.length)]
+  contextMenuQueue = contextMenuQueue
+    .then(async () => {
+      const { servers, usedCities } = await browser.storage.local.get(['servers', 'usedCities']) as Pick<StorageLocal, 'servers' | 'usedCities'>
+      const next = nextUnusedServer(servers, usedCities)
 
-  await newTabWithServer(server, {
-    url: info.srcUrl ?? info.linkUrl ?? info.pageUrl
-  })
+      if (next === undefined) {
+        return
+      }
+
+      await browser.storage.local.set({
+        usedCities: next.usedCities
+      })
+
+      await newTabWithServer(next.server, {
+        url: info.srcUrl ?? info.linkUrl ?? info.pageUrl
+      })
+    })
+    .catch(error => {
+      console.warn(error)
+    })
 })
