@@ -21,12 +21,14 @@ vi.stubGlobal('browser', browserMock)
 const defaultStorage: StorageAll = {
   sync: {
     provider: 'mullvad',
-    blockDefault: false
+    blockDefault: false,
+    country: null,
+    city: null
   },
 
   local: {
     servers: [],
-    usedCities: [],
+    used: [],
     lastUpdated: 0
   }
 }
@@ -36,12 +38,14 @@ describe('storageInit()', () => {
     expect(await storageInit(defaultStorage)).toEqual({
       sync: {
         provider: 'mullvad',
-        blockDefault: true
+        blockDefault: true,
+        country: null,
+        city: null
       },
 
       local: {
         servers: [],
-        usedCities: [],
+        used: [],
         lastUpdated: 0
       }
     })

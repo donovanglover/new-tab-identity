@@ -1,6 +1,7 @@
 import { fetchMullvad } from '@/lib/fetchMullvad'
 import { newTabWithServer } from '@/lib/newTabWithServer'
 import { nextUnusedServer } from '@/lib/nextUnusedServer'
+import { serverInLocation } from '@/lib/serverInLocation'
 import type { ProxyInfo } from '@/types/ProxyInfo'
 import type { StorageLocal, StorageSync } from '@/types/StorageAll'
 import { storageInit } from './lib/storageInit'
@@ -8,12 +9,14 @@ import { storageInit } from './lib/storageInit'
 await storageInit({
   sync: {
     provider: 'mullvad',
-    blockDefault: false
+    blockDefault: false,
+    country: null,
+    city: null
   },
 
   local: {
     servers: [],
-    usedCities: [],
+    used: [],
     lastUpdated: 0
   }
 })
@@ -67,6 +70,26 @@ browser.proxy.onError.addListener(error => {
   console.warn(error.message)
 })
 
+async function updateContextMenu (): Promise<void> {
+  const { country, city } = await browser.storage.sync.get(['country', 'city']) as Pick<StorageSync, 'country' | 'city'>
+  const { servers } = await browser.storage.local.get('servers') as Pick<StorageLocal, 'servers'>
+  const location = city ?? country
+
+  if (location === null) {
+    await browser.contextMenus.update('new-tab-identity', {
+      title: 'Open with New Identity',
+      enabled: true
+    })
+
+    return
+  }
+
+  await browser.contextMenus.update('new-tab-identity', {
+    title: `Open with New Identity (${location.name})`,
+    enabled: servers.some(server => serverInLocation(server, country, city))
+  })
+}
+
 browser.contextMenus.create({
   id: 'new-tab-identity',
   title: 'Open with New Identity',
@@ -80,6 +103,14 @@ browser.contextMenus.create({
   ]
 })
 
+await updateContextMenu()
+
+browser.storage.onChanged.addListener(changes => {
+  if ('country' in changes || 'city' in changes || 'servers' in changes) {
+    void updateContextMenu()
+  }
+})
+
 let contextMenuQueue = Promise.resolve()
 
 browser.contextMenus.onClicked.addListener(info => {
@@ -87,15 +118,17 @@ browser.contextMenus.onClicked.addListener(info => {
 
   contextMenuQueue = contextMenuQueue
     .then(async () => {
-      const { servers, usedCities } = await browser.storage.local.get(['servers', 'usedCities']) as Pick<StorageLocal, 'servers' | 'usedCities'>
-      const next = nextUnusedServer(servers, usedCities)
+      const { country, city } = await browser.storage.sync.get(['country', 'city']) as Pick<StorageSync, 'country' | 'city'>
+      const { servers, used } = await browser.storage.local.get(['servers', 'used']) as Pick<StorageLocal, 'servers' | 'used'>
+      const pool = servers.filter(server => serverInLocation(server, country, city))
+      const next = nextUnusedServer(pool, used, city === null ? 'city' : 'relay')
 
       if (next === undefined) {
         return
       }
 
       await browser.storage.local.set({
-        usedCities: next.usedCities
+        used: next.used
       })
 
       await newTabWithServer(next.server, {

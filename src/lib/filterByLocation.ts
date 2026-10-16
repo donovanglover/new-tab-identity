@@ -2,6 +2,7 @@ import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 
 export interface ServerCity {
   name: string
+  code: string
   servers: IMullvadServerWireguard[]
 }
 
@@ -42,6 +43,7 @@ export function filterByLocation (servers: IMullvadServerWireguard[]): ServerCou
 
     country.cities.push({
       name: server.city_name,
+      code: server.city_code,
       servers: [server]
     })
   })

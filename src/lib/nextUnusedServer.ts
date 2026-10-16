@@ -1,44 +1,63 @@
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 
+/** How servers are grouped when deciding whether a location has been used. */
+export type DedupeBy = 'city' | 'relay'
+
 export interface NextUnusedServer {
   server: IMullvadServerWireguard
-  usedCities: string[]
+  used: string[]
 }
 
-/** Pick a random server from a city that has not been used yet.
+/** Pick a random server from a location that has not been used yet.
  *
- * A random unused city is picked first, then a random server within that city.
- * Once every city has been used the city list starts over, beginning a new
- * cycle with the picked server's city.
+ * A random unused location is picked first, then a random server within that
+ * location. When deduping by city the location is the city; when deduping by
+ * relay the location is a single relay. Once every location in the pool has
+ * been used the pool's keys start over, beginning a new cycle with the picked
+ * location.
  *
  * @param servers Servers to pick from.
- * @param usedCities Cities that have already been used, as returned by the previous call.
- * @returns The picked server and the updated used city list, or `undefined` if there are no servers.
+ * @param used Used location keys, as returned by the previous call.
+ * @param dedupeBy Whether a location is a city or a relay.
+ * @returns The picked server and the updated used location list, or `undefined` if there are no servers.
  */
-export function nextUnusedServer (servers: IMullvadServerWireguard[], usedCities: string[]): NextUnusedServer | undefined {
+export function nextUnusedServer (servers: IMullvadServerWireguard[], used: string[], dedupeBy: DedupeBy = 'city'): NextUnusedServer | undefined {
   if (servers.length === 0) {
     return undefined
   }
 
-  const unused = servers.filter(server => !usedCities.includes(cityKey(server)))
+  const key = dedupeBy === 'relay' ? relayKey : cityKey
+  const unused = servers.filter(server => !used.includes(key(server)))
   const reset = unused.length === 0
   const pool = reset ? servers : unused
-  const cities = [...new Set(pool.map(cityKey))]
-  const city = cities[Math.floor(Math.random() * cities.length)]
-  const options = pool.filter(server => cityKey(server) === city)
+  const locations = [...new Set(pool.map(key))]
+  const location = locations[Math.floor(Math.random() * locations.length)]
+  const options = pool.filter(server => key(server) === location)
   const server = options[Math.floor(Math.random() * options.length)]
+  const poolKeys = new Set(servers.map(key))
 
   return {
     server,
-    usedCities: reset ? [city] : [...usedCities, city]
+    used: reset
+      ? [...used.filter(usedKey => !poolKeys.has(usedKey)), location]
+      : [...used, location]
   }
 }
 
-/** A unique key for the city a server is located in.
+/** The key used to dedupe servers by city.
  *
  * @param server Server to create a key for.
  * @returns The country and city codes of the server.
  */
 function cityKey (server: IMullvadServerWireguard): string {
   return `${server.country_code}-${server.city_code}`
+}
+
+/** The key used to dedupe servers by relay.
+ *
+ * @param server Server to create a key for.
+ * @returns The hostname of the server.
+ */
+function relayKey (server: IMullvadServerWireguard): string {
+  return server.hostname
 }

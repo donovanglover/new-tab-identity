@@ -8,7 +8,7 @@ import { fetchMullvad } from '@/lib/fetchMullvad'
 import { filterByLocation, type ServerCountry } from '@/lib/filterByLocation'
 import { newTabWithServer } from '@/lib/newTabWithServer'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
-import type { StorageLocal } from '@/types/StorageAll'
+import type { StoredLocation, StorageLocal, StorageSync } from '@/types/StorageAll'
 
 async function updateServerList (): Promise<void> {
   if (Date.now() - (await browser.storage.local.get('lastUpdated') as Pick<StorageLocal, 'lastUpdated'>).lastUpdated > 60 * 1000) {
@@ -55,6 +55,8 @@ async function removeInactiveContainers (): Promise<void> {
 
 export default function RootPage (): React.ReactElement {
   const [countries, setCountries] = useState<ServerCountry[]>([])
+  const [settingCountry, setSettingCountry] = useState<StoredLocation | null>(null)
+  const [settingCity, setSettingCity] = useState<StoredLocation | null>(null)
   const [openCountry, setOpenCountry] = useState<string | null>(null)
   const lastPointerType = useRef<string | null>(null)
 
@@ -62,7 +64,97 @@ export default function RootPage (): React.ReactElement {
     void browser.storage.local.get('servers').then(result => {
       setCountries(filterByLocation((result as Pick<StorageLocal, 'servers'>).servers))
     })
+
+    void browser.storage.sync.get(['country', 'city']).then(result => {
+      const settings = result as Pick<StorageSync, 'country' | 'city'>
+
+      setSettingCountry(settings.country)
+      setSettingCity(settings.city)
+    })
   }, [])
+
+  const sortedCountries = [...countries].sort((a, b) => a.name.localeCompare(b.name))
+  const selectedCountry = countries.find(option => option.code === settingCountry?.code)
+  const settingCities = selectedCountry?.cities ?? []
+  const countryUnavailable = settingCountry !== null && selectedCountry === undefined
+  const cityUnavailable = settingCity !== null && !settingCities.some(option => option.code === settingCity.code)
+
+  const options = [{ value: '', label: 'Any country' }]
+
+  if (settingCountry !== null && countryUnavailable) {
+    options.push({ value: settingCountry.code, label: `${countryFlag(settingCountry.code)} ${settingCountry.name}` })
+
+    if (settingCity !== null) {
+      options.push({ value: `${settingCountry.code}:${settingCity.code}`, label: `— ${settingCity.name}` })
+    }
+  }
+
+  sortedCountries.forEach(country => {
+    options.push({ value: country.code, label: `${countryFlag(country.code)} ${country.name}` })
+
+    if (settingCity !== null && settingCountry?.code === country.code && cityUnavailable) {
+      options.push({ value: `${country.code}:${settingCity.code}`, label: `— ${settingCity.name}` })
+    }
+
+    if (country.cities.length > 1) {
+      const cities = [...country.cities].sort((a, b) => a.name.localeCompare(b.name))
+
+      cities.forEach(city => {
+        options.push({ value: `${country.code}:${city.code}`, label: `— ${city.name}` })
+      })
+    }
+  })
+
+  const value = settingCity !== null && settingCountry !== null
+    ? `${settingCountry.code}:${settingCity.code}`
+    : settingCountry?.code ?? ''
+
+  function handleLocationChange (event: React.ChangeEvent<HTMLSelectElement>): void {
+    const [countryCode, cityCode] = event.target.value.split(':')
+    const selected = countries.find(option => option.code === countryCode)
+
+    if (selected === undefined) {
+      setSettingCountry(null)
+      setSettingCity(null)
+
+      void browser.storage.sync.set({
+        country: null,
+        city: null
+      })
+
+      return
+    }
+
+    const nextCountry = { code: selected.code, name: selected.name }
+
+    if (cityCode === undefined) {
+      setSettingCountry(nextCountry)
+      setSettingCity(null)
+
+      void browser.storage.sync.set({
+        country: nextCountry,
+        city: null
+      })
+
+      return
+    }
+
+    const selectedCity = selected.cities.find(option => option.code === cityCode)
+
+    if (selectedCity === undefined) {
+      return
+    }
+
+    const nextCity = { code: selectedCity.code, name: selectedCity.name }
+
+    setSettingCountry(nextCountry)
+    setSettingCity(nextCity)
+
+    void browser.storage.sync.set({
+      country: nextCountry,
+      city: nextCity
+    })
+  }
 
   function handleCountryClick (country: ServerCountry, hasCities: boolean, open: boolean): void {
     const pointerType = lastPointerType.current
@@ -114,6 +206,12 @@ export default function RootPage (): React.ReactElement {
   return (
     <div>
       <h1 className='p-4 text-center text-4xl font-bold'>New Tab Identity</h1>
+
+      <div className='flex items-center justify-center px-4 pb-4'>
+        <select aria-label='Location' className='rounded-md border-2 border-300 bg-200 p-2 shadow' value={value} onChange={handleLocationChange}>
+          {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+        </select>
+      </div>
 
       <div className="absolute right-0 top-0 p-4">
         <Button onClick={updateServerList} title="Update server list"><LuRefreshCw /></Button>

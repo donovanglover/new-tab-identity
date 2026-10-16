@@ -43,7 +43,7 @@ describe('nextUnusedServer()', () => {
 
     expect(nextUnusedServer(servers, ['ca-yyc'])).toEqual({
       server: servers[1],
-      usedCities: ['ca-yyc', 'us-slc']
+      used: ['ca-yyc', 'us-slc']
     })
   })
 
@@ -58,7 +58,18 @@ describe('nextUnusedServer()', () => {
 
     expect(nextUnusedServer(servers, ['us-slc'])).toEqual({
       server: servers[1],
-      usedCities: ['us-slc', 'ca-yyc']
+      used: ['us-slc', 'ca-yyc']
+    })
+  })
+
+  it('should pick an unused relay when deduping by relay', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0)
+
+    const servers = [server('de-ber-wg-101', 'de', 'ber'), server('de-ber-wg-102', 'de', 'ber')]
+
+    expect(nextUnusedServer(servers, ['de-ber-wg-101'], 'relay')).toEqual({
+      server: servers[1],
+      used: ['de-ber-wg-101', 'de-ber-wg-102']
     })
   })
 
@@ -69,7 +80,7 @@ describe('nextUnusedServer()', () => {
 
     expect(nextUnusedServer(servers, ['de-fra'])).toEqual({
       server: servers[0],
-      usedCities: ['de-fra', 'ca-yyc']
+      used: ['de-fra', 'ca-yyc']
     })
   })
 
@@ -78,9 +89,20 @@ describe('nextUnusedServer()', () => {
 
     const servers = [server('ca-yyc-wg-101', 'ca', 'yyc'), server('us-slc-wg-101', 'us', 'slc')]
 
-    expect(nextUnusedServer(servers, ['ca-yyc', 'us-slc'])).toEqual({
+    expect(nextUnusedServer(servers, ['ca-yyc', 'us-slc', 'de-fra'])).toEqual({
       server: servers[0],
-      usedCities: ['ca-yyc']
+      used: ['de-fra', 'ca-yyc']
+    })
+  })
+
+  it('should start a new relay cycle once every relay in the pool has been used', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0)
+
+    const servers = [server('de-ber-wg-101', 'de', 'ber'), server('de-ber-wg-102', 'de', 'ber')]
+
+    expect(nextUnusedServer(servers, ['de-ber-wg-101', 'de-ber-wg-102', 'de-fra'], 'relay')).toEqual({
+      server: servers[0],
+      used: ['de-fra', 'de-ber-wg-101']
     })
   })
 })
