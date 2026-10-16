@@ -8,6 +8,7 @@ import { fetchMullvad } from '@/lib/fetchMullvad'
 import { filterByLocation, type ServerCountry } from '@/lib/filterByLocation'
 import { isAutoContainer } from '@/lib/isAutoContainer'
 import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
+import { serverInLocation } from '@/lib/serverInLocation'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 import type { StoredLocation, StorageLocal, StorageSync } from '@/types/StorageAll'
 
@@ -166,6 +167,21 @@ export default function RootPage (): React.ReactElement {
     setIdentityName(sanitizeIdentityName(event.target.value))
   }
 
+  function handleOpen (event: React.FormEvent<HTMLFormElement>): void {
+    event.preventDefault()
+
+    const servers = countries.flatMap(country => country.cities.flatMap(city => city.servers))
+    const pool = servers.filter(server => serverInLocation(server, settingCountry, settingCity))
+
+    if (pool.length === 0) {
+      toast.error('No servers available for the configured location.')
+
+      return
+    }
+
+    void addTabWithServers(pool, identityName)
+  }
+
   function handleCountryClick (country: ServerCountry, hasCities: boolean, open: boolean): void {
     const pointerType = lastPointerType.current
     lastPointerType.current = null
@@ -217,12 +233,20 @@ export default function RootPage (): React.ReactElement {
     <div>
       <h1 className='p-4 text-center text-4xl font-bold'>New Tab Identity</h1>
 
-      <div className='flex flex-wrap items-center justify-center gap-2 px-4 pb-4'>
-        <select aria-label='Location' className='rounded-md border-2 border-300 bg-200 p-2 shadow' value={value} onChange={handleLocationChange}>
-          {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
-        </select>
+      <div className='flex flex-wrap items-start justify-center gap-2 px-4 pb-4'>
+        <div className='flex flex-col gap-1'>
+          <label className='text-sm text-600' htmlFor='location'>Default location</label>
 
-        <input aria-label='Identity name' className='rounded-md border-2 border-300 bg-200 p-2 shadow' maxLength={20} placeholder='Name (optional)' value={identityName} onChange={handleIdentityNameChange} />
+          <select id='location' className='rounded-md border-2 border-300 bg-200 p-2 shadow' value={value} onChange={handleLocationChange}>
+            {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+          </select>
+        </div>
+
+        <form className='flex flex-col gap-1' onSubmit={handleOpen}>
+          <label className='text-sm text-600' htmlFor='identity-name'>Identity name</label>
+
+          <input id='identity-name' className='rounded-md border-2 border-300 bg-200 p-2 shadow' maxLength={20} placeholder='Name (optional)' value={identityName} onChange={handleIdentityNameChange} />
+        </form>
       </div>
 
       <div className="absolute right-0 top-0 p-4">
