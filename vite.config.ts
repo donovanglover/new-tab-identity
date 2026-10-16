@@ -3,6 +3,7 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   root: 'src',
+  cacheDir: resolve(import.meta.dirname, 'node_modules/.vite'),
 
   resolve: {
     alias: {
