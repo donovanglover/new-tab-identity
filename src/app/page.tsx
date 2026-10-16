@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
-import { LuChevronDown, LuRefreshCw, LuX } from 'react-icons/lu'
+import { LuArrowUpRight, LuChevronDown, LuRefreshCw, LuX } from 'react-icons/lu'
 import Button from '@/components/Button'
 import CityButton from '@/components/CityButton'
 import { countryFlag } from '@/lib/countryFlag'
@@ -10,6 +10,7 @@ import { countIdentities, formatIdentityCounts, type IdentityCounts } from '@/li
 import { identityParts } from '@/lib/identityParts'
 import { isAutoContainer } from '@/lib/isAutoContainer'
 import { isCustomIdentity } from '@/lib/isCustomIdentity'
+import { newTabWithIdentity } from '@/lib/newTabWithIdentity'
 import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
 import { serverInLocation } from '@/lib/serverInLocation'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
@@ -250,6 +251,12 @@ export default function RootPage (): React.ReactElement {
     setIdentities(await fetchIdentities())
   }
 
+  async function openIdentityTab (identity: browser.contextualIdentities.ContextualIdentity): Promise<void> {
+    await newTabWithIdentity(identity)
+
+    window.close()
+  }
+
   function handleCountryClick (country: ServerCountry, hasCities: boolean, open: boolean): void {
     const pointerType = lastPointerType.current
     lastPointerType.current = null
@@ -368,6 +375,8 @@ export default function RootPage (): React.ReactElement {
                   }} />
 
                   {hostname !== undefined && <span className='shrink-0 text-xs text-600'>({hostname})</span>}
+
+                  <Button className='shrink-0' onClick={() => { void openIdentityTab(identity) }} title='Open new tab'><LuArrowUpRight /></Button>
 
                   <Button className='shrink-0' disabled={used} onClick={() => { void removeIdentity(identity) }} title={used ? 'Close its tabs first' : 'Delete identity'}><LuX /></Button>
                 </div>
