@@ -8,7 +8,7 @@ const root = document.getElementById('root')
 if (root !== null) {
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
-      <div className="w-[64rem] max-w-full bg-100 text-700 base16-selenized-black">
+      <div className="w-[64rem] max-w-full">
         <RootPage />
       </div>
     </React.StrictMode>
