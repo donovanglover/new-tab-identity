@@ -116,17 +116,17 @@ describe('filterByLocation()', () => {
     }
   ]
 
-  const locations = filterByLocation(servers)
+  const countries = filterByLocation(servers)
 
-  it('should return the correct number of locations', () => {
-    expect(locations.length).toEqual(3)
+  it('should group servers by country', () => {
+    expect(countries.map(country => country.name)).toEqual(['Brazil', 'Switzerland'])
   })
 
-  it('should have the correct servers in each location', () => {
-    locations.forEach(location => {
-      location.servers.forEach(server => {
-        expect(server.country_name).toEqual(location.name)
-      })
-    })
+  it('should group servers by city within each country', () => {
+    expect(countries[0].cities.map(city => city.name)).toEqual(['Sao Paulo', 'Fortaleza'])
+    expect(countries[0].cities[0].servers.map(server => server.hostname)).toEqual(['br-sao-wg-201', 'br-sao-wg-202'])
+    expect(countries[0].cities[1].servers.map(server => server.hostname)).toEqual(['br-for-wg-001'])
+    expect(countries[1].cities.map(city => city.name)).toEqual(['Zurich'])
+    expect(countries[1].cities[0].servers.map(server => server.hostname)).toEqual(['ch-zrh-wg-001', 'ch-zrh-wg-002'])
   })
 })

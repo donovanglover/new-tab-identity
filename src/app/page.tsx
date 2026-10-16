@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
-import { LuRefreshCw, LuX } from 'react-icons/lu'
+import { LuChevronDown, LuRefreshCw, LuX } from 'react-icons/lu'
 import Button from '@/components/Button'
+import CityButton from '@/components/CityButton'
 import { fetchMullvad } from '@/lib/fetchMullvad'
-import { filterByLocation, type ServerLocation } from '@/lib/filterByLocation'
+import { filterByLocation, type ServerCountry } from '@/lib/filterByLocation'
 import { newTabWithServer } from '@/lib/newTabWithServer'
+import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 import type { StorageLocal } from '@/types/StorageAll'
 
 async function updateServerList (): Promise<void> {
@@ -26,11 +28,8 @@ async function updateServerList (): Promise<void> {
   toast.error('Server list is already up to date!')
 }
 
-async function addTabWithLocation (event: React.MouseEvent<HTMLElement>): Promise<void> {
-  const servers = (await browser.storage.local.get('servers') as Pick<StorageLocal, 'servers'>).servers
-  const thisLocation = (event.target as HTMLButtonElement).innerText
-  const serversFromLocation = servers.filter(server => server.country_name === thisLocation)
-  const randomServer = serversFromLocation[Math.floor(Math.random() * serversFromLocation.length)]
+async function addTabWithServers (servers: IMullvadServerWireguard[]): Promise<void> {
+  const randomServer = servers[Math.floor(Math.random() * servers.length)]
 
   await newTabWithServer(randomServer)
 
@@ -54,13 +53,62 @@ async function removeInactiveContainers (): Promise<void> {
 }
 
 export default function RootPage (): React.ReactElement {
-  const [locations, setLocations] = useState<ServerLocation[]>([])
+  const [countries, setCountries] = useState<ServerCountry[]>([])
+  const [openCountry, setOpenCountry] = useState<string | null>(null)
+  const lastPointerType = useRef<string | null>(null)
 
   useEffect(() => {
     void browser.storage.local.get('servers').then(result => {
-      setLocations(filterByLocation((result as Pick<StorageLocal, 'servers'>).servers))
+      setCountries(filterByLocation((result as Pick<StorageLocal, 'servers'>).servers))
     })
-  }, [locations])
+  }, [])
+
+  function handleCountryClick (country: ServerCountry, hasCities: boolean, open: boolean): void {
+    const pointerType = lastPointerType.current
+    lastPointerType.current = null
+
+    if (hasCities && pointerType === 'touch' && !open) {
+      setOpenCountry(country.name)
+
+      return
+    }
+
+    void addTabWithServers(country.cities.flatMap(city => city.servers))
+  }
+
+  function handleCellKeyDown (event: React.KeyboardEvent<HTMLDivElement>): void {
+    lastPointerType.current = null
+
+    const buttons = Array.from(event.currentTarget.querySelectorAll('button'))
+    const index = buttons.indexOf(event.target as HTMLButtonElement)
+
+    if (index === -1 || buttons.length === 1) {
+      return
+    }
+
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+      if (index < buttons.length - 1) {
+        event.preventDefault()
+        buttons[index + 1].focus()
+      }
+
+      return
+    }
+
+    if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+      if (index > 0) {
+        event.preventDefault()
+        buttons[index - 1].focus()
+      }
+
+      return
+    }
+
+    if (event.key === 'Escape' && index > 0) {
+      event.preventDefault()
+      buttons[0].focus()
+    }
+  }
 
   return (
     <div>
@@ -74,9 +122,24 @@ export default function RootPage (): React.ReactElement {
       {browser.contextualIdentities === undefined && <p className="p-4"><strong className="text-orange">WARNING:</strong> Go to <code className="text-cyan">about:config</code> and set <code className="text-blue">privacy.userContext.enabled</code> to <code className="text-red">true</code>, then restart your browser. Otherwise this extension will not work!</p>}
 
       <div className="mx-0.5 grid grid-cols-4">
-        {locations.map(location => {
+        {countries.map(country => {
+          const hasCities = country.cities.length > 1
+          const open = openCountry === country.name
+
           return (
-            <Button key={location.name} className='m-0.5' onClick={addTabWithLocation} title={location.name}>{location.name}</Button>
+            <div key={country.name} className="group relative p-0.5" onPointerDown={event => { lastPointerType.current = event.pointerType }} onKeyDown={handleCellKeyDown}>
+              <Button className='w-full' onClick={() => handleCountryClick(country, hasCities, open)} title={country.name}>{country.name}{hasCities && <LuChevronDown className='ml-1 inline' />}</Button>
+
+              {hasCities && (
+                <div className={`absolute left-0.5 right-0.5 top-full z-10 flex-wrap justify-center gap-1 rounded-md border-2 border-300 bg-100 p-1 shadow-md ${open ? 'flex' : 'hidden group-hover:flex group-focus-within:flex'}`}>
+                  {country.cities.map(city => {
+                    return (
+                      <CityButton key={city.name} onClick={() => addTabWithServers(city.servers)} tabIndex={-1} title={city.name}>{city.name}</CityButton>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
           )
         })}
       </div>

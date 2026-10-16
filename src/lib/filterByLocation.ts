@@ -1,27 +1,48 @@
-import type { MullvadServer } from '@/types/MullvadServer'
+import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 
-export interface ServerLocation {
+export interface ServerCity {
   name: string
-  servers: MullvadServer[]
+  servers: IMullvadServerWireguard[]
 }
 
-export function filterByLocation (servers: MullvadServer[]): ServerLocation[] {
-  const locations: ServerLocation[] = []
+export interface ServerCountry {
+  name: string
+  cities: ServerCity[]
+}
+
+/** Group servers by country, then by city within each country.
+ *
+ * @param servers Servers to group.
+ * @returns Countries in order of first appearance, each with its cities in order of first appearance.
+ */
+export function filterByLocation (servers: IMullvadServerWireguard[]): ServerCountry[] {
+  const countries: ServerCountry[] = []
 
   servers.forEach(server => {
-    const location = locations.find(location => location.name === server.country_name)
+    let country = countries.find(country => country.name === server.country_name)
 
-    if (location !== undefined) {
-      location.servers.push(server)
+    if (country === undefined) {
+      country = {
+        name: server.country_name,
+        cities: []
+      }
+
+      countries.push(country)
+    }
+
+    const city = country.cities.find(city => city.name === server.city_name)
+
+    if (city !== undefined) {
+      city.servers.push(server)
 
       return
     }
 
-    locations.push({
-      name: server.country_name,
+    country.cities.push({
+      name: server.city_name,
       servers: [server]
     })
   })
 
-  return locations
+  return countries
 }
