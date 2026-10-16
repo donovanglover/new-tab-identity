@@ -86,7 +86,7 @@ export default function RootPage (): React.ReactElement {
   const countryUnavailable = settingCountry !== null && selectedCountry === undefined
   const cityUnavailable = settingCity !== null && !settingCities.some(option => option.code === settingCity.code)
 
-  const options = [{ value: '', label: 'Any country' }]
+  const options = [{ value: '', label: '🌍 Any country' }]
 
   if (settingCountry !== null && countryUnavailable) {
     options.push({ value: settingCountry.code, label: `${countryFlag(settingCountry.code)} ${settingCountry.name}` })
