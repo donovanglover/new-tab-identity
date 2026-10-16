@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { newTabWithServer } from '@/lib/newTabWithServer'
+import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 
 const browserMock = {
@@ -73,8 +73,52 @@ const server: IMullvadServerWireguard = {
   type: 'wireguard'
 }
 
+describe('sanitizeIdentityName()', () => {
+  it('should remove commas and parentheses', () => {
+    expect(sanitizeIdentityName('Wo(rk, EU)')).toBe('Work EU')
+  })
+
+  it('should trim surrounding whitespace', () => {
+    expect(sanitizeIdentityName('  Work  ')).toBe('Work')
+  })
+
+  it('should cap the name at 20 characters', () => {
+    expect(sanitizeIdentityName('a'.repeat(30))).toBe('a'.repeat(20))
+  })
+})
+
 describe('newTabWithServer()', () => {
   it('should create the new tab successfully after creating the container', async () => {
     expect(await newTabWithServer(server)).toEqual(await browserMock.tabs.create({}))
+  })
+
+  it('should name the container after the server by default', async () => {
+    await newTabWithServer(server)
+
+    expect(browserMock.contextualIdentities.create).toHaveBeenLastCalledWith({
+      name: 'Calgary, Canada (ca-yyc-wg-202)',
+      color: expect.any(String),
+      icon: expect.any(String)
+    })
+  })
+
+  it('should use the sanitized identity name when provided', async () => {
+    await newTabWithServer(server, { name: '  Wo(rk, EU)  ' })
+
+    expect(browserMock.contextualIdentities.create).toHaveBeenLastCalledWith({
+      name: 'Work EU (ca-yyc-wg-202)',
+      color: expect.any(String),
+      icon: expect.any(String)
+    })
+  })
+
+  it('should fall back to the generated name when the identity name is empty', async () => {
+    await newTabWithServer(server, { name: '  ,()  ' })
+
+    expect(browserMock.contextualIdentities.create).toHaveBeenLastCalledWith({
+      name: 'Calgary, Canada (ca-yyc-wg-202)',
+      color: expect.any(String),
+      icon: expect.any(String)
+    })
   })
 })

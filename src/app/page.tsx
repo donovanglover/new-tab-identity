@@ -7,7 +7,7 @@ import { countryFlag } from '@/lib/countryFlag'
 import { fetchMullvad } from '@/lib/fetchMullvad'
 import { filterByLocation, type ServerCountry } from '@/lib/filterByLocation'
 import { isAutoContainer } from '@/lib/isAutoContainer'
-import { newTabWithServer } from '@/lib/newTabWithServer'
+import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 import type { StoredLocation, StorageLocal, StorageSync } from '@/types/StorageAll'
 
@@ -30,10 +30,10 @@ async function updateServerList (): Promise<void> {
   toast.error('Server list is already up to date!')
 }
 
-async function addTabWithServers (servers: IMullvadServerWireguard[]): Promise<void> {
+async function addTabWithServers (servers: IMullvadServerWireguard[], name: string): Promise<void> {
   const randomServer = servers[Math.floor(Math.random() * servers.length)]
 
-  await newTabWithServer(randomServer)
+  await newTabWithServer(randomServer, { name })
 
   window.close()
 }
@@ -60,6 +60,7 @@ async function removeInactiveContainers (): Promise<void> {
 
 export default function RootPage (): React.ReactElement {
   const [countries, setCountries] = useState<ServerCountry[]>([])
+  const [identityName, setIdentityName] = useState('')
   const [settingCountry, setSettingCountry] = useState<StoredLocation | null>(null)
   const [settingCity, setSettingCity] = useState<StoredLocation | null>(null)
   const [openCountry, setOpenCountry] = useState<string | null>(null)
@@ -161,6 +162,10 @@ export default function RootPage (): React.ReactElement {
     })
   }
 
+  function handleIdentityNameChange (event: React.ChangeEvent<HTMLInputElement>): void {
+    setIdentityName(sanitizeIdentityName(event.target.value))
+  }
+
   function handleCountryClick (country: ServerCountry, hasCities: boolean, open: boolean): void {
     const pointerType = lastPointerType.current
     lastPointerType.current = null
@@ -171,7 +176,7 @@ export default function RootPage (): React.ReactElement {
       return
     }
 
-    void addTabWithServers(country.cities.flatMap(city => city.servers))
+    void addTabWithServers(country.cities.flatMap(city => city.servers), identityName)
   }
 
   function handleCellKeyDown (event: React.KeyboardEvent<HTMLDivElement>): void {
@@ -212,10 +217,12 @@ export default function RootPage (): React.ReactElement {
     <div>
       <h1 className='p-4 text-center text-4xl font-bold'>New Tab Identity</h1>
 
-      <div className='flex items-center justify-center px-4 pb-4'>
+      <div className='flex flex-wrap items-center justify-center gap-2 px-4 pb-4'>
         <select aria-label='Location' className='rounded-md border-2 border-300 bg-200 p-2 shadow' value={value} onChange={handleLocationChange}>
           {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
         </select>
+
+        <input aria-label='Identity name' className='rounded-md border-2 border-300 bg-200 p-2 shadow' maxLength={20} placeholder='Name (optional)' value={identityName} onChange={handleIdentityNameChange} />
       </div>
 
       <div className="absolute right-0 top-0 p-4">
@@ -238,7 +245,7 @@ export default function RootPage (): React.ReactElement {
                 <div className={`absolute left-0.5 right-0.5 top-full z-10 flex-wrap justify-center gap-1 rounded-md border-2 border-300 bg-100 p-1 shadow-md ${open ? 'flex' : 'hidden group-hover:flex group-focus-within:flex'}`}>
                   {country.cities.map(city => {
                     return (
-                      <CityButton key={city.name} onClick={() => addTabWithServers(city.servers)} tabIndex={-1} title={city.name}>{city.name}</CityButton>
+                      <CityButton key={city.name} onClick={() => addTabWithServers(city.servers, identityName)} tabIndex={-1} title={city.name}>{city.name}</CityButton>
                     )
                   })}
                 </div>

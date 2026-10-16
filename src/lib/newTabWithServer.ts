@@ -29,11 +29,26 @@ const icons = [
 
 interface Options {
   url?: string
+  name?: string
+}
+
+/** Sanitize a user-provided identity name for use in a container name.
+ *
+ * Commas are reserved for auto-generated names and parentheses are reserved
+ * for the hostname suffix, so both are removed.
+ *
+ * @param name Identity name typed by the user.
+ * @returns The sanitized name, capped at 20 characters, which may be empty.
+ */
+export function sanitizeIdentityName (name: string): string {
+  return name.replace(/[(),]/g, '').trim().slice(0, 20)
 }
 
 export async function newTabWithServer (server: IMullvadServerWireguard, options: Options = {}): Promise<browser.tabs.Tab> {
+  const name = sanitizeIdentityName(options.name ?? '')
+
   const container = await browser.contextualIdentities.create({
-    name: `${server.city_name}, ${server.country_name} (${server.hostname})`,
+    name: name === '' ? `${server.city_name}, ${server.country_name} (${server.hostname})` : `${name} (${server.hostname})`,
     color: colors[Math.floor(Math.random() * colors.length)],
     icon: icons[Math.floor(Math.random() * icons.length)]
   })
