@@ -17,6 +17,7 @@ await storageInit({
   local: {
     servers: [],
     used: [],
+    usedAt: 0,
     lastUpdated: 0
   }
 })
@@ -119,16 +120,19 @@ browser.contextMenus.onClicked.addListener(info => {
   contextMenuQueue = contextMenuQueue
     .then(async () => {
       const { country, city } = await browser.storage.sync.get(['country', 'city']) as Pick<StorageSync, 'country' | 'city'>
-      const { servers, used } = await browser.storage.local.get(['servers', 'used']) as Pick<StorageLocal, 'servers' | 'used'>
+      const { servers, used, usedAt } = await browser.storage.local.get(['servers', 'used', 'usedAt']) as Pick<StorageLocal, 'servers' | 'used' | 'usedAt'>
       const pool = servers.filter(server => serverInLocation(server, country, city))
-      const next = nextUnusedServer(pool, used, city === null ? 'city' : 'relay')
+      const now = Date.now()
+      const expired = usedAt !== 0 && now - usedAt > 60 * 60 * 1000
+      const next = nextUnusedServer(pool, expired ? [] : used, city === null ? 'city' : 'relay')
 
       if (next === undefined) {
         return
       }
 
       await browser.storage.local.set({
-        used: next.used
+        used: next.used,
+        usedAt: now
       })
 
       await newTabWithServer(next.server, {

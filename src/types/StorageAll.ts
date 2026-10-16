@@ -15,6 +15,7 @@ export interface StorageSync {
 export interface StorageLocal {
   servers: IMullvadServerWireguard[]
   used: string[]
+  usedAt: number
   lastUpdated: number
 }
 
