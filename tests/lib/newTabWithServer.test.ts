@@ -4,7 +4,7 @@ import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 
 const browserMock = {
   contextualIdentities: {
-    create: vi.fn((): browser.contextualIdentities.ContextualIdentity => ({
+    create: vi.fn<typeof browser.contextualIdentities.create>(async () => ({
       name: 'Calgary, Canada (ca-yyc-wg-202)',
       icon: 'tree',
       color: 'pink',
@@ -15,7 +15,7 @@ const browserMock = {
   },
 
   tabs: {
-    create: vi.fn((): browser.tabs.Tab => ({
+    create: vi.fn<typeof browser.tabs.create>(async () => ({
       active: true,
       attention: false,
       audible: false,
@@ -75,6 +75,6 @@ const server: IMullvadServerWireguard = {
 
 describe('newTabWithServer()', () => {
   it('should create the new tab successfully after creating the container', async () => {
-    expect(await newTabWithServer(server)).toEqual(browserMock.tabs.create())
+    expect(await newTabWithServer(server)).toEqual(await browserMock.tabs.create({}))
   })
 })

@@ -5,13 +5,13 @@ import type { StorageAll } from '@/types/StorageAll'
 const browserMock = {
   storage: {
     sync: {
-      get: vi.fn(async (_: string | string[] | Record<string, any> | null | undefined): Promise<Record<string, any>> => ({ blockDefault: true })),
-      set: vi.fn(async (_: Record<string, any>): Promise<void> => {})
+      get: vi.fn<typeof browser.storage.sync.get>(async () => ({ blockDefault: true })),
+      set: vi.fn<typeof browser.storage.sync.set>(async () => {})
     },
 
     local: {
-      get: vi.fn(async (_: string | string[] | Record<string, any> | null | undefined): Promise<Record<string, any>> => ({})),
-      set: vi.fn(async (_: Record<string, any>): Promise<void> => {})
+      get: vi.fn<typeof browser.storage.local.get>(async () => ({})),
+      set: vi.fn<typeof browser.storage.local.set>(async () => {})
     }
   }
 }
