@@ -6,6 +6,7 @@ import CityButton from '@/components/CityButton'
 import { countryFlag } from '@/lib/countryFlag'
 import { fetchMullvad } from '@/lib/fetchMullvad'
 import { filterByLocation, type ServerCountry } from '@/lib/filterByLocation'
+import { countIdentities, formatIdentityCounts, type IdentityCounts } from '@/lib/identityCounts'
 import { isAutoContainer } from '@/lib/isAutoContainer'
 import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
 import { serverInLocation } from '@/lib/serverInLocation'
@@ -39,21 +40,31 @@ async function addTabWithServers (servers: IMullvadServerWireguard[], name: stri
   window.close()
 }
 
+async function getUsedCookieStoreIds (): Promise<Set<string>> {
+  const tabs = await browser.tabs.query({})
+
+  return new Set(tabs.map(tab => tab.cookieStoreId).filter((id): id is string => id !== undefined))
+}
+
+async function fetchIdentityCounts (): Promise<IdentityCounts> {
+  const containers = await browser.contextualIdentities.query({})
+  const usedCookieStoreIds = await getUsedCookieStoreIds()
+
+  return countIdentities(containers, usedCookieStoreIds)
+}
+
 async function removeInactiveContainers (): Promise<void> {
   const containers = await browser.contextualIdentities.query({})
+  const usedCookieStoreIds = await getUsedCookieStoreIds()
   let numRemoved = 0
 
   for (const container of containers) {
-    if (!isAutoContainer(container.name)) {
+    if (!isAutoContainer(container.name) || usedCookieStoreIds.has(container.cookieStoreId)) {
       continue
     }
 
-    const tabsWithContainer = await browser.tabs.query({ cookieStoreId: container.cookieStoreId })
-
-    if (tabsWithContainer.length === 0) {
-      await browser.contextualIdentities.remove(container.cookieStoreId)
-      numRemoved++
-    }
+    await browser.contextualIdentities.remove(container.cookieStoreId)
+    numRemoved++
   }
 
   toast.success(`Removed ${numRemoved} inactive ${numRemoved === 1 ? 'container' : 'containers'}.`)
@@ -64,10 +75,17 @@ export default function RootPage (): React.ReactElement {
   const [identityName, setIdentityName] = useState('')
   const [settingCountry, setSettingCountry] = useState<StoredLocation | null>(null)
   const [settingCity, setSettingCity] = useState<StoredLocation | null>(null)
+  const [counts, setCounts] = useState<IdentityCounts>({
+    custom: 0,
+    random: 0,
+    unused: 0
+  })
   const [openCountry, setOpenCountry] = useState<string | null>(null)
   const lastPointerType = useRef<string | null>(null)
 
   useEffect(() => {
+    void fetchIdentityCounts().then(setCounts)
+
     void browser.storage.local.get('servers').then(result => {
       setCountries(filterByLocation((result as Pick<StorageLocal, 'servers'>).servers))
     })
@@ -182,6 +200,11 @@ export default function RootPage (): React.ReactElement {
     void addTabWithServers(pool, identityName)
   }
 
+  async function handleRemoveInactiveContainers (): Promise<void> {
+    await removeInactiveContainers()
+    setCounts(await fetchIdentityCounts())
+  }
+
   function handleCountryClick (country: ServerCountry, hasCities: boolean, open: boolean): void {
     const pointerType = lastPointerType.current
     lastPointerType.current = null
@@ -233,6 +256,8 @@ export default function RootPage (): React.ReactElement {
     <div>
       <h1 className='p-4 text-center text-4xl font-bold'>New Tab Identity</h1>
 
+      <p className='-mt-2 px-4 pb-4 text-center text-sm text-600'>{formatIdentityCounts(counts)}</p>
+
       <div className='flex flex-wrap items-start justify-center gap-2 px-4 pb-4'>
         <div className='flex flex-col gap-1'>
           <label className='text-sm text-600' htmlFor='location'>Default location</label>
@@ -251,7 +276,7 @@ export default function RootPage (): React.ReactElement {
 
       <div className="absolute right-0 top-0 p-4">
         <Button onClick={updateServerList} title="Update server list"><LuRefreshCw /></Button>
-        <Button className="ml-2" onClick={removeInactiveContainers} title="Delete inactive containers"><LuX /></Button>
+        <Button className="ml-2" onClick={handleRemoveInactiveContainers} title="Delete inactive containers"><LuX /></Button>
       </div>
 
       {browser.contextualIdentities === undefined && <p className="p-4"><strong className="text-orange">WARNING:</strong> Go to <code className="text-cyan">about:config</code> and set <code className="text-blue">privacy.userContext.enabled</code> to <code className="text-red">true</code>, then restart your browser. Otherwise this extension will not work!</p>}
