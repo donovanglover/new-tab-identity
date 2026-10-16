@@ -6,7 +6,7 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src/')
+      '@': resolve(import.meta.dirname, './src/')
     }
   },
 
@@ -17,8 +17,8 @@ export default defineConfig({
 
     rollupOptions: {
       input: {
-        app: resolve(__dirname, './src/index.html'),
-        background: resolve(__dirname, './src/background.ts')
+        app: resolve(import.meta.dirname, './src/index.html'),
+        background: resolve(import.meta.dirname, './src/background.ts')
       },
 
       output: {
