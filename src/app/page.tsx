@@ -28,7 +28,7 @@ async function updateServerList (): Promise<void> {
     return
   }
 
-  toast.error('Server list is already up to date!')
+  toast.success('Server list is already up to date.')
 }
 
 async function addTabWithServers (servers: IMullvadServerWireguard[], name: string): Promise<void> {
