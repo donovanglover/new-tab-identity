@@ -237,7 +237,7 @@ export default function RootPage (): React.ReactElement {
         <div className='flex flex-col gap-1'>
           <label className='text-sm text-600' htmlFor='location'>Default location</label>
 
-          <select id='location' className='rounded-md border-2 border-300 bg-200 p-2 shadow' value={value} onChange={handleLocationChange}>
+          <select id='location' className='w-48 rounded-md border-2 border-300 bg-200 p-2 shadow' value={value} onChange={handleLocationChange}>
             {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
           </select>
         </div>
