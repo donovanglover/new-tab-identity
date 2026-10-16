@@ -7,6 +7,7 @@ import { countryFlag } from '@/lib/countryFlag'
 import { fetchMullvad } from '@/lib/fetchMullvad'
 import { filterByLocation, type ServerCountry } from '@/lib/filterByLocation'
 import { countIdentities, formatIdentityCounts, type IdentityCounts } from '@/lib/identityCounts'
+import { identityParts } from '@/lib/identityParts'
 import { isAutoContainer } from '@/lib/isAutoContainer'
 import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
 import { serverInLocation } from '@/lib/serverInLocation'
@@ -46,11 +47,21 @@ async function getUsedCookieStoreIds (): Promise<Set<string>> {
   return new Set(tabs.map(tab => tab.cookieStoreId).filter((id): id is string => id !== undefined))
 }
 
-async function fetchIdentityCounts (): Promise<IdentityCounts> {
+interface Identities {
+  counts: IdentityCounts
+  named: browser.contextualIdentities.ContextualIdentity[]
+  usedCookieStoreIds: Set<string>
+}
+
+async function fetchIdentities (): Promise<Identities> {
   const containers = await browser.contextualIdentities.query({})
   const usedCookieStoreIds = await getUsedCookieStoreIds()
 
-  return countIdentities(containers, usedCookieStoreIds)
+  return {
+    counts: countIdentities(containers, usedCookieStoreIds),
+    named: containers.filter(container => !isAutoContainer(container.name)),
+    usedCookieStoreIds
+  }
 }
 
 async function removeInactiveContainers (): Promise<void> {
@@ -75,16 +86,20 @@ export default function RootPage (): React.ReactElement {
   const [identityName, setIdentityName] = useState('')
   const [settingCountry, setSettingCountry] = useState<StoredLocation | null>(null)
   const [settingCity, setSettingCity] = useState<StoredLocation | null>(null)
-  const [counts, setCounts] = useState<IdentityCounts>({
-    custom: 0,
-    random: 0,
-    unused: 0
+  const [identities, setIdentities] = useState<Identities>({
+    counts: {
+      custom: 0,
+      random: 0,
+      unused: 0
+    },
+    named: [],
+    usedCookieStoreIds: new Set()
   })
   const [openCountry, setOpenCountry] = useState<string | null>(null)
   const lastPointerType = useRef<string | null>(null)
 
   useEffect(() => {
-    void fetchIdentityCounts().then(setCounts)
+    void fetchIdentities().then(setIdentities)
 
     void browser.storage.local.get('servers').then(result => {
       setCountries(filterByLocation((result as Pick<StorageLocal, 'servers'>).servers))
@@ -202,7 +217,36 @@ export default function RootPage (): React.ReactElement {
 
   async function handleRemoveInactiveContainers (): Promise<void> {
     await removeInactiveContainers()
-    setCounts(await fetchIdentityCounts())
+    setIdentities(await fetchIdentities())
+  }
+
+  async function saveIdentityName (identity: browser.contextualIdentities.ContextualIdentity, input: HTMLInputElement): Promise<void> {
+    const { custom, hostname } = identityParts(identity.name)
+    const name = sanitizeIdentityName(input.value)
+
+    if (name === '' || name === custom) {
+      input.value = custom
+
+      return
+    }
+
+    await browser.contextualIdentities.update(identity.cookieStoreId, {
+      name: hostname === undefined ? name : `${name} (${hostname})`
+    })
+
+    input.value = name
+
+    toast.success(`Renamed identity to ${name}.`)
+
+    setIdentities(await fetchIdentities())
+  }
+
+  async function removeIdentity (identity: browser.contextualIdentities.ContextualIdentity): Promise<void> {
+    await browser.contextualIdentities.remove(identity.cookieStoreId)
+
+    toast.success(`Removed ${identity.name}.`)
+
+    setIdentities(await fetchIdentities())
   }
 
   function handleCountryClick (country: ServerCountry, hasCities: boolean, open: boolean): void {
@@ -256,7 +300,7 @@ export default function RootPage (): React.ReactElement {
     <div>
       <h1 className='p-4 text-center text-4xl font-bold'>New Tab Identity</h1>
 
-      <p className='-mt-2 px-4 pb-4 text-center text-sm text-600'>{formatIdentityCounts(counts)}</p>
+      <p className='-mt-2 px-4 pb-4 text-center text-sm text-600'>{formatIdentityCounts(identities.counts)}</p>
 
       <div className='flex flex-wrap items-start justify-center gap-2 px-4 pb-4'>
         <div className='flex flex-col gap-1'>
@@ -303,6 +347,35 @@ export default function RootPage (): React.ReactElement {
           )
         })}
       </div>
+
+      {identities.named.length > 0 && (
+        <div className='p-4'>
+          <h2 className='pb-2 text-sm text-600'>Custom identities</h2>
+
+          <div className='flex flex-col gap-1'>
+            {identities.named.map(identity => {
+              const { custom, hostname } = identityParts(identity.name)
+              const used = identities.usedCookieStoreIds.has(identity.cookieStoreId)
+
+              return (
+                <div key={identity.cookieStoreId} className='flex items-center gap-2'>
+                  <input aria-label='Identity name' className='min-w-0 flex-1 rounded-md border-2 border-300 bg-200 p-2 shadow' defaultValue={custom} maxLength={20} onChange={event => { event.target.value = sanitizeIdentityName(event.target.value) }} onBlur={event => { void saveIdentityName(identity, event.target) }} onKeyDown={event => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault()
+                      void saveIdentityName(identity, event.currentTarget)
+                    }
+                  }} />
+
+                  {hostname !== undefined && <span className='shrink-0 text-xs text-600'>({hostname})</span>}
+
+                  <Button className='shrink-0' disabled={used} onClick={() => { void removeIdentity(identity) }} title={used ? 'Close its tabs first' : 'Delete identity'}><LuX /></Button>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
       <Toaster />
     </div>
   )
