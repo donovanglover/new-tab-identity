@@ -120,6 +120,7 @@ describe('filterByLocation()', () => {
 
   it('should group servers by country', () => {
     expect(countries.map(country => country.name)).toEqual(['Brazil', 'Switzerland'])
+    expect(countries.map(country => country.code)).toEqual(['br', 'ch'])
   })
 
   it('should group servers by city within each country', () => {

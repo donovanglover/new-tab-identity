@@ -7,6 +7,7 @@ export interface ServerCity {
 
 export interface ServerCountry {
   name: string
+  code: string
   cities: ServerCity[]
 }
 
@@ -24,6 +25,7 @@ export function filterByLocation (servers: IMullvadServerWireguard[]): ServerCou
     if (country === undefined) {
       country = {
         name: server.country_name,
+        code: server.country_code,
         cities: []
       }
 
