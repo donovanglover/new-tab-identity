@@ -47,8 +47,15 @@ async function addTabWithServers (servers: IMullvadServerWireguard[], name: stri
 
 async function getUsedCookieStoreIds (): Promise<Set<string>> {
   const tabs = await browser.tabs.query({})
+  const inProgress = await browser.downloads.search({ state: 'in_progress' })
+  const interrupted = await browser.downloads.search({ state: 'interrupted' })
+  const cookieStoreIds = [
+    ...tabs.map(tab => tab.cookieStoreId),
+    ...inProgress.map(download => download.cookieStoreId),
+    ...interrupted.map(download => download.cookieStoreId)
+  ]
 
-  return new Set(tabs.map(tab => tab.cookieStoreId).filter((id): id is string => id !== undefined))
+  return new Set(cookieStoreIds.filter((id): id is string => id !== undefined))
 }
 
 interface Identities {
@@ -424,7 +431,7 @@ export default function RootPage (): React.ReactElement {
 
                   <Button className='shrink-0' onClick={() => { void openIdentityTab(identity) }} title='Open new tab'><LuArrowUpRight /></Button>
 
-                  <Button className='shrink-0' disabled={used} onClick={() => { void removeIdentity(identity) }} title={used ? 'Close its tabs first' : 'Delete identity'}><LuX /></Button>
+                  <Button className='shrink-0' disabled={used} onClick={() => { void removeIdentity(identity) }} title={used ? 'In use by tabs or downloads' : 'Delete identity'}><LuX /></Button>
                 </div>
               )
             })}
