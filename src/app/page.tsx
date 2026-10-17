@@ -453,7 +453,7 @@ export default function RootPage (): React.ReactElement {
           <label className='text-sm text-600' htmlFor='identity-name'>Identity name</label>
 
           <div className='relative'>
-            <input id='identity-name' className='rounded-md border-2 border-300 bg-200 px-2 py-1 shadow' maxLength={20} placeholder='Name (optional)' value={identityName} onChange={handleIdentityNameChange} />
+            <input id='identity-name' className='rounded-md border-2 border-300 bg-200 px-2 py-1 shadow' maxLength={20} placeholder='Name (optional)' autoComplete='off' value={identityName} onChange={handleIdentityNameChange} />
 
             <Button className='absolute left-full top-1/2 ml-1 -translate-y-1/2' onClick={event => { event.preventDefault(); void openWithSettings() }} title='Open new tab'><LuArrowUpRight /></Button>
           </div>
@@ -502,14 +502,14 @@ export default function RootPage (): React.ReactElement {
 
               return (
                 <div key={identity.cookieStoreId} className='flex items-center gap-2'>
-                  <input aria-label='Identity name' className='w-48 shrink-0 rounded-md border-2 border-300 bg-200 px-2 py-1 shadow' defaultValue={custom} maxLength={20} onChange={event => { event.target.value = sanitizeIdentityName(event.target.value) }} onBlur={event => { void saveIdentityName(identity, event.target) }} onKeyDown={event => {
+                  <input aria-label='Identity name' className='w-48 shrink-0 rounded-md border-2 border-300 bg-200 px-2 py-1 shadow' defaultValue={custom} maxLength={20} autoComplete='off' onChange={event => { event.target.value = sanitizeIdentityName(event.target.value) }} onBlur={event => { void saveIdentityName(identity, event.target) }} onKeyDown={event => {
                     if (event.key === 'Enter') {
                       event.preventDefault()
                       void saveIdentityName(identity, event.currentTarget)
                     }
                   }} />
 
-                  <input aria-label='New tab URL' className='min-w-0 flex-1 rounded-md border-2 border-300 bg-200 px-2 py-1 shadow' placeholder='Optional URL' defaultValue={identities.identityUrls[identity.cookieStoreId] ?? ''} onBlur={event => { void saveIdentityUrl(identity, event.target) }} onKeyDown={event => {
+                  <input aria-label='New tab URL' className='min-w-0 flex-1 rounded-md border-2 border-300 bg-200 px-2 py-1 shadow' placeholder='Optional URL' autoComplete='off' defaultValue={identities.identityUrls[identity.cookieStoreId] ?? ''} onBlur={event => { void saveIdentityUrl(identity, event.target) }} onKeyDown={event => {
                     if (event.key === 'Enter') {
                       event.preventDefault()
                       void saveIdentityUrl(identity, event.currentTarget)
