@@ -461,6 +461,11 @@ export default function RootPage (): React.ReactElement {
 
       <p className='-mt-2 px-4 pb-4 text-center text-sm text-600'>{formatIdentityCounts(identities.counts)}</p>
 
+      <div className="absolute right-0 top-0 p-4">
+        <Button onClick={updateServerList} title="Update server list"><LuRefreshCw /></Button>
+        <Button className="ml-2" disabled={deletingInactive} onClick={handleRemoveInactiveContainers} title={deletingInactive ? 'Deleting inactive containers...' : 'Delete inactive containers'}>{deletingInactive ? <LuLoaderCircle className='animate-spin' /> : <LuX />}</Button>
+      </div>
+
       <div className='flex flex-wrap items-start justify-center gap-2 px-4 pb-4'>
         <div className='flex flex-col gap-1'>
           <label className='text-sm text-600' htmlFor='location'>Default location</label>
@@ -479,11 +484,6 @@ export default function RootPage (): React.ReactElement {
             <Button className='absolute left-full top-1/2 ml-1 -translate-y-1/2' onClick={event => { event.preventDefault(); void openWithSettings() }} title='Open new tab'><LuArrowUpRight /></Button>
           </div>
         </form>
-      </div>
-
-      <div className="absolute right-0 top-0 p-4">
-        <Button onClick={updateServerList} title="Update server list"><LuRefreshCw /></Button>
-        <Button className="ml-2" disabled={deletingInactive} onClick={handleRemoveInactiveContainers} title={deletingInactive ? 'Deleting inactive containers...' : 'Delete inactive containers'}>{deletingInactive ? <LuLoaderCircle className='animate-spin' /> : <LuX />}</Button>
       </div>
 
       {browser.contextualIdentities === undefined && <p className="p-4"><strong className="text-orange">WARNING:</strong> Go to <code className="text-cyan">about:config</code> and set <code className="text-blue">privacy.userContext.enabled</code> to <code className="text-red">true</code>, then restart your browser. Otherwise this extension will not work!</p>}
