@@ -12,6 +12,7 @@ import { isAutoContainer } from '@/lib/isAutoContainer'
 import { isCustomIdentity } from '@/lib/isCustomIdentity'
 import { newTabWithIdentity } from '@/lib/newTabWithIdentity'
 import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
+import { nextUnusedServer } from '@/lib/nextUnusedServer'
 import { sanitizeNewTabUrl } from '@/lib/sanitizeNewTabUrl'
 import { serverInLocation } from '@/lib/serverInLocation'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
@@ -240,22 +241,32 @@ export default function RootPage (): React.ReactElement {
     setIdentityName(sanitizeIdentityName(event.target.value))
   }
 
-  function openWithSettings (): void {
-    const servers = countries.flatMap(country => country.cities.flatMap(city => city.servers))
+  async function openWithSettings (): Promise<void> {
+    const { servers, used, usedAt } = await browser.storage.local.get(['servers', 'used', 'usedAt']) as Pick<StorageLocal, 'servers' | 'used' | 'usedAt'>
     const pool = servers.filter(server => serverInLocation(server, settingCountry, settingCity))
+    const now = Date.now()
+    const expired = usedAt !== 0 && now - usedAt > 60 * 60 * 1000
+    const next = nextUnusedServer(pool, expired ? [] : used, settingCity === null ? 'city' : 'relay')
 
-    if (pool.length === 0) {
+    if (next === undefined) {
       toast.error('No servers available for the configured location.')
 
       return
     }
 
-    void addTabWithServers(pool, identityName)
+    await browser.storage.local.set({
+      used: next.used,
+      usedAt: now
+    })
+
+    await newTabWithServer(next.server, { name: identityName })
+
+    window.close()
   }
 
   function handleOpen (event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault()
-    openWithSettings()
+    void openWithSettings()
   }
 
   async function handleRemoveInactiveContainers (): Promise<void> {
@@ -444,7 +455,7 @@ export default function RootPage (): React.ReactElement {
           <div className='relative'>
             <input id='identity-name' className='rounded-md border-2 border-300 bg-200 px-2 py-1 shadow' maxLength={20} placeholder='Name (optional)' value={identityName} onChange={handleIdentityNameChange} />
 
-            <Button className='absolute left-full top-1/2 ml-1 -translate-y-1/2' onClick={event => { event.preventDefault(); openWithSettings() }} title='Open new tab'><LuArrowUpRight /></Button>
+            <Button className='absolute left-full top-1/2 ml-1 -translate-y-1/2' onClick={event => { event.preventDefault(); void openWithSettings() }} title='Open new tab'><LuArrowUpRight /></Button>
           </div>
         </form>
       </div>
