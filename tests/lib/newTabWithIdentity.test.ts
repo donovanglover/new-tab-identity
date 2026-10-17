@@ -52,7 +52,6 @@ describe('newTabWithIdentity()', () => {
     const tab = await newTabWithIdentity(identity)
 
     expect(browserMock.tabs.create).toHaveBeenLastCalledWith({
-      url: 'https://am.i.mullvad.net/connected',
       cookieStoreId: 'firefox-container-7'
     })
 

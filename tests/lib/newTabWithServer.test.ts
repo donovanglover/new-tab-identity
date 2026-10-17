@@ -121,4 +121,21 @@ describe('newTabWithServer()', () => {
       icon: expect.any(String)
     })
   })
+
+  it('should open the new tab page by omitting the URL', async () => {
+    await newTabWithServer(server)
+
+    expect(browserMock.tabs.create).toHaveBeenLastCalledWith({
+      cookieStoreId: 'firefox-container-7'
+    })
+  })
+
+  it('should use the provided URL', async () => {
+    await newTabWithServer(server, { url: 'https://example.com/' })
+
+    expect(browserMock.tabs.create).toHaveBeenLastCalledWith({
+      url: 'https://example.com/',
+      cookieStoreId: 'firefox-container-7'
+    })
+  })
 })

@@ -53,10 +53,15 @@ export async function newTabWithServer (server: IMullvadServerWireguard, options
     icon: icons[Math.floor(Math.random() * icons.length)]
   })
 
-  const tab = await browser.tabs.create({
-    url: options.url ?? 'https://am.i.mullvad.net/connected',
+  const properties: Parameters<typeof browser.tabs.create>[0] = {
     cookieStoreId: container.cookieStoreId
-  })
+  }
+
+  if (options.url !== undefined) {
+    properties.url = options.url
+  }
+
+  const tab = await browser.tabs.create(properties)
 
   return tab
 }
