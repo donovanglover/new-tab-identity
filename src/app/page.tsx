@@ -129,6 +129,27 @@ export default function RootPage (): React.ReactElement {
   const [openCountry, setOpenCountry] = useState<string | null>(null)
   const [deletingInactive, setDeletingInactive] = useState(false)
   const lastPointerType = useRef<string | null>(null)
+  const identityNameInput = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const input = identityNameInput.current
+
+    if (input === null) {
+      return
+    }
+
+    const focus = (): void => { input.focus() }
+    focus()
+
+    const timeout = window.setTimeout(focus, 100)
+
+    window.addEventListener('focus', focus, { once: true })
+
+    return () => {
+      window.clearTimeout(timeout)
+      window.removeEventListener('focus', focus)
+    }
+  }, [])
 
   useEffect(() => {
     void fetchIdentities().then(setIdentities)
@@ -453,7 +474,7 @@ export default function RootPage (): React.ReactElement {
           <label className='text-sm text-600' htmlFor='identity-name'>Identity name</label>
 
           <div className='relative'>
-            <input id='identity-name' className='rounded-md border-2 border-300 bg-200 px-2 py-1 shadow' maxLength={20} placeholder='Name (optional)' autoComplete='off' value={identityName} onChange={handleIdentityNameChange} />
+            <input id='identity-name' ref={identityNameInput} className='rounded-md border-2 border-300 bg-200 px-2 py-1 shadow' maxLength={20} placeholder='Name (optional)' autoComplete='off' value={identityName} onChange={handleIdentityNameChange} />
 
             <Button className='absolute left-full top-1/2 ml-1 -translate-y-1/2' onClick={event => { event.preventDefault(); void openWithSettings() }} title='Open new tab'><LuArrowUpRight /></Button>
           </div>
