@@ -21,7 +21,6 @@ Browse the web from multiple VPN locations simultaneously. Goes well with [Libre
 
 1. Use the extension popup to create new identities and delete old ones.
 2. Right click on links to open them with an unused random location.
-3. For everything else, use the built-in containers functionality to open new tabs in existing containers.
 
 ## Contributing
 
