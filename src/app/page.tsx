@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
-import { LuArrowUpRight, LuChevronDown, LuRefreshCw, LuX } from 'react-icons/lu'
+import { LuArrowUpRight, LuChevronDown, LuLoaderCircle, LuRefreshCw, LuX } from 'react-icons/lu'
 import Button from '@/components/Button'
 import CityButton from '@/components/CityButton'
 import { countryFlag } from '@/lib/countryFlag'
@@ -80,20 +80,34 @@ async function fetchIdentities (): Promise<Identities> {
 }
 
 async function removeInactiveContainers (): Promise<void> {
-  const containers = await browser.contextualIdentities.query({})
-  const usedCookieStoreIds = await getUsedCookieStoreIds()
-  let numRemoved = 0
+  const loading = toast.loading('Deleting inactive containers...')
 
-  for (const container of containers) {
-    if (!isAutoContainer(container.name) || usedCookieStoreIds.has(container.cookieStoreId)) {
-      continue
+  try {
+    const containers = await browser.contextualIdentities.query({})
+    const usedCookieStoreIds = await getUsedCookieStoreIds()
+    const removable = containers.filter(container => isAutoContainer(container.name) && !usedCookieStoreIds.has(container.cookieStoreId))
+    const total = removable.length
+    let numRemoved = 0
+    let lastUpdate = Date.now()
+
+    if (total > 0) {
+      toast.loading(`Deleting inactive containers... 0/${total} (0%)`, { id: loading })
     }
 
-    await browser.contextualIdentities.remove(container.cookieStoreId)
-    numRemoved++
-  }
+    for (const container of removable) {
+      await browser.contextualIdentities.remove(container.cookieStoreId)
+      numRemoved++
 
-  toast.success(`Removed ${numRemoved} inactive ${numRemoved === 1 ? 'container' : 'containers'}.`)
+      if (numRemoved === total || Date.now() - lastUpdate >= 250) {
+        toast.loading(`Deleting inactive containers... ${numRemoved}/${total} (${Math.floor(numRemoved / total * 100)}%)`, { id: loading })
+        lastUpdate = Date.now()
+      }
+    }
+
+    toast.success(`Removed ${numRemoved} inactive ${numRemoved === 1 ? 'container' : 'containers'}.`, { id: loading })
+  } catch {
+    toast.error('Failed to delete inactive containers.', { id: loading })
+  }
 }
 
 export default function RootPage (): React.ReactElement {
@@ -112,6 +126,7 @@ export default function RootPage (): React.ReactElement {
     identityUrls: {}
   })
   const [openCountry, setOpenCountry] = useState<string | null>(null)
+  const [deletingInactive, setDeletingInactive] = useState(false)
   const lastPointerType = useRef<string | null>(null)
 
   useEffect(() => {
@@ -241,8 +256,14 @@ export default function RootPage (): React.ReactElement {
   }
 
   async function handleRemoveInactiveContainers (): Promise<void> {
-    await removeInactiveContainers()
-    setIdentities(await fetchIdentities())
+    setDeletingInactive(true)
+
+    try {
+      await removeInactiveContainers()
+      setIdentities(await fetchIdentities())
+    } finally {
+      setDeletingInactive(false)
+    }
   }
 
   async function saveIdentityUrl (identity: browser.contextualIdentities.ContextualIdentity, input: HTMLInputElement): Promise<void> {
@@ -423,7 +444,7 @@ export default function RootPage (): React.ReactElement {
 
       <div className="absolute right-0 top-0 p-4">
         <Button onClick={updateServerList} title="Update server list"><LuRefreshCw /></Button>
-        <Button className="ml-2" onClick={handleRemoveInactiveContainers} title="Delete inactive containers"><LuX /></Button>
+        <Button className="ml-2" disabled={deletingInactive} onClick={handleRemoveInactiveContainers} title={deletingInactive ? 'Deleting inactive containers...' : 'Delete inactive containers'}>{deletingInactive ? <LuLoaderCircle className='animate-spin' /> : <LuX />}</Button>
       </div>
 
       {browser.contextualIdentities === undefined && <p className="p-4"><strong className="text-orange">WARNING:</strong> Go to <code className="text-cyan">about:config</code> and set <code className="text-blue">privacy.userContext.enabled</code> to <code className="text-red">true</code>, then restart your browser. Otherwise this extension will not work!</p>}
