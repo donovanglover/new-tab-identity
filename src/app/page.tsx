@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
-import { LuArrowUpRight, LuChevronDown, LuLoaderCircle, LuPlus, LuRefreshCw, LuX } from 'react-icons/lu'
+import { LuArrowUpRight, LuChevronDown, LuLoaderCircle, LuRefreshCw, LuX } from 'react-icons/lu'
 import Button from '@/components/Button'
 import CityButton from '@/components/CityButton'
 import { countryFlag } from '@/lib/countryFlag'
@@ -12,7 +12,6 @@ import { isAutoContainer } from '@/lib/isAutoContainer'
 import { isCustomIdentity } from '@/lib/isCustomIdentity'
 import { newTabWithIdentity } from '@/lib/newTabWithIdentity'
 import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
-import { nextUnusedServer } from '@/lib/nextUnusedServer'
 import { sanitizeNewTabUrl } from '@/lib/sanitizeNewTabUrl'
 import { serverInLocation } from '@/lib/serverInLocation'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
@@ -111,28 +110,6 @@ async function removeInactiveContainers (): Promise<void> {
   }
 }
 
-async function openRandomNewTab (): Promise<void> {
-  const { servers, used, usedAt } = await browser.storage.local.get(['servers', 'used', 'usedAt']) as Pick<StorageLocal, 'servers' | 'used' | 'usedAt'>
-  const now = Date.now()
-  const expired = usedAt !== 0 && now - usedAt > 60 * 60 * 1000
-  const next = nextUnusedServer(servers, expired ? [] : used)
-
-  if (next === undefined) {
-    toast.error('No servers available.')
-
-    return
-  }
-
-  await browser.storage.local.set({
-    used: next.used,
-    usedAt: now
-  })
-
-  await newTabWithServer(next.server)
-
-  window.close()
-}
-
 export default function RootPage (): React.ReactElement {
   const [countries, setCountries] = useState<ServerCountry[]>([])
   const [identityName, setIdentityName] = useState('')
@@ -150,7 +127,6 @@ export default function RootPage (): React.ReactElement {
   })
   const [openCountry, setOpenCountry] = useState<string | null>(null)
   const [deletingInactive, setDeletingInactive] = useState(false)
-  const [openingRandomTab, setOpeningRandomTab] = useState(false)
   const lastPointerType = useRef<string | null>(null)
 
   useEffect(() => {
@@ -280,16 +256,6 @@ export default function RootPage (): React.ReactElement {
   function handleOpen (event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault()
     openWithSettings()
-  }
-
-  async function handleOpenRandomTab (): Promise<void> {
-    setOpeningRandomTab(true)
-
-    try {
-      await openRandomNewTab()
-    } finally {
-      setOpeningRandomTab(false)
-    }
   }
 
   async function handleRemoveInactiveContainers (): Promise<void> {
@@ -484,7 +450,6 @@ export default function RootPage (): React.ReactElement {
       </div>
 
       <div className="absolute right-0 top-0 p-4">
-        <Button className="mr-2" disabled={openingRandomTab} onClick={handleOpenRandomTab} title="Open random new tab"><LuPlus /></Button>
         <Button onClick={updateServerList} title="Update server list"><LuRefreshCw /></Button>
         <Button className="ml-2" disabled={deletingInactive} onClick={handleRemoveInactiveContainers} title={deletingInactive ? 'Deleting inactive containers...' : 'Delete inactive containers'}>{deletingInactive ? <LuLoaderCircle className='animate-spin' /> : <LuX />}</Button>
       </div>
