@@ -17,6 +17,7 @@ export interface StorageLocal {
   used: string[]
   usedAt: number
   lastUpdated: number
+  identityUrls: Record<string, string>
 }
 
 export interface StorageAll {

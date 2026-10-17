@@ -12,6 +12,7 @@ import { isAutoContainer } from '@/lib/isAutoContainer'
 import { isCustomIdentity } from '@/lib/isCustomIdentity'
 import { newTabWithIdentity } from '@/lib/newTabWithIdentity'
 import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
+import { sanitizeNewTabUrl } from '@/lib/sanitizeNewTabUrl'
 import { serverInLocation } from '@/lib/serverInLocation'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 import type { StoredLocation, StorageLocal, StorageSync } from '@/types/StorageAll'
@@ -62,16 +63,19 @@ interface Identities {
   counts: IdentityCounts
   customIdentities: browser.contextualIdentities.ContextualIdentity[]
   usedCookieStoreIds: Set<string>
+  identityUrls: Record<string, string>
 }
 
 async function fetchIdentities (): Promise<Identities> {
   const containers = await browser.contextualIdentities.query({})
   const usedCookieStoreIds = await getUsedCookieStoreIds()
+  const { identityUrls } = await browser.storage.local.get('identityUrls') as Pick<StorageLocal, 'identityUrls'>
 
   return {
     counts: countIdentities(containers, usedCookieStoreIds),
     customIdentities: containers.filter(container => isCustomIdentity(container.name)),
-    usedCookieStoreIds
+    usedCookieStoreIds,
+    identityUrls: identityUrls ?? {}
   }
 }
 
@@ -104,7 +108,8 @@ export default function RootPage (): React.ReactElement {
       unused: 0
     },
     customIdentities: [],
-    usedCookieStoreIds: new Set()
+    usedCookieStoreIds: new Set(),
+    identityUrls: {}
   })
   const [openCountry, setOpenCountry] = useState<string | null>(null)
   const lastPointerType = useRef<string | null>(null)
@@ -240,6 +245,42 @@ export default function RootPage (): React.ReactElement {
     setIdentities(await fetchIdentities())
   }
 
+  async function saveIdentityUrl (identity: browser.contextualIdentities.ContextualIdentity, input: HTMLInputElement): Promise<void> {
+    const raw = input.value
+    const url = sanitizeNewTabUrl(raw)
+
+    if (url === undefined && raw.trim() !== '') {
+      toast.error('Enter a valid URL.')
+      input.value = identities.identityUrls[identity.cookieStoreId] ?? ''
+
+      return
+    }
+
+    const current = identities.identityUrls[identity.cookieStoreId] ?? ''
+    const nextUrl = url ?? ''
+
+    if (nextUrl === current) {
+      input.value = nextUrl
+
+      return
+    }
+
+    const next = { ...identities.identityUrls }
+
+    if (url === undefined) {
+      delete next[identity.cookieStoreId]
+    } else {
+      next[identity.cookieStoreId] = url
+    }
+
+    setIdentities({ ...identities, identityUrls: next })
+    await browser.storage.local.set({ identityUrls: next })
+
+    input.value = nextUrl
+
+    toast.success(url === undefined ? 'Reset new tab URL to the default.' : 'Updated new tab URL.')
+  }
+
   async function saveIdentityName (identity: browser.contextualIdentities.ContextualIdentity, input: HTMLInputElement): Promise<void> {
     const { custom, hostname } = identityParts(identity.name)
     const name = sanitizeIdentityName(input.value)
@@ -264,13 +305,18 @@ export default function RootPage (): React.ReactElement {
   async function removeIdentity (identity: browser.contextualIdentities.ContextualIdentity): Promise<void> {
     await browser.contextualIdentities.remove(identity.cookieStoreId)
 
+    const next = { ...identities.identityUrls }
+    delete next[identity.cookieStoreId]
+
+    await browser.storage.local.set({ identityUrls: next })
+
     toast.success(`Removed ${identity.name}.`)
 
     setIdentities(await fetchIdentities())
   }
 
   async function openIdentityTab (identity: browser.contextualIdentities.ContextualIdentity): Promise<void> {
-    await newTabWithIdentity(identity)
+    await newTabWithIdentity(identity, identities.identityUrls[identity.cookieStoreId])
 
     window.close()
   }
@@ -417,10 +463,17 @@ export default function RootPage (): React.ReactElement {
 
               return (
                 <div key={identity.cookieStoreId} className='flex items-center gap-2'>
-                  <input aria-label='Identity name' className='min-w-0 flex-1 rounded-md border-2 border-300 bg-200 p-2 shadow' defaultValue={custom} maxLength={20} onChange={event => { event.target.value = sanitizeIdentityName(event.target.value) }} onBlur={event => { void saveIdentityName(identity, event.target) }} onKeyDown={event => {
+                  <input aria-label='Identity name' className='w-48 shrink-0 rounded-md border-2 border-300 bg-200 p-2 shadow' defaultValue={custom} maxLength={20} onChange={event => { event.target.value = sanitizeIdentityName(event.target.value) }} onBlur={event => { void saveIdentityName(identity, event.target) }} onKeyDown={event => {
                     if (event.key === 'Enter') {
                       event.preventDefault()
                       void saveIdentityName(identity, event.currentTarget)
+                    }
+                  }} />
+
+                  <input aria-label='New tab URL' className='min-w-0 flex-1 rounded-md border-2 border-300 bg-200 p-2 shadow' placeholder='Optional URL' defaultValue={identities.identityUrls[identity.cookieStoreId] ?? ''} onBlur={event => { void saveIdentityUrl(identity, event.target) }} onKeyDown={event => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault()
+                      void saveIdentityUrl(identity, event.currentTarget)
                     }
                   }} />
 

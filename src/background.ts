@@ -18,7 +18,8 @@ await storageInit({
     servers: [],
     used: [],
     usedAt: 0,
-    lastUpdated: 0
+    lastUpdated: 0,
+    identityUrls: {}
   }
 })
 

@@ -30,7 +30,8 @@ const defaultStorage: StorageAll = {
     servers: [],
     used: [],
     usedAt: 0,
-    lastUpdated: 0
+    lastUpdated: 0,
+    identityUrls: {}
   }
 }
 
@@ -48,7 +49,8 @@ describe('storageInit()', () => {
         servers: [],
         used: [],
         usedAt: 0,
-        lastUpdated: 0
+        lastUpdated: 0,
+        identityUrls: {}
       }
     })
   })
