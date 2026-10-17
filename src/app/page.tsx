@@ -264,9 +264,7 @@ export default function RootPage (): React.ReactElement {
     setIdentityName(sanitizeIdentityName(event.target.value))
   }
 
-  function handleOpen (event: React.FormEvent<HTMLFormElement>): void {
-    event.preventDefault()
-
+  function openWithSettings (): void {
     const servers = countries.flatMap(country => country.cities.flatMap(city => city.servers))
     const pool = servers.filter(server => serverInLocation(server, settingCountry, settingCity))
 
@@ -277,6 +275,11 @@ export default function RootPage (): React.ReactElement {
     }
 
     void addTabWithServers(pool, identityName)
+  }
+
+  function handleOpen (event: React.FormEvent<HTMLFormElement>): void {
+    event.preventDefault()
+    openWithSettings()
   }
 
   async function handleOpenRandomTab (): Promise<void> {
@@ -464,7 +467,7 @@ export default function RootPage (): React.ReactElement {
         <div className='flex flex-col gap-1'>
           <label className='text-sm text-600' htmlFor='location'>Default location</label>
 
-          <select id='location' className='w-48 rounded-md border-2 border-300 bg-200 p-2 shadow' value={value} onChange={handleLocationChange}>
+          <select id='location' className='w-48 rounded-md border-2 border-300 bg-200 px-2 py-1 shadow' value={value} onChange={handleLocationChange}>
             {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
           </select>
         </div>
@@ -472,7 +475,11 @@ export default function RootPage (): React.ReactElement {
         <form className='flex flex-col gap-1' onSubmit={handleOpen}>
           <label className='text-sm text-600' htmlFor='identity-name'>Identity name</label>
 
-          <input id='identity-name' className='rounded-md border-2 border-300 bg-200 p-2 shadow' maxLength={20} placeholder='Name (optional)' value={identityName} onChange={handleIdentityNameChange} />
+          <div className='relative'>
+            <input id='identity-name' className='rounded-md border-2 border-300 bg-200 px-2 py-1 shadow' maxLength={20} placeholder='Name (optional)' value={identityName} onChange={handleIdentityNameChange} />
+
+            <Button className='absolute left-full top-1/2 ml-1 -translate-y-1/2' onClick={event => { event.preventDefault(); openWithSettings() }} title='Open new tab'><LuArrowUpRight /></Button>
+          </div>
         </form>
       </div>
 
