@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
+import { newTabWithServer, sanitizeIdentityName, sanitizeIdentityNameInput } from '@/lib/newTabWithServer'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 
 const browserMock = {
@@ -72,6 +72,20 @@ const server: IMullvadServerWireguard = {
   stboot: true,
   type: 'wireguard'
 }
+
+describe('sanitizeIdentityNameInput()', () => {
+  it('should keep spaces so multi-word names can be typed', () => {
+    expect(sanitizeIdentityNameInput('My Work ')).toBe('My Work ')
+  })
+
+  it('should remove commas and parentheses', () => {
+    expect(sanitizeIdentityNameInput('Wo(rk, EU)')).toBe('Work EU')
+  })
+
+  it('should cap the name at 20 characters', () => {
+    expect(sanitizeIdentityNameInput('a'.repeat(30))).toBe('a'.repeat(20))
+  })
+})
 
 describe('sanitizeIdentityName()', () => {
   it('should remove commas and parentheses', () => {

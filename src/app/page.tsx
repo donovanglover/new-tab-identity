@@ -11,7 +11,7 @@ import { identityParts } from '@/lib/identityParts'
 import { isAutoContainer } from '@/lib/isAutoContainer'
 import { isCustomIdentity } from '@/lib/isCustomIdentity'
 import { newTabWithIdentity } from '@/lib/newTabWithIdentity'
-import { newTabWithServer, sanitizeIdentityName } from '@/lib/newTabWithServer'
+import { newTabWithServer, sanitizeIdentityName, sanitizeIdentityNameInput } from '@/lib/newTabWithServer'
 import { nextUnusedServer } from '@/lib/nextUnusedServer'
 import { sanitizeNewTabUrl } from '@/lib/sanitizeNewTabUrl'
 import { serverInLocation } from '@/lib/serverInLocation'
@@ -259,7 +259,7 @@ export default function RootPage (): React.ReactElement {
   }
 
   function handleIdentityNameChange (event: React.ChangeEvent<HTMLInputElement>): void {
-    setIdentityName(sanitizeIdentityName(event.target.value))
+    setIdentityName(sanitizeIdentityNameInput(event.target.value))
   }
 
   async function openWithSettings (): Promise<void> {
@@ -523,7 +523,7 @@ export default function RootPage (): React.ReactElement {
 
               return (
                 <div key={identity.cookieStoreId} className='flex items-center gap-2'>
-                  <input aria-label='Identity name' className='w-48 shrink-0 rounded-md border-2 border-300 bg-200 px-2 py-1 shadow focus:outline-none focus-visible:border-500' defaultValue={custom} maxLength={20} autoComplete='off' onChange={event => { event.target.value = sanitizeIdentityName(event.target.value) }} onBlur={event => { void saveIdentityName(identity, event.target) }} onKeyDown={event => {
+                  <input aria-label='Identity name' className='w-48 shrink-0 rounded-md border-2 border-300 bg-200 px-2 py-1 shadow focus:outline-none focus-visible:border-500' defaultValue={custom} maxLength={20} autoComplete='off' onChange={event => { event.target.value = sanitizeIdentityNameInput(event.target.value) }} onBlur={event => { void saveIdentityName(identity, event.target) }} onKeyDown={event => {
                     if (event.key === 'Enter') {
                       event.preventDefault()
                       void saveIdentityName(identity, event.currentTarget)
