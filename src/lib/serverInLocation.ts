@@ -11,7 +11,11 @@ import type { StoredLocation } from '@/types/StorageAll'
  * @param city Configured city, or `null` when any city is allowed.
  * @returns Whether the server can be used for the configured location.
  */
-export function serverInLocation (server: IMullvadServerWireguard, country: StoredLocation | null, city: StoredLocation | null): boolean {
+export function serverInLocation(
+  server: IMullvadServerWireguard,
+  country: StoredLocation | null,
+  city: StoredLocation | null,
+): boolean {
   if (country === null) {
     return city === null
   }

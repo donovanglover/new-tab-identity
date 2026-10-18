@@ -5,7 +5,7 @@
  * @param input URL typed by the user.
  * @returns The normalized URL, or undefined when empty or invalid.
  */
-export function sanitizeNewTabUrl (input: string): string | undefined {
+export function sanitizeNewTabUrl(input: string): string | undefined {
   const trimmed = input.trim()
 
   if (trimmed === '') {

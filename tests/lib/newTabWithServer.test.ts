@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
-import { newTabWithServer, sanitizeIdentityName, sanitizeIdentityNameInput } from '@/lib/newTabWithServer'
+import {
+  newTabWithServer,
+  sanitizeIdentityName,
+  sanitizeIdentityNameInput,
+} from '@/lib/newTabWithServer'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 
 const browserMock = {
@@ -10,8 +14,8 @@ const browserMock = {
       color: 'pink',
       iconUrl: 'resource://usercontext-content/tree.svg',
       colorCode: '#ff4bda',
-      cookieStoreId: 'firefox-container-7'
-    }))
+      cookieStoreId: 'firefox-container-7',
+    })),
   },
 
   tabs: {
@@ -32,20 +36,20 @@ const browserMock = {
       isInReaderMode: undefined,
       lastAccessed: 1715160840455,
       mutedInfo: {
-        muted: false
+        muted: false,
       },
       pinned: false,
       sharingState: {
         camera: false,
         microphone: false,
-        screen: undefined
+        screen: undefined,
       },
       status: 'complete',
       successorTabId: -1,
       width: 1920,
-      windowId: 1
-    }))
-  }
+      windowId: 1,
+    })),
+  },
 }
 
 vi.stubGlobal('browser', browserMock)
@@ -70,7 +74,7 @@ const server: IMullvadServerWireguard = {
   socks_port: 1080,
   status_messages: [],
   stboot: true,
-  type: 'wireguard'
+  type: 'wireguard',
 }
 
 describe('sanitizeIdentityNameInput()', () => {
@@ -112,7 +116,7 @@ describe('newTabWithServer()', () => {
     expect(browserMock.contextualIdentities.create).toHaveBeenLastCalledWith({
       name: 'Calgary, Canada (ca-yyc-wg-202)',
       color: expect.any(String),
-      icon: expect.any(String)
+      icon: expect.any(String),
     })
   })
 
@@ -122,7 +126,7 @@ describe('newTabWithServer()', () => {
     expect(browserMock.contextualIdentities.create).toHaveBeenLastCalledWith({
       name: 'Work EU (ca-yyc-wg-202)',
       color: expect.any(String),
-      icon: expect.any(String)
+      icon: expect.any(String),
     })
   })
 
@@ -132,7 +136,7 @@ describe('newTabWithServer()', () => {
     expect(browserMock.contextualIdentities.create).toHaveBeenLastCalledWith({
       name: 'Calgary, Canada (ca-yyc-wg-202)',
       color: expect.any(String),
-      icon: expect.any(String)
+      icon: expect.any(String),
     })
   })
 
@@ -140,7 +144,7 @@ describe('newTabWithServer()', () => {
     await newTabWithServer(server)
 
     expect(browserMock.tabs.create).toHaveBeenLastCalledWith({
-      cookieStoreId: 'firefox-container-7'
+      cookieStoreId: 'firefox-container-7',
     })
   })
 
@@ -149,7 +153,7 @@ describe('newTabWithServer()', () => {
 
     expect(browserMock.tabs.create).toHaveBeenLastCalledWith({
       url: 'https://example.com/',
-      cookieStoreId: 'firefox-container-7'
+      cookieStoreId: 'firefox-container-7',
     })
   })
 })

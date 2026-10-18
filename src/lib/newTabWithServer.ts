@@ -1,15 +1,6 @@
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 
-const colors = [
-  'blue',
-  'turquoise',
-  'green',
-  'yellow',
-  'orange',
-  'red',
-  'pink',
-  'purple'
-]
+const colors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple']
 
 const icons = [
   'fingerprint',
@@ -24,7 +15,7 @@ const icons = [
   'pet',
   'tree',
   'chill',
-  'fence'
+  'fence',
 ]
 
 interface Options {
@@ -42,7 +33,7 @@ interface Options {
  * @param name Identity name typed by the user.
  * @returns The sanitized name, capped at 20 characters, which may be empty.
  */
-export function sanitizeIdentityNameInput (name: string): string {
+export function sanitizeIdentityNameInput(name: string): string {
   return name.replace(/[(),]/g, '').slice(0, 20)
 }
 
@@ -54,21 +45,27 @@ export function sanitizeIdentityNameInput (name: string): string {
  * @param name Identity name typed by the user.
  * @returns The sanitized name, capped at 20 characters, which may be empty.
  */
-export function sanitizeIdentityName (name: string): string {
+export function sanitizeIdentityName(name: string): string {
   return name.replace(/[(),]/g, '').trim().slice(0, 20)
 }
 
-export async function newTabWithServer (server: IMullvadServerWireguard, options: Options = {}): Promise<browser.tabs.Tab> {
+export async function newTabWithServer(
+  server: IMullvadServerWireguard,
+  options: Options = {},
+): Promise<browser.tabs.Tab> {
   const name = sanitizeIdentityName(options.name ?? '')
 
   const container = await browser.contextualIdentities.create({
-    name: name === '' ? `${server.city_name}, ${server.country_name} (${server.hostname})` : `${name} (${server.hostname})`,
+    name:
+      name === ''
+        ? `${server.city_name}, ${server.country_name} (${server.hostname})`
+        : `${name} (${server.hostname})`,
     color: colors[Math.floor(Math.random() * colors.length)],
-    icon: icons[Math.floor(Math.random() * icons.length)]
+    icon: icons[Math.floor(Math.random() * icons.length)],
   })
 
   const properties: Parameters<typeof browser.tabs.create>[0] = {
-    cookieStoreId: container.cookieStoreId
+    cookieStoreId: container.cookieStoreId,
   }
 
   if (options.url !== undefined) {

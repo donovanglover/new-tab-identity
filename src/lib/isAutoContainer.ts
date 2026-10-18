@@ -6,6 +6,6 @@
  * @param name Container name to check.
  * @returns Whether the name looks like an auto-generated container name.
  */
-export function isAutoContainer (name: string): boolean {
+export function isAutoContainer(name: string): boolean {
   return name.includes(',')
 }

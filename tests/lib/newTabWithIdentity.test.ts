@@ -20,20 +20,20 @@ const browserMock = {
       isInReaderMode: undefined,
       lastAccessed: 1715160840455,
       mutedInfo: {
-        muted: false
+        muted: false,
       },
       pinned: false,
       sharingState: {
         camera: false,
         microphone: false,
-        screen: undefined
+        screen: undefined,
       },
       status: 'complete',
       successorTabId: -1,
       width: 1920,
-      windowId: 1
-    }))
-  }
+      windowId: 1,
+    })),
+  },
 }
 
 vi.stubGlobal('browser', browserMock)
@@ -44,7 +44,7 @@ const identity = {
   color: 'blue',
   iconUrl: 'resource://usercontext-content/briefcase.svg',
   colorCode: '#0000ff',
-  cookieStoreId: 'firefox-container-7'
+  cookieStoreId: 'firefox-container-7',
 }
 
 describe('newTabWithIdentity()', () => {
@@ -52,7 +52,7 @@ describe('newTabWithIdentity()', () => {
     const tab = await newTabWithIdentity(identity)
 
     expect(browserMock.tabs.create).toHaveBeenLastCalledWith({
-      cookieStoreId: 'firefox-container-7'
+      cookieStoreId: 'firefox-container-7',
     })
 
     expect(tab).toEqual(await browserMock.tabs.create({}))
@@ -63,7 +63,7 @@ describe('newTabWithIdentity()', () => {
 
     expect(browserMock.tabs.create).toHaveBeenLastCalledWith({
       url: 'https://example.com/',
-      cookieStoreId: 'firefox-container-7'
+      cookieStoreId: 'firefox-container-7',
     })
   })
 })

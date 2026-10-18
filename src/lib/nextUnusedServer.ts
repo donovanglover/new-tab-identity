@@ -21,26 +21,30 @@ export interface NextUnusedServer {
  * @param dedupeBy Whether a location is a city or a relay.
  * @returns The picked server and the updated used location list, or `undefined` if there are no servers.
  */
-export function nextUnusedServer (servers: IMullvadServerWireguard[], used: string[], dedupeBy: DedupeBy = 'city'): NextUnusedServer | undefined {
+export function nextUnusedServer(
+  servers: IMullvadServerWireguard[],
+  used: string[],
+  dedupeBy: DedupeBy = 'city',
+): NextUnusedServer | undefined {
   if (servers.length === 0) {
     return undefined
   }
 
   const key = dedupeBy === 'relay' ? relayKey : cityKey
-  const unused = servers.filter(server => !used.includes(key(server)))
+  const unused = servers.filter((server) => !used.includes(key(server)))
   const reset = unused.length === 0
   const pool = reset ? servers : unused
   const locations = [...new Set(pool.map(key))]
   const location = locations[Math.floor(Math.random() * locations.length)]
-  const options = pool.filter(server => key(server) === location)
+  const options = pool.filter((server) => key(server) === location)
   const server = options[Math.floor(Math.random() * options.length)]
   const poolKeys = new Set(servers.map(key))
 
   return {
     server,
     used: reset
-      ? [...used.filter(usedKey => !poolKeys.has(usedKey)), location]
-      : [...used, location]
+      ? [...used.filter((usedKey) => !poolKeys.has(usedKey)), location]
+      : [...used, location],
   }
 }
 
@@ -49,7 +53,7 @@ export function nextUnusedServer (servers: IMullvadServerWireguard[], used: stri
  * @param server Server to create a key for.
  * @returns The country and city codes of the server.
  */
-function cityKey (server: IMullvadServerWireguard): string {
+function cityKey(server: IMullvadServerWireguard): string {
   return `${server.country_code}-${server.city_code}`
 }
 
@@ -58,6 +62,6 @@ function cityKey (server: IMullvadServerWireguard): string {
  * @param server Server to create a key for.
  * @returns The hostname of the server.
  */
-function relayKey (server: IMullvadServerWireguard): string {
+function relayKey(server: IMullvadServerWireguard): string {
   return server.hostname
 }

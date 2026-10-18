@@ -7,8 +7,8 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '@': resolve(import.meta.dirname, './src/')
-    }
+      '@': resolve(import.meta.dirname, './src/'),
+    },
   },
 
   build: {
@@ -19,23 +19,23 @@ export default defineConfig({
     rollupOptions: {
       input: {
         app: resolve(import.meta.dirname, './src/index.html'),
-        background: resolve(import.meta.dirname, './src/background.ts')
+        background: resolve(import.meta.dirname, './src/background.ts'),
       },
 
       output: {
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
-        assetFileNames: '[name].[ext]'
+        assetFileNames: '[name].[ext]',
       },
 
-      onwarn (warning, warn) {
+      onwarn(warning, warn) {
         if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
           return
         }
 
         warn(warning)
-      }
-    }
+      },
+    },
   },
 
   test: {
@@ -51,10 +51,10 @@ export default defineConfig({
       clean: false,
 
       thresholds: {
-        100: true
-      }
+        100: true,
+      },
     },
 
-    dir: './tests'
-  }
+    dir: './tests',
+  },
 })

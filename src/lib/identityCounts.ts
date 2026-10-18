@@ -17,11 +17,14 @@ export interface IdentityCounts {
  * @param usedCookieStoreIds Cookie store ids of containers with at least one open tab.
  * @returns Counts of custom, random, and unused random identities.
  */
-export function countIdentities (containers: Pick<browser.contextualIdentities.ContextualIdentity, 'name' | 'cookieStoreId'>[], usedCookieStoreIds: Set<string>): IdentityCounts {
+export function countIdentities(
+  containers: Pick<browser.contextualIdentities.ContextualIdentity, 'name' | 'cookieStoreId'>[],
+  usedCookieStoreIds: Set<string>,
+): IdentityCounts {
   const counts: IdentityCounts = {
     custom: 0,
     random: 0,
-    unused: 0
+    unused: 0,
   }
 
   for (const container of containers) {
@@ -44,6 +47,6 @@ export function countIdentities (containers: Pick<browser.contextualIdentities.C
  * @param counts Counts returned by countIdentities().
  * @returns A summary such as "5 Custom, 40 Random (38 unused)".
  */
-export function formatIdentityCounts (counts: IdentityCounts): string {
+export function formatIdentityCounts(counts: IdentityCounts): string {
   return `${counts.custom} Custom, ${counts.random} Random (${counts.unused} unused)`
 }

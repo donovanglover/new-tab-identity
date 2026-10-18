@@ -22,7 +22,7 @@ const server: IMullvadServerWireguard = {
   socks_port: 1080,
   status_messages: [],
   stboot: true,
-  type: 'wireguard'
+  type: 'wireguard',
 }
 
 describe('serverInLocation()', () => {
@@ -43,10 +43,14 @@ describe('serverInLocation()', () => {
   })
 
   it('should match a server in the configured city', () => {
-    expect(serverInLocation(server, { code: 'de', name: 'Germany' }, { code: 'ber', name: 'Berlin' })).toBe(true)
+    expect(
+      serverInLocation(server, { code: 'de', name: 'Germany' }, { code: 'ber', name: 'Berlin' }),
+    ).toBe(true)
   })
 
   it('should not match a server outside the configured city', () => {
-    expect(serverInLocation(server, { code: 'de', name: 'Germany' }, { code: 'fra', name: 'Frankfurt' })).toBe(false)
+    expect(
+      serverInLocation(server, { code: 'de', name: 'Germany' }, { code: 'fra', name: 'Frankfurt' }),
+    ).toBe(false)
   })
 })

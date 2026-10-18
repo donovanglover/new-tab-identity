@@ -24,7 +24,7 @@ describe('filterByLocation()', () => {
       socks_port: 1080,
       status_messages: [],
       stboot: true,
-      type: 'wireguard'
+      type: 'wireguard',
     },
     {
       active: true,
@@ -46,7 +46,7 @@ describe('filterByLocation()', () => {
       socks_port: 1080,
       status_messages: [],
       stboot: true,
-      type: 'wireguard'
+      type: 'wireguard',
     },
     {
       active: true,
@@ -68,7 +68,7 @@ describe('filterByLocation()', () => {
       socks_port: 1080,
       status_messages: [],
       stboot: true,
-      type: 'wireguard'
+      type: 'wireguard',
     },
     {
       active: true,
@@ -90,7 +90,7 @@ describe('filterByLocation()', () => {
       socks_port: 1080,
       status_messages: [],
       stboot: true,
-      type: 'wireguard'
+      type: 'wireguard',
     },
     {
       active: true,
@@ -112,23 +112,31 @@ describe('filterByLocation()', () => {
       socks_port: 1080,
       status_messages: [],
       stboot: true,
-      type: 'wireguard'
-    }
+      type: 'wireguard',
+    },
   ]
 
   const countries = filterByLocation(servers)
 
   it('should group servers by country', () => {
-    expect(countries.map(country => country.name)).toEqual(['Brazil', 'Switzerland'])
-    expect(countries.map(country => country.code)).toEqual(['br', 'ch'])
+    expect(countries.map((country) => country.name)).toEqual(['Brazil', 'Switzerland'])
+    expect(countries.map((country) => country.code)).toEqual(['br', 'ch'])
   })
 
   it('should group servers by city within each country', () => {
-    expect(countries[0].cities.map(city => city.name)).toEqual(['Sao Paulo', 'Fortaleza'])
-    expect(countries[0].cities.map(city => city.code)).toEqual(['sao', 'for'])
-    expect(countries[0].cities[0].servers.map(server => server.hostname)).toEqual(['br-sao-wg-201', 'br-sao-wg-202'])
-    expect(countries[0].cities[1].servers.map(server => server.hostname)).toEqual(['br-for-wg-001'])
-    expect(countries[1].cities.map(city => city.name)).toEqual(['Zurich'])
-    expect(countries[1].cities[0].servers.map(server => server.hostname)).toEqual(['ch-zrh-wg-001', 'ch-zrh-wg-002'])
+    expect(countries[0].cities.map((city) => city.name)).toEqual(['Sao Paulo', 'Fortaleza'])
+    expect(countries[0].cities.map((city) => city.code)).toEqual(['sao', 'for'])
+    expect(countries[0].cities[0].servers.map((server) => server.hostname)).toEqual([
+      'br-sao-wg-201',
+      'br-sao-wg-202',
+    ])
+    expect(countries[0].cities[1].servers.map((server) => server.hostname)).toEqual([
+      'br-for-wg-001',
+    ])
+    expect(countries[1].cities.map((city) => city.name)).toEqual(['Zurich'])
+    expect(countries[1].cities[0].servers.map((server) => server.hostname)).toEqual([
+      'ch-zrh-wg-001',
+      'ch-zrh-wg-002',
+    ])
   })
 })

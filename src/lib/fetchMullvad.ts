@@ -9,11 +9,13 @@ import type { IMullvadServerWireguard, MullvadServer } from '@/types/MullvadServ
  *
  * @returns A **randomized** list of `active` Wireguard Mullvad servers
  */
-export async function fetchMullvad (): Promise<IMullvadServerWireguard[]> {
+export async function fetchMullvad(): Promise<IMullvadServerWireguard[]> {
   const response = await fetch('https://api-www.mullvad.net/www/relays/all')
   const json: MullvadServer[] = await response.json()
-  const wireguard = json.filter((server): server is IMullvadServerWireguard => server.type === 'wireguard')
-  const active = wireguard.filter(wireguard => wireguard.active)
+  const wireguard = json.filter(
+    (server): server is IMullvadServerWireguard => server.type === 'wireguard',
+  )
+  const active = wireguard.filter((wireguard) => wireguard.active)
 
   shuffle(active)
 
@@ -24,13 +26,13 @@ export async function fetchMullvad (): Promise<IMullvadServerWireguard[]> {
  *
  * See: <https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle>
  */
-function shuffle (array: any[]): void {
+function shuffle(array: any[]): void {
   let currentIndex = array.length
 
   while (currentIndex !== 0) {
     const randomIndex = Math.floor(Math.random() * currentIndex)
-    currentIndex--;
+    currentIndex--
 
-    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+    ;[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
   }
 }

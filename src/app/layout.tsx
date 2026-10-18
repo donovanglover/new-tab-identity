@@ -8,9 +8,9 @@ const root = document.getElementById('root')
 if (root !== null) {
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
-      <div className="w-[64rem] max-w-full">
+      <div className='w-[64rem] max-w-full'>
         <RootPage />
       </div>
-    </React.StrictMode>
+    </React.StrictMode>,
   )
 }

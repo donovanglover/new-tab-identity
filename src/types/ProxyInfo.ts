@@ -32,4 +32,9 @@ interface IProxyInfoSocks4 extends IProxyInfo {
   proxyDNS?: boolean
 }
 
-export type ProxyInfo = IProxyInfoDirect | IProxyInfoSocks | IProxyInfoSocks4 | IProxyInfoHttp | IProxyInfoHttps
+export type ProxyInfo =
+  | IProxyInfoDirect
+  | IProxyInfoSocks
+  | IProxyInfoSocks4
+  | IProxyInfoHttp
+  | IProxyInfoHttps

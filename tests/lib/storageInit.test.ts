@@ -6,14 +6,14 @@ const browserMock = {
   storage: {
     sync: {
       get: vi.fn<typeof browser.storage.sync.get>(async () => ({ blockDefault: true })),
-      set: vi.fn<typeof browser.storage.sync.set>(async () => {})
+      set: vi.fn<typeof browser.storage.sync.set>(async () => {}),
     },
 
     local: {
       get: vi.fn<typeof browser.storage.local.get>(async () => ({})),
-      set: vi.fn<typeof browser.storage.local.set>(async () => {})
-    }
-  }
+      set: vi.fn<typeof browser.storage.local.set>(async () => {}),
+    },
+  },
 }
 
 vi.stubGlobal('browser', browserMock)
@@ -23,7 +23,7 @@ const defaultStorage: StorageAll = {
     provider: 'mullvad',
     blockDefault: false,
     country: null,
-    city: null
+    city: null,
   },
 
   local: {
@@ -31,8 +31,8 @@ const defaultStorage: StorageAll = {
     used: [],
     usedAt: 0,
     lastUpdated: 0,
-    identityUrls: {}
-  }
+    identityUrls: {},
+  },
 }
 
 describe('storageInit()', () => {
@@ -42,7 +42,7 @@ describe('storageInit()', () => {
         provider: 'mullvad',
         blockDefault: true,
         country: null,
-        city: null
+        city: null,
       },
 
       local: {
@@ -50,8 +50,8 @@ describe('storageInit()', () => {
         used: [],
         usedAt: 0,
         lastUpdated: 0,
-        identityUrls: {}
-      }
+        identityUrls: {},
+      },
     })
   })
 })

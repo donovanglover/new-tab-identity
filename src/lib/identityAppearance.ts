@@ -27,12 +27,10 @@ interface SupportedIdentityAppearanceApi {
  *
  * @returns The supported colors with their hex codes, and icons with their URLs.
  */
-export async function getIdentityAppearanceOptions (): Promise<IdentityAppearanceOptions> {
-  const api = browser.contextualIdentities as typeof browser.contextualIdentities & SupportedIdentityAppearanceApi
-  const [colors, icons] = await Promise.all([
-    api.getSupportedColors(),
-    api.getSupportedIcons()
-  ])
+export async function getIdentityAppearanceOptions(): Promise<IdentityAppearanceOptions> {
+  const api = browser.contextualIdentities as typeof browser.contextualIdentities &
+    SupportedIdentityAppearanceApi
+  const [colors, icons] = await Promise.all([api.getSupportedColors(), api.getSupportedIcons()])
 
   return { colors, icons }
 }

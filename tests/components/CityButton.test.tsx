@@ -5,7 +5,9 @@ import CityButton from '@/components/CityButton'
 describe('CityButton', () => {
   beforeEach(() => {
     render(
-      <CityButton onClick={() => {}} title='Test'>Test</CityButton>
+      <CityButton onClick={() => {}} title='Test'>
+        Test
+      </CityButton>,
     )
   })
 

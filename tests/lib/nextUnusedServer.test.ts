@@ -2,7 +2,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextUnusedServer } from '@/lib/nextUnusedServer'
 import type { IMullvadServerWireguard } from '@/types/MullvadServer'
 
-function server (hostname: string, country_code: string, city_code: string): IMullvadServerWireguard {
+function server(
+  hostname: string,
+  country_code: string,
+  city_code: string,
+): IMullvadServerWireguard {
   return {
     active: true,
     city_code,
@@ -23,7 +27,7 @@ function server (hostname: string, country_code: string, city_code: string): IMu
     socks_port: 1080,
     status_messages: [],
     stboot: true,
-    type: 'wireguard'
+    type: 'wireguard',
   }
 }
 
@@ -43,7 +47,7 @@ describe('nextUnusedServer()', () => {
 
     expect(nextUnusedServer(servers, ['ca-yyc'])).toEqual({
       server: servers[1],
-      used: ['ca-yyc', 'us-slc']
+      used: ['ca-yyc', 'us-slc'],
     })
   })
 
@@ -53,12 +57,12 @@ describe('nextUnusedServer()', () => {
     const servers = [
       server('ca-yyc-wg-101', 'ca', 'yyc'),
       server('ca-yyc-wg-102', 'ca', 'yyc'),
-      server('us-slc-wg-101', 'us', 'slc')
+      server('us-slc-wg-101', 'us', 'slc'),
     ]
 
     expect(nextUnusedServer(servers, ['us-slc'])).toEqual({
       server: servers[1],
-      used: ['us-slc', 'ca-yyc']
+      used: ['us-slc', 'ca-yyc'],
     })
   })
 
@@ -69,7 +73,7 @@ describe('nextUnusedServer()', () => {
 
     expect(nextUnusedServer(servers, ['de-ber-wg-101'], 'relay')).toEqual({
       server: servers[1],
-      used: ['de-ber-wg-101', 'de-ber-wg-102']
+      used: ['de-ber-wg-101', 'de-ber-wg-102'],
     })
   })
 
@@ -80,7 +84,7 @@ describe('nextUnusedServer()', () => {
 
     expect(nextUnusedServer(servers, ['de-fra'])).toEqual({
       server: servers[0],
-      used: ['de-fra', 'ca-yyc']
+      used: ['de-fra', 'ca-yyc'],
     })
   })
 
@@ -91,7 +95,7 @@ describe('nextUnusedServer()', () => {
 
     expect(nextUnusedServer(servers, ['ca-yyc', 'us-slc', 'de-fra'])).toEqual({
       server: servers[0],
-      used: ['de-fra', 'ca-yyc']
+      used: ['de-fra', 'ca-yyc'],
     })
   })
 
@@ -100,9 +104,11 @@ describe('nextUnusedServer()', () => {
 
     const servers = [server('de-ber-wg-101', 'de', 'ber'), server('de-ber-wg-102', 'de', 'ber')]
 
-    expect(nextUnusedServer(servers, ['de-ber-wg-101', 'de-ber-wg-102', 'de-fra'], 'relay')).toEqual({
+    expect(
+      nextUnusedServer(servers, ['de-ber-wg-101', 'de-ber-wg-102', 'de-fra'], 'relay'),
+    ).toEqual({
       server: servers[0],
-      used: ['de-fra', 'de-ber-wg-101']
+      used: ['de-fra', 'de-ber-wg-101'],
     })
   })
 })

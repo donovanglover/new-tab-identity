@@ -9,6 +9,6 @@ import { isAutoContainer } from '@/lib/isAutoContainer'
  * @param name Container name to check.
  * @returns Whether the name belongs to an addon-managed custom identity.
  */
-export function isCustomIdentity (name: string): boolean {
+export function isCustomIdentity(name: string): boolean {
   return !isAutoContainer(name) && identityParts(name).hostname !== undefined
 }

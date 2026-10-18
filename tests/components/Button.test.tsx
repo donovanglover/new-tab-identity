@@ -5,7 +5,9 @@ import Button from '@/components/Button'
 describe('Button', () => {
   beforeEach(() => {
     render(
-      <Button onClick={() => {}} title='Test'>Test</Button>
+      <Button onClick={() => {}} title='Test'>
+        Test
+      </Button>,
     )
   })
 

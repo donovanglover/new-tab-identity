@@ -17,23 +17,23 @@ export interface ServerCountry {
  * @param servers Servers to group.
  * @returns Countries in order of first appearance, each with its cities in order of first appearance.
  */
-export function filterByLocation (servers: IMullvadServerWireguard[]): ServerCountry[] {
+export function filterByLocation(servers: IMullvadServerWireguard[]): ServerCountry[] {
   const countries: ServerCountry[] = []
 
-  servers.forEach(server => {
-    let country = countries.find(country => country.name === server.country_name)
+  servers.forEach((server) => {
+    let country = countries.find((country) => country.name === server.country_name)
 
     if (country === undefined) {
       country = {
         name: server.country_name,
         code: server.country_code,
-        cities: []
+        cities: [],
       }
 
       countries.push(country)
     }
 
-    const city = country.cities.find(city => city.name === server.city_name)
+    const city = country.cities.find((city) => city.name === server.city_name)
 
     if (city !== undefined) {
       city.servers.push(server)
@@ -44,7 +44,7 @@ export function filterByLocation (servers: IMullvadServerWireguard[]): ServerCou
     country.cities.push({
       name: server.city_name,
       code: server.city_code,
-      servers: [server]
+      servers: [server],
     })
   })
 

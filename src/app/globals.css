@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 body {
-  @apply base16-selenized-black bg-100 text-700;
+  @apply bg-100 text-700 base16-selenized-black;
 }

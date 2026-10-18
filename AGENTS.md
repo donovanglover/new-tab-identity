@@ -65,7 +65,7 @@ SOCKS5 relays. React popup + background script bundled by Vite.
   the container is created or renamed. The typed name is used by grid clicks, the identity name
   button, and Enter.
 - The delete button only removes containers whose name matches the generated `City, Country
-  (hostname)` format; renamed containers and containers created outside the addon are kept.
+(hostname)` format; renamed containers and containers created outside the addon are kept.
 - The popup shows `{custom} Custom, {random} Random ({unused} unused)` under the title; a custom
   identity has no comma and a parenthesized hostname, and an unused identity is a random one with
   no open tabs and no in-progress or interrupted downloads. Containers without a hostname (e.g.
