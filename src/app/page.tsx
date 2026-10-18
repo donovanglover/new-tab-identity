@@ -512,7 +512,7 @@ export default function RootPage (): React.ReactElement {
 
           return (
             <div key={country.name} className="group relative p-0.5" onPointerDown={event => { lastPointerType.current = event.pointerType }} onKeyDown={handleCellKeyDown}>
-              <Button className='w-full' onClick={() => handleCountryClick(country, hasCities, open)} title={country.name}><span aria-hidden='true'>{countryFlag(country.code)}</span> {country.name}{hasCities && <LuChevronDown className='ml-1 inline' />}</Button>
+              <Button className='w-full group-hover:bg-300' onClick={() => handleCountryClick(country, hasCities, open)} title={country.name}><span aria-hidden='true'>{countryFlag(country.code)}</span> {country.name}{hasCities && <LuChevronDown className='ml-1 inline' />}</Button>
 
               {hasCities && (
                 <div className={`absolute left-0.5 right-0.5 top-full z-10 flex-wrap justify-center gap-1 rounded-md border-2 border-300 bg-100 p-1 shadow-md ${open ? 'flex' : 'hidden group-hover:flex group-focus-within:flex'}`}>
