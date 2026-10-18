@@ -35,8 +35,9 @@ SOCKS5 relays. React popup + background script bundled by Vite.
   with `Intl.PluralRules`; define both forms in every locale, including Japanese.
 - Localize manifest strings with `__MSG_...__`. `src/app/layout.tsx` sets the document language
   and title from `browser.i18n`.
-- Do not translate generated container names, Mullvad city/country names, URLs, user-entered
-  names, or technical tokens such as `about:config`.
+- Do not translate generated container names, stored Mullvad city/country names, URLs,
+  user-entered names, or technical tokens such as `about:config`. Display-only country names are
+  localized with `countryName()` via `Intl.DisplayNames`; city names remain as supplied.
 
 ## Business logic
 

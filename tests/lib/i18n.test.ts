@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { t, tCount } from '@/lib/i18n'
+import { catalogLocale, countryName, t, tCount } from '@/lib/i18n'
 
 const getMessage = vi.fn<(key: string, substitutions?: string[]) => string>()
 const getUILanguage = vi.fn<() => string>()
@@ -90,5 +90,61 @@ describe('tCount()', () => {
 
     expect(tCount('servers', 1)).toBe('서버')
     expect(getMessage).toHaveBeenCalledWith('servers_other', ['1'])
+  })
+
+  it('should use English plural forms for unsupported locales', () => {
+    getUILanguage.mockReturnValue('zh-TW')
+    getMessage.mockReturnValue('1 server')
+
+    expect(tCount('servers', 1)).toBe('1 server')
+    expect(getMessage).toHaveBeenCalledWith('servers_one', ['1'])
+  })
+})
+
+describe('catalogLocale()', () => {
+  it.each([
+    ['en-US', 'en'],
+    ['es-419', 'es'],
+    ['fr-CA', 'fr'],
+    ['ja-JP', 'ja'],
+    ['ko-KR', 'ko'],
+    ['zh-CN', 'zh-CN'],
+    ['zh-TW', 'en'],
+    ['de-DE', 'en'],
+  ])('should map %s to %s', (language, expected) => {
+    getUILanguage.mockReturnValue(language)
+
+    expect(catalogLocale()).toBe(expected)
+  })
+})
+
+describe('countryName()', () => {
+  it('should return the provider name for English', () => {
+    expect(countryName('us', 'USA')).toBe('USA')
+  })
+
+  it('should return the fallback for an invalid country code', () => {
+    getUILanguage.mockReturnValue('fr')
+
+    expect(countryName('USA', 'USA')).toBe('USA')
+  })
+
+  it('should localize a country code', () => {
+    getUILanguage.mockReturnValue('fr')
+
+    expect(countryName('us', 'USA')).toBe('États-Unis')
+  })
+
+  it('should cache localized names', () => {
+    getUILanguage.mockReturnValue('fr')
+
+    expect(countryName('de', 'Germany')).toBe('Allemagne')
+    expect(countryName('de', 'Germany')).toBe('Allemagne')
+  })
+
+  it('should localize Simplified Chinese', () => {
+    getUILanguage.mockReturnValue('zh-CN')
+
+    expect(countryName('ca', 'Canada')).toBe('加拿大')
   })
 })

@@ -12,7 +12,7 @@ import {
   type IdentityAppearanceChange,
   type IdentityAppearanceOptions,
 } from '@/lib/identityAppearance'
-import { t, tCount } from '@/lib/i18n'
+import { countryName, t, tCount } from '@/lib/i18n'
 import { countIdentities, formatIdentityCounts, type IdentityCounts } from '@/lib/identityCounts'
 import { identityParts } from '@/lib/identityParts'
 import { isAutoContainer } from '@/lib/isAutoContainer'
@@ -202,7 +202,9 @@ export default function RootPage(): React.ReactElement {
     })
   }, [])
 
-  const sortedCountries = [...countries].sort((a, b) => a.name.localeCompare(b.name))
+  const sortedCountries = [...countries].sort((a, b) =>
+    countryName(a.code, a.name).localeCompare(countryName(b.code, b.name)),
+  )
   const selectedCountry = countries.find((option) => option.code === settingCountry?.code)
   const settingCities = selectedCountry?.cities ?? []
   const countryUnavailable = settingCountry !== null && selectedCountry === undefined
@@ -214,7 +216,7 @@ export default function RootPage(): React.ReactElement {
   if (settingCountry !== null && countryUnavailable) {
     options.push({
       value: settingCountry.code,
-      label: `${countryFlag(settingCountry.code)} ${settingCountry.name}`,
+      label: `${countryFlag(settingCountry.code)} ${countryName(settingCountry.code, settingCountry.name)}`,
     })
 
     if (settingCity !== null) {
@@ -226,7 +228,10 @@ export default function RootPage(): React.ReactElement {
   }
 
   sortedCountries.forEach((country) => {
-    options.push({ value: country.code, label: `${countryFlag(country.code)} ${country.name}` })
+    options.push({
+      value: country.code,
+      label: `${countryFlag(country.code)} ${countryName(country.code, country.name)}`,
+    })
 
     if (settingCity !== null && settingCountry?.code === country.code && cityUnavailable) {
       options.push({ value: `${country.code}:${settingCity.code}`, label: `— ${settingCity.name}` })
@@ -251,7 +256,7 @@ export default function RootPage(): React.ReactElement {
 
     return cities.map((city) => ({
       value: `${country.code}:${city.code}`,
-      label: `${countryFlag(country.code)} ${city.name}, ${country.name}`,
+      label: `${countryFlag(country.code)} ${city.name}, ${countryName(country.code, country.name)}`,
     }))
   })
 
@@ -492,7 +497,12 @@ export default function RootPage(): React.ReactElement {
       name: `${custom} (${server.hostname})`,
     })
 
-    toast.success(t('serverChanged', [server.city_name, server.country_name]))
+    toast.success(
+      t('serverChanged', [
+        server.city_name,
+        countryName(server.country_code, server.country_name),
+      ]),
+    )
 
     setIdentities(await fetchIdentities())
   }
@@ -502,7 +512,7 @@ export default function RootPage(): React.ReactElement {
     lastPointerType.current = null
 
     if (hasCities && pointerType === 'touch' && !open) {
-      setOpenCountry(country.name)
+      setOpenCountry(country.code)
 
       return
     }
@@ -632,11 +642,12 @@ export default function RootPage(): React.ReactElement {
       <div className='mx-0.5 grid grid-cols-4'>
         {countries.map((country) => {
           const hasCities = country.cities.length > 1
-          const open = openCountry === country.name
+          const open = openCountry === country.code
+          const name = countryName(country.code, country.name)
 
           return (
             <div
-              key={country.name}
+              key={country.code}
               className='group relative p-0.5'
               onPointerDown={(event) => {
                 lastPointerType.current = event.pointerType
@@ -646,9 +657,9 @@ export default function RootPage(): React.ReactElement {
               <Button
                 className='w-full group-hover:bg-300'
                 onClick={() => handleCountryClick(country, hasCities, open)}
-                title={country.name}
+                title={name}
               >
-                <span aria-hidden='true'>{countryFlag(country.code)}</span> {country.name}
+                <span aria-hidden='true'>{countryFlag(country.code)}</span> {name}
                 {hasCities && <LuChevronDown className='ml-1 inline' />}
               </Button>
 
