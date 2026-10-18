@@ -40,7 +40,7 @@
 
   "browser_specific_settings": {
     "gecko": {
-      "strict_min_version": "142.0",
+      "strict_min_version": "153.0",
       "id": "some-name@example.org",
 
       "data_collection_permissions": {

@@ -74,6 +74,10 @@ SOCKS5 relays. React popup + background script bundled by Vite.
   always preserves the `(hostname)` suffix; delete is disabled while the identity has open tabs
   or in-progress or interrupted downloads, and the open button starts a new tab in that identity
   and closes the popup.
+- Each custom identity row starts with a button showing the container's real icon masked in its
+  real color. It opens a picker for both color and icon; changes call
+  `contextualIdentities.update` and keep the other property untouched. Options come from
+  `getSupportedColors()` / `getSupportedIcons()`; the minimum Firefox version is 153.
 - Each custom identity row has a city select; choosing a city re-points the identity to a random
   relay in it by rewriting the `(hostname)` suffix, changing the proxy for the container's
   subsequent requests.

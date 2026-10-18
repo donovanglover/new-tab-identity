@@ -3,9 +3,11 @@ import toast, { Toaster } from 'react-hot-toast'
 import { LuArrowUpRight, LuChevronDown, LuLoaderCircle, LuRefreshCw, LuX } from 'react-icons/lu'
 import Button from '@/components/Button'
 import CityButton from '@/components/CityButton'
+import IdentityAppearance from '@/components/IdentityAppearance'
 import { countryFlag } from '@/lib/countryFlag'
 import { fetchMullvad } from '@/lib/fetchMullvad'
 import { filterByLocation, type ServerCountry } from '@/lib/filterByLocation'
+import { getIdentityAppearanceOptions, type IdentityAppearanceChange, type IdentityAppearanceOptions } from '@/lib/identityAppearance'
 import { countIdentities, formatIdentityCounts, type IdentityCounts } from '@/lib/identityCounts'
 import { identityParts } from '@/lib/identityParts'
 import { isAutoContainer } from '@/lib/isAutoContainer'
@@ -114,6 +116,7 @@ async function removeInactiveContainers (): Promise<void> {
 export default function RootPage (): React.ReactElement {
   const [countries, setCountries] = useState<ServerCountry[]>([])
   const [identityName, setIdentityName] = useState('')
+  const [appearanceOptions, setAppearanceOptions] = useState<IdentityAppearanceOptions>({ colors: [], icons: [] })
   const [settingCountry, setSettingCountry] = useState<StoredLocation | null>(null)
   const [settingCity, setSettingCity] = useState<StoredLocation | null>(null)
   const [identities, setIdentities] = useState<Identities>({
@@ -153,6 +156,7 @@ export default function RootPage (): React.ReactElement {
 
   useEffect(() => {
     void fetchIdentities().then(setIdentities)
+    void getIdentityAppearanceOptions().then(setAppearanceOptions)
 
     void browser.storage.local.get('servers').then(result => {
       setCountries(filterByLocation((result as Pick<StorageLocal, 'servers'>).servers))
@@ -358,6 +362,19 @@ export default function RootPage (): React.ReactElement {
     setIdentities(await fetchIdentities())
   }
 
+  async function changeIdentityAppearance (identity: browser.contextualIdentities.ContextualIdentity, change: IdentityAppearanceChange): Promise<void> {
+    try {
+      const updated = await browser.contextualIdentities.update(identity.cookieStoreId, change)
+
+      setIdentities(current => ({
+        ...current,
+        customIdentities: current.customIdentities.map(item => item.cookieStoreId === updated.cookieStoreId ? updated : item)
+      }))
+    } catch {
+      toast.error('Failed to change the identity color or icon.')
+    }
+  }
+
   async function removeIdentity (identity: browser.contextualIdentities.ContextualIdentity): Promise<void> {
     await browser.contextualIdentities.remove(identity.cookieStoreId)
 
@@ -523,6 +540,8 @@ export default function RootPage (): React.ReactElement {
 
               return (
                 <div key={identity.cookieStoreId} className='flex items-center gap-2'>
+                  <IdentityAppearance color={identity.color} icon={identity.icon} colorCode={identity.colorCode} iconUrl={identity.iconUrl} colors={appearanceOptions.colors} icons={appearanceOptions.icons} onChange={change => { void changeIdentityAppearance(identity, change) }} />
+
                   <input aria-label='Identity name' className='w-48 shrink-0 rounded-md border-2 border-300 bg-200 px-2 py-1 shadow focus:outline-none focus-visible:border-500' defaultValue={custom} maxLength={20} autoComplete='off' onChange={event => { event.target.value = sanitizeIdentityNameInput(event.target.value) }} onBlur={event => { void saveIdentityName(identity, event.target) }} onKeyDown={event => {
                     if (event.key === 'Enter') {
                       event.preventDefault()
