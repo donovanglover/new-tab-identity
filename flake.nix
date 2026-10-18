@@ -16,6 +16,7 @@
           firefox
           nodejs
           oxlint
+          oxfmt
         ];
       };
     });
