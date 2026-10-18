@@ -6,15 +6,18 @@ import {
   type IdentityColorOption,
   type IdentityIconOption,
 } from '@/lib/identityAppearance'
+import { stubEnglishI18n } from '../helpers/i18n'
 
 const colors: IdentityColorOption[] = [
   { color: 'blue', colorCode: '#37adff' },
   { color: 'turquoise', colorCode: '#00c79a' },
+  { color: 'chartreuse', colorCode: '#7fff00' },
 ]
 
 const icons: IdentityIconOption[] = [
   { icon: 'fingerprint', iconUrl: 'resource://usercontext-content/fingerprint.svg' },
   { icon: 'tree', iconUrl: 'resource://usercontext-content/tree.svg' },
+  { icon: 'star', iconUrl: 'resource://usercontext-content/star.svg' },
 ]
 
 const onChange = vi.fn<(change: IdentityAppearanceChange) => void>()
@@ -45,6 +48,7 @@ afterEach(() => {
 
 beforeEach(() => {
   onChange.mockReset()
+  stubEnglishI18n()
   renderAppearance()
 })
 
@@ -74,6 +78,13 @@ describe('IdentityAppearance', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Tree' }))
 
     expect(onChange).toHaveBeenCalledWith({ icon: 'tree' })
+  })
+
+  it('should fall back to identifiers for unknown colors and icons', () => {
+    openAppearance()
+
+    expect(screen.getByRole('button', { name: 'Chartreuse' })).toBeDefined()
+    expect(screen.getByRole('button', { name: 'Star' })).toBeDefined()
   })
 
   it('should toggle when the trigger is clicked', () => {

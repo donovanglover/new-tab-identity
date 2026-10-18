@@ -26,6 +26,18 @@ SOCKS5 relays. React popup + background script bundled by Vite.
 - Firefox clamps browser-action popups to 800×600; the wrapper in `src/app/layout.tsx` is capped
   at that size and taller content scrolls.
 
+## Internationalization
+
+- UI strings live in `src/public/_locales/{en,es,fr,ja,ko,zh_CN}/messages.json`; `default_locale`
+  is `en`.
+  Firefox falls back per key to the default locale, so every locale must define the same keys.
+- Use `t()` and `tCount()` from `lib/i18n.ts`. `tCount` selects `${key}_one` / `${key}_other`
+  with `Intl.PluralRules`; define both forms in every locale, including Japanese.
+- Localize manifest strings with `__MSG_...__`. `src/app/layout.tsx` sets the document language
+  and title from `browser.i18n`.
+- Do not translate generated container names, Mullvad city/country names, URLs, user-entered
+  names, or technical tokens such as `about:config`.
+
 ## Business logic
 
 - `storage.sync.country` / `city` hold `{ code, name } | null`; `city` requires `country`.

@@ -1,0 +1,223 @@
+{
+  "extensionName": {
+    "message": "New Tab Identity"
+  },
+  "extensionDescription": {
+    "message": "ランダムな Mullvad VPN のロケーションを経由してコンテナタブを開きます。"
+  },
+  "updatingServerList": {
+    "message": "サーバーリストを更新しています..."
+  },
+  "serverListUpdated_one": {
+    "message": "サーバーリストを $1 台のサーバーで更新しました。",
+    "description": "$1 is the number of servers."
+  },
+  "serverListUpdated_other": {
+    "message": "サーバーリストを $1 台のサーバーで更新しました。",
+    "description": "$1 is the number of servers."
+  },
+  "serverListUpToDate": {
+    "message": "サーバーリストはすでに最新です。"
+  },
+  "deletingInactiveContainers": {
+    "message": "非アクティブなコンテナを削除しています..."
+  },
+  "deletingInactiveContainersProgress": {
+    "message": "非アクティブなコンテナを削除しています... $1/$2 ($3%)",
+    "description": "$1 is the number deleted, $2 is the total, $3 is the percentage."
+  },
+  "inactiveContainersRemoved_one": {
+    "message": "非アクティブなコンテナを $1 個削除しました。",
+    "description": "$1 is the number of containers."
+  },
+  "inactiveContainersRemoved_other": {
+    "message": "非アクティブなコンテナを $1 個削除しました。",
+    "description": "$1 is the number of containers."
+  },
+  "failedToDeleteInactiveContainers": {
+    "message": "非アクティブなコンテナを削除できませんでした。"
+  },
+  "noServersAvailable": {
+    "message": "設定された場所で利用可能なサーバーがありません。"
+  },
+  "invalidUrl": {
+    "message": "有効な URL を入力してください。"
+  },
+  "newTabUrlReset": {
+    "message": "新しいタブの URL を既定に戻しました。"
+  },
+  "newTabUrlUpdated": {
+    "message": "新しいタブの URL を更新しました。"
+  },
+  "identityRenamed": {
+    "message": "ID の名前を $1 に変更しました。",
+    "description": "$1 is the new identity name."
+  },
+  "identityAppearanceChangeFailed": {
+    "message": "ID の色またはアイコンを変更できませんでした。"
+  },
+  "identityRemoved": {
+    "message": "$1 を削除しました。",
+    "description": "$1 is the identity name."
+  },
+  "serverChanged": {
+    "message": "サーバーを $1（$2）に変更しました。",
+    "description": "$1 is the city name, $2 is the country name."
+  },
+  "updateServerList": {
+    "message": "サーバーリストを更新"
+  },
+  "deleteInactiveContainers": {
+    "message": "非アクティブなコンテナを削除"
+  },
+  "defaultLocation": {
+    "message": "デフォルトの場所"
+  },
+  "anyCountry": {
+    "message": "すべての国"
+  },
+  "identityName": {
+    "message": "ID の名前"
+  },
+  "identityNameOptional": {
+    "message": "名前（任意）"
+  },
+  "openNewTab": {
+    "message": "新しいタブを開く"
+  },
+  "warningLabel": {
+    "message": "警告:"
+  },
+  "warningInstructions": {
+    "message": "$1 に移動し、$2 を $3 に設定してから、ブラウザを再起動してください。そうしないと、この拡張機能は動作しません！",
+    "description": "$1 is about:config, $2 is privacy.userContext.enabled, $3 is true."
+  },
+  "customIdentities": {
+    "message": "カスタム ID"
+  },
+  "newTabUrl": {
+    "message": "新しいタブの URL"
+  },
+  "optionalUrl": {
+    "message": "URL（任意）"
+  },
+  "server": {
+    "message": "サーバー"
+  },
+  "inUseByTabsOrDownloads": {
+    "message": "タブまたはダウンロードで使用中"
+  },
+  "deleteIdentity": {
+    "message": "ID を削除"
+  },
+  "changeColorAndIcon": {
+    "message": "色とアイコンを変更"
+  },
+  "colorAndIcon": {
+    "message": "色とアイコン"
+  },
+  "color": {
+    "message": "色"
+  },
+  "icon": {
+    "message": "アイコン"
+  },
+  "colorBlue": {
+    "message": "青"
+  },
+  "colorTurquoise": {
+    "message": "ターコイズ"
+  },
+  "colorGreen": {
+    "message": "緑"
+  },
+  "colorYellow": {
+    "message": "黄"
+  },
+  "colorOrange": {
+    "message": "オレンジ"
+  },
+  "colorRed": {
+    "message": "赤"
+  },
+  "colorPink": {
+    "message": "ピンク"
+  },
+  "colorPurple": {
+    "message": "紫"
+  },
+  "iconFingerprint": {
+    "message": "指紋"
+  },
+  "iconBriefcase": {
+    "message": "ブリーフケース"
+  },
+  "iconDollar": {
+    "message": "ドル"
+  },
+  "iconCart": {
+    "message": "カート"
+  },
+  "iconCircle": {
+    "message": "円"
+  },
+  "iconGift": {
+    "message": "ギフト"
+  },
+  "iconVacation": {
+    "message": "休暇"
+  },
+  "iconFood": {
+    "message": "食べ物"
+  },
+  "iconFruit": {
+    "message": "果物"
+  },
+  "iconPet": {
+    "message": "ペット"
+  },
+  "iconTree": {
+    "message": "木"
+  },
+  "iconChill": {
+    "message": "くつろぎ"
+  },
+  "iconFence": {
+    "message": "フェンス"
+  },
+  "identityCounts": {
+    "message": "$1、$2（$3）",
+    "description": "$1 is the custom count, $2 is the random count, $3 is the unused count."
+  },
+  "identityCountsCustom_one": {
+    "message": "カスタム $1 件",
+    "description": "$1 is the number of custom identities."
+  },
+  "identityCountsCustom_other": {
+    "message": "カスタム $1 件",
+    "description": "$1 is the number of custom identities."
+  },
+  "identityCountsRandom_one": {
+    "message": "ランダム $1 件",
+    "description": "$1 is the number of random identities."
+  },
+  "identityCountsRandom_other": {
+    "message": "ランダム $1 件",
+    "description": "$1 is the number of random identities."
+  },
+  "identityCountsUnused_one": {
+    "message": "未使用 $1 件",
+    "description": "$1 is the number of unused identities."
+  },
+  "identityCountsUnused_other": {
+    "message": "未使用 $1 件",
+    "description": "$1 is the number of unused identities."
+  },
+  "openWithNewIdentity": {
+    "message": "新しい ID で開く"
+  },
+  "openWithNewIdentityLocation": {
+    "message": "新しい ID で開く（$1）",
+    "description": "$1 is the configured location name."
+  }
+}

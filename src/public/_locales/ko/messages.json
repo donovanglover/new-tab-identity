@@ -1,0 +1,223 @@
+{
+  "extensionName": {
+    "message": "New Tab Identity"
+  },
+  "extensionDescription": {
+    "message": "무작위 Mullvad VPN 위치를 통해 컨테이너 탭을 엽니다."
+  },
+  "updatingServerList": {
+    "message": "서버 목록을 업데이트하는 중..."
+  },
+  "serverListUpdated_one": {
+    "message": "서버 $1개로 서버 목록을 업데이트했습니다.",
+    "description": "$1 is the number of servers."
+  },
+  "serverListUpdated_other": {
+    "message": "서버 $1개로 서버 목록을 업데이트했습니다.",
+    "description": "$1 is the number of servers."
+  },
+  "serverListUpToDate": {
+    "message": "서버 목록이 이미 최신 상태입니다."
+  },
+  "deletingInactiveContainers": {
+    "message": "비활성 컨테이너를 삭제하는 중..."
+  },
+  "deletingInactiveContainersProgress": {
+    "message": "비활성 컨테이너를 삭제하는 중... $1/$2 ($3%)",
+    "description": "$1 is the number deleted, $2 is the total, $3 is the percentage."
+  },
+  "inactiveContainersRemoved_one": {
+    "message": "비활성 컨테이너 $1개를 삭제했습니다.",
+    "description": "$1 is the number of containers."
+  },
+  "inactiveContainersRemoved_other": {
+    "message": "비활성 컨테이너 $1개를 삭제했습니다.",
+    "description": "$1 is the number of containers."
+  },
+  "failedToDeleteInactiveContainers": {
+    "message": "비활성 컨테이너를 삭제하지 못했습니다."
+  },
+  "noServersAvailable": {
+    "message": "설정된 위치에 사용 가능한 서버가 없습니다."
+  },
+  "invalidUrl": {
+    "message": "올바른 URL을 입력하세요."
+  },
+  "newTabUrlReset": {
+    "message": "새 탭 URL을 기본값으로 재설정했습니다."
+  },
+  "newTabUrlUpdated": {
+    "message": "새 탭 URL을 업데이트했습니다."
+  },
+  "identityRenamed": {
+    "message": "ID 이름을 $1(으)로 변경했습니다.",
+    "description": "$1 is the new identity name."
+  },
+  "identityAppearanceChangeFailed": {
+    "message": "ID 색상이나 아이콘을 변경하지 못했습니다."
+  },
+  "identityRemoved": {
+    "message": "$1을(를) 삭제했습니다.",
+    "description": "$1 is the identity name."
+  },
+  "serverChanged": {
+    "message": "서버 위치를 $1, $2(으)로 변경했습니다.",
+    "description": "$1 is the city name, $2 is the country name."
+  },
+  "updateServerList": {
+    "message": "서버 목록 업데이트"
+  },
+  "deleteInactiveContainers": {
+    "message": "비활성 컨테이너 삭제"
+  },
+  "defaultLocation": {
+    "message": "기본 위치"
+  },
+  "anyCountry": {
+    "message": "모든 국가"
+  },
+  "identityName": {
+    "message": "ID 이름"
+  },
+  "identityNameOptional": {
+    "message": "이름(선택 사항)"
+  },
+  "openNewTab": {
+    "message": "새 탭 열기"
+  },
+  "warningLabel": {
+    "message": "경고:"
+  },
+  "warningInstructions": {
+    "message": "$1(으)로 이동하여 $2을(를) $3(으)로 설정한 다음 브라우저를 다시 시작하세요. 그렇지 않으면 이 확장 기능이 작동하지 않습니다!",
+    "description": "$1 is about:config, $2 is privacy.userContext.enabled, $3 is true."
+  },
+  "customIdentities": {
+    "message": "사용자 지정 ID"
+  },
+  "newTabUrl": {
+    "message": "새 탭 URL"
+  },
+  "optionalUrl": {
+    "message": "URL(선택 사항)"
+  },
+  "server": {
+    "message": "서버"
+  },
+  "inUseByTabsOrDownloads": {
+    "message": "탭 또는 다운로드에서 사용 중"
+  },
+  "deleteIdentity": {
+    "message": "ID 삭제"
+  },
+  "changeColorAndIcon": {
+    "message": "색상 및 아이콘 변경"
+  },
+  "colorAndIcon": {
+    "message": "색상 및 아이콘"
+  },
+  "color": {
+    "message": "색상"
+  },
+  "icon": {
+    "message": "아이콘"
+  },
+  "colorBlue": {
+    "message": "파랑"
+  },
+  "colorTurquoise": {
+    "message": "청록"
+  },
+  "colorGreen": {
+    "message": "초록"
+  },
+  "colorYellow": {
+    "message": "노랑"
+  },
+  "colorOrange": {
+    "message": "주황"
+  },
+  "colorRed": {
+    "message": "빨강"
+  },
+  "colorPink": {
+    "message": "분홍"
+  },
+  "colorPurple": {
+    "message": "보라"
+  },
+  "iconFingerprint": {
+    "message": "지문"
+  },
+  "iconBriefcase": {
+    "message": "서류 가방"
+  },
+  "iconDollar": {
+    "message": "달러"
+  },
+  "iconCart": {
+    "message": "카트"
+  },
+  "iconCircle": {
+    "message": "원"
+  },
+  "iconGift": {
+    "message": "선물"
+  },
+  "iconVacation": {
+    "message": "휴가"
+  },
+  "iconFood": {
+    "message": "음식"
+  },
+  "iconFruit": {
+    "message": "과일"
+  },
+  "iconPet": {
+    "message": "반려동물"
+  },
+  "iconTree": {
+    "message": "나무"
+  },
+  "iconChill": {
+    "message": "휴식"
+  },
+  "iconFence": {
+    "message": "울타리"
+  },
+  "identityCounts": {
+    "message": "$1, $2 ($3)",
+    "description": "$1 is the custom count, $2 is the random count, $3 is the unused count."
+  },
+  "identityCountsCustom_one": {
+    "message": "사용자 지정 $1개",
+    "description": "$1 is the number of custom identities."
+  },
+  "identityCountsCustom_other": {
+    "message": "사용자 지정 $1개",
+    "description": "$1 is the number of custom identities."
+  },
+  "identityCountsRandom_one": {
+    "message": "무작위 $1개",
+    "description": "$1 is the number of random identities."
+  },
+  "identityCountsRandom_other": {
+    "message": "무작위 $1개",
+    "description": "$1 is the number of random identities."
+  },
+  "identityCountsUnused_one": {
+    "message": "미사용 $1개",
+    "description": "$1 is the number of unused identities."
+  },
+  "identityCountsUnused_other": {
+    "message": "미사용 $1개",
+    "description": "$1 is the number of unused identities."
+  },
+  "openWithNewIdentity": {
+    "message": "새 ID로 열기"
+  },
+  "openWithNewIdentityLocation": {
+    "message": "새 ID로 열기 ($1)",
+    "description": "$1 is the configured location name."
+  }
+}

@@ -1,5 +1,10 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { countIdentities, formatIdentityCounts } from '@/lib/identityCounts'
+import { stubEnglishI18n } from '../helpers/i18n'
+
+beforeEach(() => {
+  stubEnglishI18n()
+})
 
 const custom = { name: 'Work (de-ber-wg-101)', cookieStoreId: 'firefox-container-1' }
 const usedRandom = { name: 'Paris, France (fr-par-wg-001)', cookieStoreId: 'firefox-container-2' }

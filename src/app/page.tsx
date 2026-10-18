@@ -12,6 +12,7 @@ import {
   type IdentityAppearanceChange,
   type IdentityAppearanceOptions,
 } from '@/lib/identityAppearance'
+import { t, tCount } from '@/lib/i18n'
 import { countIdentities, formatIdentityCounts, type IdentityCounts } from '@/lib/identityCounts'
 import { identityParts } from '@/lib/identityParts'
 import { isAutoContainer } from '@/lib/isAutoContainer'
@@ -35,7 +36,7 @@ async function updateServerList(): Promise<void> {
         .lastUpdated >
     60 * 1000
   ) {
-    const loading = toast.loading('Updating server list...')
+    const loading = toast.loading(t('updatingServerList'))
     const servers = await fetchMullvad()
 
     await browser.storage.local.set({
@@ -44,14 +45,12 @@ async function updateServerList(): Promise<void> {
     })
 
     toast.dismiss(loading)
-    toast.success(
-      `Updated server list with ${servers.length} ${servers.length === 1 ? 'server' : 'servers'}.`,
-    )
+    toast.success(tCount('serverListUpdated', servers.length))
 
     return
   }
 
-  toast.success('Server list is already up to date.')
+  toast.success(t('serverListUpToDate'))
 }
 
 function randomServer(servers: IMullvadServerWireguard[]): IMullvadServerWireguard {
@@ -101,7 +100,7 @@ async function fetchIdentities(): Promise<Identities> {
 }
 
 async function removeInactiveContainers(): Promise<void> {
-  const loading = toast.loading('Deleting inactive containers...')
+  const loading = toast.loading(t('deletingInactiveContainers'))
 
   try {
     const containers = await browser.contextualIdentities.query({})
@@ -115,7 +114,7 @@ async function removeInactiveContainers(): Promise<void> {
     let lastUpdate = Date.now()
 
     if (total > 0) {
-      toast.loading(`Deleting inactive containers... 0/${total} (0%)`, { id: loading })
+      toast.loading(t('deletingInactiveContainersProgress', [0, total, 0]), { id: loading })
     }
 
     for (const container of removable) {
@@ -124,19 +123,20 @@ async function removeInactiveContainers(): Promise<void> {
 
       if (numRemoved === total || Date.now() - lastUpdate >= 250) {
         toast.loading(
-          `Deleting inactive containers... ${numRemoved}/${total} (${Math.floor((numRemoved / total) * 100)}%)`,
+          t('deletingInactiveContainersProgress', [
+            numRemoved,
+            total,
+            Math.floor((numRemoved / total) * 100),
+          ]),
           { id: loading },
         )
         lastUpdate = Date.now()
       }
     }
 
-    toast.success(
-      `Removed ${numRemoved} inactive ${numRemoved === 1 ? 'container' : 'containers'}.`,
-      { id: loading },
-    )
+    toast.success(tCount('inactiveContainersRemoved', numRemoved), { id: loading })
   } catch {
-    toast.error('Failed to delete inactive containers.', { id: loading })
+    toast.error(t('failedToDeleteInactiveContainers'), { id: loading })
   }
 }
 
@@ -209,7 +209,7 @@ export default function RootPage(): React.ReactElement {
   const cityUnavailable =
     settingCity !== null && !settingCities.some((option) => option.code === settingCity.code)
 
-  const options = [{ value: '', label: '🌍 Any country' }]
+  const options = [{ value: '', label: `🌍 ${t('anyCountry')}` }]
 
   if (settingCountry !== null && countryUnavailable) {
     options.push({
@@ -322,7 +322,7 @@ export default function RootPage(): React.ReactElement {
     )
 
     if (next === undefined) {
-      toast.error('No servers available for the configured location.')
+      toast.error(t('noServersAvailable'))
 
       return
     }
@@ -361,7 +361,7 @@ export default function RootPage(): React.ReactElement {
     const url = sanitizeNewTabUrl(raw)
 
     if (url === undefined && raw.trim() !== '') {
-      toast.error('Enter a valid URL.')
+      toast.error(t('invalidUrl'))
       input.value = identities.identityUrls[identity.cookieStoreId] ?? ''
 
       return
@@ -389,7 +389,7 @@ export default function RootPage(): React.ReactElement {
 
     input.value = nextUrl
 
-    toast.success(url === undefined ? 'Reset new tab URL to the default.' : 'Updated new tab URL.')
+    toast.success(t(url === undefined ? 'newTabUrlReset' : 'newTabUrlUpdated'))
   }
 
   async function saveIdentityName(
@@ -411,7 +411,7 @@ export default function RootPage(): React.ReactElement {
 
     input.value = name
 
-    toast.success(`Renamed identity to ${name}.`)
+    toast.success(t('identityRenamed', [name]))
 
     setIdentities(await fetchIdentities())
   }
@@ -430,7 +430,7 @@ export default function RootPage(): React.ReactElement {
         ),
       }))
     } catch {
-      toast.error('Failed to change the identity color or icon.')
+      toast.error(t('identityAppearanceChangeFailed'))
     }
   }
 
@@ -444,7 +444,7 @@ export default function RootPage(): React.ReactElement {
 
     await browser.storage.local.set({ identityUrls: next })
 
-    toast.success(`Removed ${identity.name}.`)
+    toast.success(t('identityRemoved', [identity.name]))
 
     setIdentities(await fetchIdentities())
   }
@@ -492,7 +492,7 @@ export default function RootPage(): React.ReactElement {
       name: `${custom} (${server.hostname})`,
     })
 
-    toast.success(`Changed server to ${server.city_name}, ${server.country_name}.`)
+    toast.success(t('serverChanged', [server.city_name, server.country_name]))
 
     setIdentities(await fetchIdentities())
   }
@@ -549,14 +549,14 @@ export default function RootPage(): React.ReactElement {
 
   return (
     <div>
-      <h1 className='p-4 text-center text-4xl font-bold'>New Tab Identity</h1>
+      <h1 className='p-4 text-center text-4xl font-bold'>{t('extensionName')}</h1>
 
       <p className='-mt-2 px-4 pb-4 text-center text-sm text-600'>
         {formatIdentityCounts(identities.counts)}
       </p>
 
       <div className='absolute right-0 top-0 p-4'>
-        <Button onClick={updateServerList} title='Update server list'>
+        <Button onClick={updateServerList} title={t('updateServerList')}>
           <LuRefreshCw />
         </Button>
         <Button
@@ -564,7 +564,7 @@ export default function RootPage(): React.ReactElement {
           disabled={deletingInactive}
           onClick={handleRemoveInactiveContainers}
           title={
-            deletingInactive ? 'Deleting inactive containers...' : 'Delete inactive containers'
+            deletingInactive ? t('deletingInactiveContainers') : t('deleteInactiveContainers')
           }
         >
           {deletingInactive ? <LuLoaderCircle className='animate-spin' /> : <LuX />}
@@ -574,7 +574,7 @@ export default function RootPage(): React.ReactElement {
       <div className='flex flex-wrap items-start justify-center gap-2 px-4 pb-4'>
         <div className='flex flex-col gap-1'>
           <label className='text-sm text-600' htmlFor='location'>
-            Default location
+            {t('defaultLocation')}
           </label>
 
           <select
@@ -593,7 +593,7 @@ export default function RootPage(): React.ReactElement {
 
         <form className='flex flex-col gap-1' onSubmit={handleOpen}>
           <label className='text-sm text-600' htmlFor='identity-name'>
-            Identity name
+            {t('identityName')}
           </label>
 
           <div className='relative'>
@@ -602,7 +602,7 @@ export default function RootPage(): React.ReactElement {
               ref={identityNameInput}
               className='rounded-md border-2 border-300 bg-200 px-2 py-1 shadow focus:outline-none focus-visible:border-500'
               maxLength={20}
-              placeholder='Name (optional)'
+              placeholder={t('identityNameOptional')}
               autoComplete='off'
               value={identityName}
               onChange={handleIdentityNameChange}
@@ -614,7 +614,7 @@ export default function RootPage(): React.ReactElement {
                 event.preventDefault()
                 void openWithSettings()
               }}
-              title='Open new tab'
+              title={t('openNewTab')}
             >
               <LuArrowUpRight />
             </Button>
@@ -624,11 +624,8 @@ export default function RootPage(): React.ReactElement {
 
       {browser.contextualIdentities === undefined && (
         <p className='p-4'>
-          <strong className='text-orange'>WARNING:</strong> Go to{' '}
-          <code className='text-cyan'>about:config</code> and set{' '}
-          <code className='text-blue'>privacy.userContext.enabled</code> to{' '}
-          <code className='text-red'>true</code>, then restart your browser. Otherwise this
-          extension will not work!
+          <strong className='text-orange'>{t('warningLabel')}</strong>{' '}
+          {t('warningInstructions', ['about:config', 'privacy.userContext.enabled', 'true'])}
         </p>
       )}
 
@@ -680,7 +677,7 @@ export default function RootPage(): React.ReactElement {
 
       {identities.customIdentities.length > 0 && (
         <div className='p-4'>
-          <h2 className='pb-2 text-sm text-600'>Custom identities</h2>
+          <h2 className='pb-2 text-sm text-600'>{t('customIdentities')}</h2>
 
           <div className='flex flex-col gap-1'>
             {identities.customIdentities.map((identity) => {
@@ -703,7 +700,7 @@ export default function RootPage(): React.ReactElement {
                   />
 
                   <input
-                    aria-label='Identity name'
+                    aria-label={t('identityName')}
                     className='w-48 shrink-0 rounded-md border-2 border-300 bg-200 px-2 py-1 shadow focus:outline-none focus-visible:border-500'
                     defaultValue={custom}
                     maxLength={20}
@@ -723,9 +720,9 @@ export default function RootPage(): React.ReactElement {
                   />
 
                   <input
-                    aria-label='New tab URL'
+                    aria-label={t('newTabUrl')}
                     className='min-w-0 flex-1 rounded-md border-2 border-300 bg-200 px-2 py-1 shadow focus:outline-none focus-visible:border-500'
-                    placeholder='Optional URL'
+                    placeholder={t('optionalUrl')}
                     autoComplete='off'
                     defaultValue={identities.identityUrls[identity.cookieStoreId] ?? ''}
                     onBlur={(event) => {
@@ -740,7 +737,7 @@ export default function RootPage(): React.ReactElement {
                   />
 
                   <select
-                    aria-label='Server'
+                    aria-label={t('server')}
                     className='w-64 shrink-0 rounded-md border-2 border-300 bg-200 px-2 py-1 shadow focus:outline-none focus-visible:border-500'
                     value={
                       server === undefined
@@ -766,7 +763,7 @@ export default function RootPage(): React.ReactElement {
                     onClick={() => {
                       void openIdentityTab(identity)
                     }}
-                    title='Open new tab'
+                    title={t('openNewTab')}
                   >
                     <LuArrowUpRight />
                   </Button>
@@ -777,7 +774,7 @@ export default function RootPage(): React.ReactElement {
                     onClick={() => {
                       void removeIdentity(identity)
                     }}
-                    title={used ? 'In use by tabs or downloads' : 'Delete identity'}
+                    title={used ? t('inUseByTabsOrDownloads') : t('deleteIdentity')}
                   >
                     <LuX />
                   </Button>

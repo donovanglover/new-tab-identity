@@ -1,3 +1,4 @@
+import { t, tCount } from '@/lib/i18n'
 import { isAutoContainer } from '@/lib/isAutoContainer'
 import { isCustomIdentity } from '@/lib/isCustomIdentity'
 
@@ -45,8 +46,12 @@ export function countIdentities(
 /** Format identity counts for display in the popup.
  *
  * @param counts Counts returned by countIdentities().
- * @returns A summary such as "5 Custom, 40 Random (38 unused)".
+ * @returns A localized summary such as "5 Custom, 40 Random (38 unused)".
  */
 export function formatIdentityCounts(counts: IdentityCounts): string {
-  return `${counts.custom} Custom, ${counts.random} Random (${counts.unused} unused)`
+  return t('identityCounts', [
+    tCount('identityCountsCustom', counts.custom),
+    tCount('identityCountsRandom', counts.random),
+    tCount('identityCountsUnused', counts.unused),
+  ])
 }

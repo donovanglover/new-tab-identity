@@ -1,0 +1,223 @@
+{
+  "extensionName": {
+    "message": "New Tab Identity"
+  },
+  "extensionDescription": {
+    "message": "通过随机 Mullvad VPN 位置打开容器标签页。"
+  },
+  "updatingServerList": {
+    "message": "正在更新服务器列表..."
+  },
+  "serverListUpdated_one": {
+    "message": "服务器列表已更新，共 $1 台服务器。",
+    "description": "$1 is the number of servers."
+  },
+  "serverListUpdated_other": {
+    "message": "服务器列表已更新，共 $1 台服务器。",
+    "description": "$1 is the number of servers."
+  },
+  "serverListUpToDate": {
+    "message": "服务器列表已是最新。"
+  },
+  "deletingInactiveContainers": {
+    "message": "正在删除未使用的容器..."
+  },
+  "deletingInactiveContainersProgress": {
+    "message": "正在删除未使用的容器... $1/$2 ($3%)",
+    "description": "$1 is the number deleted, $2 is the total, $3 is the percentage."
+  },
+  "inactiveContainersRemoved_one": {
+    "message": "已删除 $1 个未使用的容器。",
+    "description": "$1 is the number of containers."
+  },
+  "inactiveContainersRemoved_other": {
+    "message": "已删除 $1 个未使用的容器。",
+    "description": "$1 is the number of containers."
+  },
+  "failedToDeleteInactiveContainers": {
+    "message": "无法删除未使用的容器。"
+  },
+  "noServersAvailable": {
+    "message": "配置的位置没有可用的服务器。"
+  },
+  "invalidUrl": {
+    "message": "请输入有效的 URL。"
+  },
+  "newTabUrlReset": {
+    "message": "已将新标签页 URL 重置为默认值。"
+  },
+  "newTabUrlUpdated": {
+    "message": "已更新新标签页 URL。"
+  },
+  "identityRenamed": {
+    "message": "身份已重命名为 $1。",
+    "description": "$1 is the new identity name."
+  },
+  "identityAppearanceChangeFailed": {
+    "message": "无法更改身份的颜色或图标。"
+  },
+  "identityRemoved": {
+    "message": "已删除 $1。",
+    "description": "$1 is the identity name."
+  },
+  "serverChanged": {
+    "message": "已将服务器更改为 $1，$2。",
+    "description": "$1 is the city name, $2 is the country name."
+  },
+  "updateServerList": {
+    "message": "更新服务器列表"
+  },
+  "deleteInactiveContainers": {
+    "message": "删除未使用的容器"
+  },
+  "defaultLocation": {
+    "message": "默认位置"
+  },
+  "anyCountry": {
+    "message": "任何国家/地区"
+  },
+  "identityName": {
+    "message": "身份名称"
+  },
+  "identityNameOptional": {
+    "message": "名称（可选）"
+  },
+  "openNewTab": {
+    "message": "打开新标签页"
+  },
+  "warningLabel": {
+    "message": "警告："
+  },
+  "warningInstructions": {
+    "message": "前往 $1，将 $2 设置为 $3，然后重新启动浏览器。否则此扩展将无法正常工作！",
+    "description": "$1 is about:config, $2 is privacy.userContext.enabled, $3 is true."
+  },
+  "customIdentities": {
+    "message": "自定义身份"
+  },
+  "newTabUrl": {
+    "message": "新标签页 URL"
+  },
+  "optionalUrl": {
+    "message": "可选 URL"
+  },
+  "server": {
+    "message": "服务器"
+  },
+  "inUseByTabsOrDownloads": {
+    "message": "正被标签页或下载使用"
+  },
+  "deleteIdentity": {
+    "message": "删除身份"
+  },
+  "changeColorAndIcon": {
+    "message": "更改颜色和图标"
+  },
+  "colorAndIcon": {
+    "message": "颜色和图标"
+  },
+  "color": {
+    "message": "颜色"
+  },
+  "icon": {
+    "message": "图标"
+  },
+  "colorBlue": {
+    "message": "蓝色"
+  },
+  "colorTurquoise": {
+    "message": "青绿色"
+  },
+  "colorGreen": {
+    "message": "绿色"
+  },
+  "colorYellow": {
+    "message": "黄色"
+  },
+  "colorOrange": {
+    "message": "橙色"
+  },
+  "colorRed": {
+    "message": "红色"
+  },
+  "colorPink": {
+    "message": "粉色"
+  },
+  "colorPurple": {
+    "message": "紫色"
+  },
+  "iconFingerprint": {
+    "message": "指纹"
+  },
+  "iconBriefcase": {
+    "message": "公文包"
+  },
+  "iconDollar": {
+    "message": "美元"
+  },
+  "iconCart": {
+    "message": "购物车"
+  },
+  "iconCircle": {
+    "message": "圆形"
+  },
+  "iconGift": {
+    "message": "礼物"
+  },
+  "iconVacation": {
+    "message": "度假"
+  },
+  "iconFood": {
+    "message": "食物"
+  },
+  "iconFruit": {
+    "message": "水果"
+  },
+  "iconPet": {
+    "message": "宠物"
+  },
+  "iconTree": {
+    "message": "树"
+  },
+  "iconChill": {
+    "message": "休闲"
+  },
+  "iconFence": {
+    "message": "栅栏"
+  },
+  "identityCounts": {
+    "message": "$1，$2（$3）",
+    "description": "$1 is the custom count, $2 is the random count, $3 is the unused count."
+  },
+  "identityCountsCustom_one": {
+    "message": "自定义 $1",
+    "description": "$1 is the number of custom identities."
+  },
+  "identityCountsCustom_other": {
+    "message": "自定义 $1",
+    "description": "$1 is the number of custom identities."
+  },
+  "identityCountsRandom_one": {
+    "message": "随机 $1",
+    "description": "$1 is the number of random identities."
+  },
+  "identityCountsRandom_other": {
+    "message": "随机 $1",
+    "description": "$1 is the number of random identities."
+  },
+  "identityCountsUnused_one": {
+    "message": "未使用 $1",
+    "description": "$1 is the number of unused identities."
+  },
+  "identityCountsUnused_other": {
+    "message": "未使用 $1",
+    "description": "$1 is the number of unused identities."
+  },
+  "openWithNewIdentity": {
+    "message": "使用新身份打开"
+  },
+  "openWithNewIdentityLocation": {
+    "message": "使用新身份打开（$1）",
+    "description": "$1 is the configured location name."
+  }
+}

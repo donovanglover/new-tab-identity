@@ -2,6 +2,10 @@ import '@/app/globals.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import RootPage from '@/app/page'
+import { t } from '@/lib/i18n'
+
+document.documentElement.lang = browser.i18n.getUILanguage()
+document.title = t('extensionName')
 
 const root = document.getElementById('root')
 

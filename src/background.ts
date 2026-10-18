@@ -1,4 +1,5 @@
 import { fetchMullvad } from '@/lib/fetchMullvad'
+import { t } from '@/lib/i18n'
 import { newTabWithServer } from '@/lib/newTabWithServer'
 import { nextUnusedServer } from '@/lib/nextUnusedServer'
 import { serverInLocation } from '@/lib/serverInLocation'
@@ -91,7 +92,7 @@ async function updateContextMenu(): Promise<void> {
 
   if (location === null) {
     await browser.contextMenus.update('new-tab-identity', {
-      title: 'Open with New Identity',
+      title: t('openWithNewIdentity'),
       enabled: true,
     })
 
@@ -99,14 +100,14 @@ async function updateContextMenu(): Promise<void> {
   }
 
   await browser.contextMenus.update('new-tab-identity', {
-    title: `Open with New Identity (${location.name})`,
+    title: t('openWithNewIdentityLocation', [location.name]),
     enabled: servers.some((server) => serverInLocation(server, country, city)),
   })
 }
 
 browser.contextMenus.create({
   id: 'new-tab-identity',
-  title: 'Open with New Identity',
+  title: t('openWithNewIdentity'),
   contexts: ['image', 'audio', 'video', 'link', 'page', 'tab'],
 })
 

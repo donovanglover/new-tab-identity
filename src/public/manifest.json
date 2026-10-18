@@ -1,6 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "New Tab Identity",
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
   "version": "1.0",
 
   "background": {
@@ -11,7 +13,7 @@
 
   "browser_action": {
     "browser_style": true,
-    "default_title": "New Tab Identity",
+    "default_title": "__MSG_extensionName__",
     "default_popup": "index.html",
     "default_icon": {
       "128": "icon.svg"

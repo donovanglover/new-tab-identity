@@ -1,0 +1,223 @@
+{
+  "extensionName": {
+    "message": "New Tab Identity"
+  },
+  "extensionDescription": {
+    "message": "Ouvrez des onglets conteneurs via des emplacements Mullvad VPN aléatoires."
+  },
+  "updatingServerList": {
+    "message": "Mise à jour de la liste des serveurs..."
+  },
+  "serverListUpdated_one": {
+    "message": "Liste des serveurs mise à jour avec $1 serveur.",
+    "description": "$1 is the number of servers."
+  },
+  "serverListUpdated_other": {
+    "message": "Liste des serveurs mise à jour avec $1 serveurs.",
+    "description": "$1 is the number of servers."
+  },
+  "serverListUpToDate": {
+    "message": "La liste des serveurs est déjà à jour."
+  },
+  "deletingInactiveContainers": {
+    "message": "Suppression des conteneurs inactifs..."
+  },
+  "deletingInactiveContainersProgress": {
+    "message": "Suppression des conteneurs inactifs... $1/$2 ($3 %)",
+    "description": "$1 is the number deleted, $2 is the total, $3 is the percentage."
+  },
+  "inactiveContainersRemoved_one": {
+    "message": "$1 conteneur inactif supprimé.",
+    "description": "$1 is the number of containers."
+  },
+  "inactiveContainersRemoved_other": {
+    "message": "$1 conteneurs inactifs supprimés.",
+    "description": "$1 is the number of containers."
+  },
+  "failedToDeleteInactiveContainers": {
+    "message": "Impossible de supprimer les conteneurs inactifs."
+  },
+  "noServersAvailable": {
+    "message": "Aucun serveur disponible pour l'emplacement configuré."
+  },
+  "invalidUrl": {
+    "message": "Saisissez une URL valide."
+  },
+  "newTabUrlReset": {
+    "message": "URL du nouvel onglet réinitialisée."
+  },
+  "newTabUrlUpdated": {
+    "message": "URL du nouvel onglet mise à jour."
+  },
+  "identityRenamed": {
+    "message": "Identité renommée en $1.",
+    "description": "$1 is the new identity name."
+  },
+  "identityAppearanceChangeFailed": {
+    "message": "Impossible de modifier la couleur ou l'icône de l'identité."
+  },
+  "identityRemoved": {
+    "message": "Identité supprimée : $1.",
+    "description": "$1 is the identity name."
+  },
+  "serverChanged": {
+    "message": "Serveur changé pour $1, $2.",
+    "description": "$1 is the city name, $2 is the country name."
+  },
+  "updateServerList": {
+    "message": "Mettre à jour la liste des serveurs"
+  },
+  "deleteInactiveContainers": {
+    "message": "Supprimer les conteneurs inactifs"
+  },
+  "defaultLocation": {
+    "message": "Emplacement par défaut"
+  },
+  "anyCountry": {
+    "message": "Tous les pays"
+  },
+  "identityName": {
+    "message": "Nom de l'identité"
+  },
+  "identityNameOptional": {
+    "message": "Nom (facultatif)"
+  },
+  "openNewTab": {
+    "message": "Ouvrir un nouvel onglet"
+  },
+  "warningLabel": {
+    "message": "AVERTISSEMENT :"
+  },
+  "warningInstructions": {
+    "message": "Accédez à $1, définissez $2 sur $3, puis redémarrez votre navigateur. Sinon, cette extension ne fonctionnera pas !",
+    "description": "$1 is about:config, $2 is privacy.userContext.enabled, $3 is true."
+  },
+  "customIdentities": {
+    "message": "Identités personnalisées"
+  },
+  "newTabUrl": {
+    "message": "URL du nouvel onglet"
+  },
+  "optionalUrl": {
+    "message": "URL facultative"
+  },
+  "server": {
+    "message": "Serveur"
+  },
+  "inUseByTabsOrDownloads": {
+    "message": "Utilisée par des onglets ou des téléchargements"
+  },
+  "deleteIdentity": {
+    "message": "Supprimer l'identité"
+  },
+  "changeColorAndIcon": {
+    "message": "Changer la couleur et l'icône"
+  },
+  "colorAndIcon": {
+    "message": "Couleur et icône"
+  },
+  "color": {
+    "message": "Couleur"
+  },
+  "icon": {
+    "message": "Icône"
+  },
+  "colorBlue": {
+    "message": "Bleu"
+  },
+  "colorTurquoise": {
+    "message": "Turquoise"
+  },
+  "colorGreen": {
+    "message": "Vert"
+  },
+  "colorYellow": {
+    "message": "Jaune"
+  },
+  "colorOrange": {
+    "message": "Orange"
+  },
+  "colorRed": {
+    "message": "Rouge"
+  },
+  "colorPink": {
+    "message": "Rose"
+  },
+  "colorPurple": {
+    "message": "Violet"
+  },
+  "iconFingerprint": {
+    "message": "Empreinte digitale"
+  },
+  "iconBriefcase": {
+    "message": "Mallette"
+  },
+  "iconDollar": {
+    "message": "Dollar"
+  },
+  "iconCart": {
+    "message": "Panier"
+  },
+  "iconCircle": {
+    "message": "Cercle"
+  },
+  "iconGift": {
+    "message": "Cadeau"
+  },
+  "iconVacation": {
+    "message": "Vacances"
+  },
+  "iconFood": {
+    "message": "Nourriture"
+  },
+  "iconFruit": {
+    "message": "Fruit"
+  },
+  "iconPet": {
+    "message": "Animal"
+  },
+  "iconTree": {
+    "message": "Arbre"
+  },
+  "iconChill": {
+    "message": "Détente"
+  },
+  "iconFence": {
+    "message": "Clôture"
+  },
+  "identityCounts": {
+    "message": "$1, $2 ($3)",
+    "description": "$1 is the custom count, $2 is the random count, $3 is the unused count."
+  },
+  "identityCountsCustom_one": {
+    "message": "$1 personnalisée",
+    "description": "$1 is the number of custom identities."
+  },
+  "identityCountsCustom_other": {
+    "message": "$1 personnalisées",
+    "description": "$1 is the number of custom identities."
+  },
+  "identityCountsRandom_one": {
+    "message": "$1 aléatoire",
+    "description": "$1 is the number of random identities."
+  },
+  "identityCountsRandom_other": {
+    "message": "$1 aléatoires",
+    "description": "$1 is the number of random identities."
+  },
+  "identityCountsUnused_one": {
+    "message": "$1 inutilisée",
+    "description": "$1 is the number of unused identities."
+  },
+  "identityCountsUnused_other": {
+    "message": "$1 inutilisées",
+    "description": "$1 is the number of unused identities."
+  },
+  "openWithNewIdentity": {
+    "message": "Ouvrir avec une nouvelle identité"
+  },
+  "openWithNewIdentityLocation": {
+    "message": "Ouvrir avec une nouvelle identité ($1)",
+    "description": "$1 is the configured location name."
+  }
+}
